@@ -3,7 +3,6 @@ package br.com.sqlScholar.student;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,11 +25,10 @@ public class StudentController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Usuário já registrado");
         }
 
-        student.setUsername();
-        student.setFirstName();
-        student.setLastName();
-
-        String passwordHashed = passwordEncoder.encode();
+        student.setUsername(studentModel.getUsername());
+        student.setFirstName(studentModel.getFirstName());
+        student.setLastName(student.getLastName());
+        student.setPassword(passwordEncoder.encode(studentModel.getPassword()));
 
         return null;
     }
