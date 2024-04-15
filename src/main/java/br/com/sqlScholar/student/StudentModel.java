@@ -27,6 +27,8 @@ public class StudentModel implements UserDetails{
     @Column
     private String username;
     @Column
+    private String email;
+    @Column
     private String firstName;
     @Column
     private String lastName;
@@ -42,21 +44,20 @@ public class StudentModel implements UserDetails{
     @CreationTimestamp
     private LocalDateTime createdAt;
 
-    public StudentModel(LocalDateTime createdAt,
-                        Boolean enabled,
-                        Boolean locked,
-                        AppUserRole appUserRole,
-                        String password,
+    public StudentModel(String username,
+                        String email,
+                        String firstName,
                         String lastName,
-                        String firstName, String username) {
-        this.createdAt = createdAt;
-        this.enabled = enabled;
-        this.locked = locked;
-        this.appUserRole = appUserRole;
-        this.password = password;
-        this.lastName = lastName;
-        this.firstName = firstName;
+                        String password, AppUserRole appUserRole, Boolean locked, Boolean enabled, LocalDateTime createdAt) {
         this.username = username;
+        this.email = email;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.password = password;
+        this.appUserRole = appUserRole;
+        this.locked = locked;
+        this.enabled = enabled;
+        this.createdAt = createdAt;
     }
 
     @Override

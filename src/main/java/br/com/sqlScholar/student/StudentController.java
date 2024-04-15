@@ -20,15 +20,11 @@ public class StudentController {
 
     public ResponseEntity create(@RequestBody StudentModel studentModel){
         StudentModel student = this.studentRepository.findByUsername(studentModel.getUsername());
-
-        if(student != null){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Usuário já registrado");
-        }
-
         student.setUsername(studentModel.getUsername());
         student.setFirstName(studentModel.getFirstName());
         student.setLastName(student.getLastName());
         student.setPassword(passwordEncoder.encode(studentModel.getPassword()));
+
 
         return null;
     }
