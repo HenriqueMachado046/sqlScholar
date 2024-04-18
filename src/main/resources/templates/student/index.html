@@ -1,0 +1,15 @@
+<html>
+    <head>
+        Alunos cadastrados:
+    </head>
+    <body>
+        <ul>
+            {{#arrStudent}}
+            <li>
+                <a href="/student/tela_editar/{{id}}">Editar</a> <a href="/student/deletar/{{id}}">Excluir</a> #{{id}} - {{username}} {{email}}
+            </li>
+            {{/arrStudent}}
+        </ul>
+        <a href="/student/tela_adicionar">Adicionar</a>
+    </body>
+</html>
