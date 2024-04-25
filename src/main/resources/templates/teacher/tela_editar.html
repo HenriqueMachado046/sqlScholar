@@ -1,10 +1,10 @@
 <html>
     <head>
-        <title>::Student::</title>
+        <title>::Teacher::</title>
     </head>
     <body>
-        {{#student}}
-        <form action="/student/editar" method="post" onsubmit="">
+        {{#teacher}}
+        <form action="/teacher/editar" method="post" onsubmit="">
             <input type="hidden" name="id"><br>
             E-mail: <input type="email" name="email"> <br>
             Primeiro nome: <input type="text" name="firstName"> <br>
@@ -13,6 +13,6 @@
             Nome de usuário: <input type="text" name="username">
             <input type="submit">
     </form>
-        {{/student}}
+        {{/teacher}}
     </body>
 </html>

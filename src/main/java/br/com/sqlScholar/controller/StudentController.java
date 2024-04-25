@@ -37,21 +37,23 @@ public class StudentController {
         this.studentRepository.save(student);
         Map<String, Object> template = new HashMap<>();
         template.put("message", "Aluno criado com sucesso!");
-        return new ModelAndView("message", template);
+        return new ModelAndView("student/message", template);
     }
 
-    @PatchMapping("/editar")
+    @RequestMapping("/editar")
     public ModelAndView editar(@ModelAttribute Student student){
+        System.out.println(student.getId());
         this.studentRepository.save(student);
         Map<String, Object> template = new HashMap<>();
         template.put("message", "Aluno editado com sucesso!");
-        return new ModelAndView("message", template);
+        return new ModelAndView("student/message", template);
     }
 
     @GetMapping("/tela_editar/{id}")
     public ModelAndView tela_editar(@PathVariable UUID id){
         Map<String, Object> template = new HashMap<>();
         Optional<Student> student = this.studentRepository.findById(id);
+        System.out.println(student.toString());
         template.put("student",  student);
         return new ModelAndView("/student/tela_editar", template);
     }
@@ -61,7 +63,7 @@ public class StudentController {
         this.studentRepository.deleteById(id);
         Map<String, Object> template = new HashMap<>();
         template.put("message", "Aluno deletado com sucesso!");
-        return new ModelAndView("message", template);
+        return new ModelAndView("student/message", template);
     }
 
 }
