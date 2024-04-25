@@ -1,0 +1,23 @@
+<html>
+    <head>
+        Questões cadastradas:
+    </head>
+    <body>
+
+        <Table border="10">
+            {{#arrQuestion}}
+            <tr>
+                <th>Id</th>
+                <th>Título</th>
+            </tr>
+            <tr>
+                <td>{{id}}</td>
+                <td><a href="/question/mostrar_questao/{{id}}">{{title}}</a></td>
+                <td><a href="/question/tela_editar/{{id}}">Editar</a></td>
+                <td><a href="/question/deletar/{{id}}">Excluir</a></td>
+            </tr>
+            {{/arrQuestion}}
+        </Table>
+        <a href="/question/tela_adicionar">Adicionar</a>
+    </body>
+</html>
