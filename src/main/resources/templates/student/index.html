@@ -1,15 +1,25 @@
 <html>
-    <head>
-        Alunos cadastrados:
-    </head>
-    <body>
-        <ul>
-            {{#arrStudent}}
-            <li>
-                <a href="/student/tela_editar/{{id}}">Editar</a> <a href="/student/deletar/{{id}}">Excluir</a> #{{id}} - {{username}} {{email}}
-            </li>
-            {{/arrStudent}}
-        </ul>
-        <a href="/student/tela_adicionar">Adicionar</a>
-    </body>
+<head>
+    Alunos cadastrados:
+</head>
+<body>
+
+<Table border="10">
+    {{#arrStudent}}
+    <tr>
+        <th>Id</th>
+        <th>Nome de usuário</th>
+        <th>Email</th>
+    </tr>
+    <tr>
+        <td>{{id}}</td>
+        <td>{{username}}</td>
+        <td>{{email}}</td>
+        <td><a href="/student/tela_editar/{{id}}">Editar</a></td>
+        <td><a href="/student/deletar/{{id}}">Excluir</a></td>
+    </tr>
+    {{/arrStudent}}
+</Table>
+<a href="/student/tela_adicionar">Adicionar</a>
+</body>
 </html>
