@@ -32,6 +32,7 @@ public class StudentController {
         return new ModelAndView("student/index", template);
     }
 
+
     @PostMapping("/adicionar")
     public ModelAndView adicionar(@ModelAttribute Student student){
         this.studentRepository.save(student);
@@ -54,7 +55,7 @@ public class StudentController {
         Map<String, Object> template = new HashMap<>();
         Optional<Student> student = this.studentRepository.findById(id);
         System.out.println(student.toString());
-        template.put("student",  student);
+        template.put("student",  student.get());
         return new ModelAndView("/student/tela_editar", template);
     }
 

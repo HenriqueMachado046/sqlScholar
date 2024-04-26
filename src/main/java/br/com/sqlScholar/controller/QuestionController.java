@@ -2,6 +2,7 @@ package br.com.sqlScholar.controller;
 
 
 import br.com.sqlScholar.model.Question;
+import br.com.sqlScholar.model.Student;
 import br.com.sqlScholar.repository.QuestionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

@@ -8,37 +8,12 @@ import org.hibernate.annotations.CreationTimestamp;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Data
-@NoArgsConstructor
+
 @Entity
-@Table
-public class Teacher{
+public class Teacher extends Person{
 
-    @Id
-    @GeneratedValue(generator = "UUID")
-    private UUID id;
-    @Column
-    private String username;
-    @Column
-    private String email;
-    @Column
-    private String firstName;
-    @Column
-    private String lastName;
-    @Column
-    private String password;
-    @Column
-    @CreationTimestamp
-    private LocalDateTime createdAt;
-
-    public Teacher(String username, String email, String firstName, String lastName, String password,
-                   LocalDateTime createdAt) {
-        this.username = username;
-        this.email = email;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.password = password;
-        this.createdAt = createdAt;
+    public Teacher() {
+        this.setTeacher(true);
     }
 
 }
