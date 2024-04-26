@@ -5,9 +5,10 @@
     <body>
         {{#question}}
         <form id="questionform" action="/question/adicionar" method="post">
-            Título: <input name="title" type="text" maxlength="50">
-            Descrição: <textarea name="description" form="questionform"></textarea><br>
-            Gabarito: <textarea name="answerSheet" form="questionform"></textarea><br>
+            <input type="hidden" name="id" value="{{id}}">
+            Título: <input name="title" type="text" maxlength="50" value="{{title}}">
+            Descrição: <textarea name="description" form="questionform">{{description}}</textarea><br>
+            Gabarito: <textarea name="answerSheet" form="questionform">{{answerSheet}}</textarea><br>
             <input type="submit">
     </form>
         {{/question}}

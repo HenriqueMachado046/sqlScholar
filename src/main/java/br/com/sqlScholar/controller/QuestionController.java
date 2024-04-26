@@ -35,7 +35,7 @@ public class QuestionController {
     public ModelAndView mostrarQuestao(@PathVariable UUID id){
         Map<String, Object> template = new HashMap<>();
         Optional<Question> question = this.questionRepository.findById(id);
-        template.put("question", question);
+        template.put("question", question.get());
         System.out.println(question.toString());
         return new ModelAndView("question/mostrar_questao", template);
     }
@@ -50,6 +50,10 @@ public class QuestionController {
 
     @RequestMapping("/editar")
     public ModelAndView editar(@ModelAttribute Question question){
+        System.out.println();
+        System.out.println();
+        System.out.println();
+        System.out.println(question.toString());
         this.questionRepository.save(question);
         Map<String, Object> template = new HashMap<>();
         template.put("message", "Questão editada com sucesso!");
@@ -60,7 +64,7 @@ public class QuestionController {
     public ModelAndView tela_editar (@PathVariable UUID id){
         Map<String, Object> template =  new HashMap<>();
         Optional<Question> question = this.questionRepository.findById(id);
-        template.put("question", question);
+        template.put("question", question.get());
         return new ModelAndView("question/tela_editar", template);
     }
 
@@ -69,7 +73,7 @@ public class QuestionController {
         this.questionRepository.deleteById(id);
         Map<String, Object> template = new HashMap<>();
         template.put("message", "Questão deletada com sucesso!");
-        return new ModelAndView("question/message");
+        return new ModelAndView("question/message", template);
     }
 
 }
