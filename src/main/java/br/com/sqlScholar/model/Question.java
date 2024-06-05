@@ -2,9 +2,7 @@ package br.com.sqlScholar.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
@@ -25,14 +23,25 @@ public class Question {
     @Column
     private String description;
     @Column
+    private boolean isShared;
+    @Column
     private String answerSheet;
-//    @ManyToMany
-//    @JoinColumn(name = "teacher_id")
     @OneToMany
-    @JoinColumn(name = "testcase_id")
     private List<TestCase> testCases;
+    @Column
+    private String tag;
     @Column
     @CreationTimestamp
     private LocalDateTime createdAt;
+    @ManyToMany
+    @JoinTable(
+            joinColumns = @JoinColumn(name = "question_id"),
+            inverseJoinColumns = @JoinColumn(name = "questionlist_id")
+    )
+    private List<QuestionList> questionLists;
+
+
+
+
 
 }

@@ -1,13 +1,17 @@
-<html>
-    <head>
-        <title>::Teacher::</title>
-    </head>
-    <body>
-        <form id="questionform" action="/question/adicionar" method="post">
-            Título: <input name="title" type="text" maxlength="50">
-            Descrição: <textarea name="description" form="questionform"></textarea><br>
-            Gabarito: <textarea name="answerSheet" form="questionform"></textarea><br>
-            <input type="submit">
-        </form>
-    </body>
-</html>
+{{>header}}
+<form id="questionform" action="/question/adicionar" method="post">
+    <div class="form-group">
+        <label for="title">Título:</label>
+        <input name="title" type="text" class="form-control" id="title" placeholder="Example input" maxlength="50">
+    </div>
+    <div class="form-group">
+        <label for="description">Descrição</label>
+        <textarea id="description" name="description" form="questionform"></textarea>
+    </div>
+    <div class="form-group">
+        <label for="answerSheet">Descrição</label>
+        <textarea id="answerSheet" name="answerSheet" form="questionform"></textarea>
+    </div>
+    <input type="submit">
+</form>
+{{>footer}}

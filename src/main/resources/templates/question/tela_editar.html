@@ -1,16 +1,19 @@
-<html>
-    <head>
-        <title>::Question::</title>
-    </head>
-    <body>
-        {{#question}}
-        <form id="questionform" action="/question/adicionar" method="post">
-            <input type="hidden" name="id" value="{{id}}">
-            Título: <input name="title" type="text" maxlength="50" value="{{title}}">
-            Descrição: <textarea name="description" form="questionform">{{description}}</textarea><br>
-            Gabarito: <textarea name="answerSheet" form="questionform">{{answerSheet}}</textarea><br>
-            <input type="submit">
-    </form>
-        {{/question}}
-    </body>
-</html>
+{{>header}}
+{{#question}}
+<form id="questionform" action="/question/editar" method="post">
+    <div class="form-group">
+        <label for="title">Título:</label>
+        <input name="title" type="text" class="form-control" id="title" placeholder="Example input" maxlength="50">
+    </div>
+    <div class="form-group">
+        <label for="description">Descrição</label>
+        <textarea id="description" name="description" form="questionform"></textarea>
+    </div>
+    <div class="form-group">
+        <label for="answerSheet">Descrição</label>
+        <textarea id="answerSheet" name="answerSheet" form="questionform"></textarea>
+    </div>
+    <input type="submit">
+</form>
+{{/question}}
+{{>footer}}

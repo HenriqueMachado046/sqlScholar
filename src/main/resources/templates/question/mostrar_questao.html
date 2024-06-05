@@ -1,26 +1,24 @@
-<html>
-<head>
-    <title>Questão</title>
-</head>
-<body>
-
-<Table border="10">
-    {{#question}}
+{{>header}}
+<table class="table">
+    <thead>
     <tr>
         <th>Id</th>
         <th>Título</th>
         <th>Descrição</th>
         <th>Gabarito</th>
     </tr>
+    </thead>
+    {{#question}}
+    <tbody>
     <tr>
         <td>{{id}}</td>
         <td>{{description}}</td>
         <td>{{answerSheet}}</td>
-        <td><a href="/question/tela_editar/{{id}}">Editar</a></td>
-        <td><a href="/question/deletar/{{id}}">Excluir</a></td>
+        <td><a href="/question/tela_editar/{{id}}" class="btn btn-primary">Editar</a></td>
+        <td><a href="/question/deletar/{{id}}" class="btn btn-primary">Excluir</a></td>
     </tr>
+    </tbody>
     {{/question}}
-</Table>
-<a href="/question/index">Retornar</a>
-</body>
-</html>
+</table>
+<a href="/question/index" class="btn btn-primary">Retornar</a>
+{{>footer}}

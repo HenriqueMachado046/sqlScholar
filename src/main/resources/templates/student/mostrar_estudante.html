@@ -3,21 +3,25 @@
     <thead>
     <tr>
         <th>Id</th>
+        <th>E-mail</th>
+        <th>Primeiro nome</th>
+        <th>Último nome</th>
         <th>Nome de usuário</th>
-        <th>Email</th>
     </tr>
     </thead>
-    {{#arrStudent}}
+    {{#student}}
     <tbody>
     <tr>
         <td>{{id}}</td>
-        <td>{{username}}</td>
         <td>{{email}}</td>
+        <td>{{firstName}}</td>
+        <td>{{lastName}}</td>
+        <td>{{username}}</td>
         <td><a href="/student/tela_editar/{{id}}" class="btn btn-primary">Editar</a></td>
         <td><a href="/student/deletar/{{id}}" class="btn btn-primary">Excluir</a></td>
     </tr>
     </tbody>
-    {{/arrStudent}}
+    {{/student}}
 </table>
-<a href="/student/tela_adicionar" class="btn btn-primary">Adicionar</a>
+<a href="/student/index" class="btn btn-primary">Retornar</a>
 {{>footer}}

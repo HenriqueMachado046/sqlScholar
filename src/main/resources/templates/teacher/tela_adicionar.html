@@ -1,15 +1,25 @@
-<html>
-    <head>
-        <title>::Teacher::</title>
-    </head>
-    <body>
-        <form action="/teacher/adicionar" method="post">
-            E-mail: <input type="email" name="email" placeholder="email@email.com"> <br>
-            Primeiro nome: <input type="text" name="firstName"> <br>
-            Ultimo nome: <input type="text" name="lastName"> <br>
-            Senha: <input type="text" name = 'password'> <br>
-            Nome de usuário: <input type="text" name = 'username'>
-            <input type="submit">
-        </form>
-    </body>
-</html>
+    {{>header}}
+    <form id="questionform" action="/teacher/adicionar" method="post">
+        <div class="form-group">
+            <label for="email">E-mail:</label>
+            <input name="email" type="email" class="form-control" id="email" maxlength="50">
+        </div>
+        <div class="form-group">
+            <label for="firstName">Primeiro Nome:</label>
+            <input name="firstName" type="text" class="form-control" id="firstName" maxlength="50">
+        </div>
+        <div class="form-group">
+            <label for="lastName">Último nome:</label>
+            <input name="lastName" type="text" class="form-control" id="lastName" maxlength="50">
+        </div>
+        <div class="form-group">
+            <label for="password">Senha:</label>
+            <input name="password" type="text" class="form-control" id="password" maxlength="50">
+        </div>
+        <div class="form-group">
+            <label for="username">Nome de usuário:</label>
+            <input name="username" type="text" class="form-control" id="username" maxlength="50">
+        </div>
+        <input type="submit">
+    </form>
+    {{>footer}}

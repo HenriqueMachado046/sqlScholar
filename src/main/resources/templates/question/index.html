@@ -1,23 +1,21 @@
-<html>
-    <head>
-        Questões cadastradas:
-    </head>
-    <body>
-
-        <Table border="10">
-            {{#arrQuestion}}
+{{>header}}
+        <table class="table">
+            <thead>
             <tr>
                 <th>Id</th>
                 <th>Título</th>
             </tr>
+            </thead>
+            {{#arrQuestion}}
+            <tbody>
             <tr>
                 <td>{{id}}</td>
-                <td><a href="/question/mostrar_questao/{{id}}">{{title}}</a></td>
-                <td><a href="/question/tela_editar/{{id}}">Editar</a></td>
-                <td><a href="/question/deletar/{{id}}">Excluir</a></td>
+                <td><a href="/question/mostrar_questao/{{id}}" class="btn btn-primary">{{title}}</a></td>
+                <td><a href="/question/tela_editar/{{id}}" class="btn btn-primary">Editar</a></td>
+                <td><a href="/question/deletar/{{id}}" class="btn btn-primary">Excluir</a></td>
             </tr>
+            </tbody>
             {{/arrQuestion}}
-        </Table>
-        <a href="/question/tela_adicionar">Adicionar</a>
-    </body>
-</html>
+        </table>
+        <a href="/question/tela_adicionar" class="btn btn-primary">Adicionar</a>
+{{>footer}}
