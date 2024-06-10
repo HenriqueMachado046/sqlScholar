@@ -51,9 +51,6 @@ public class QuestionController {
 
     @RequestMapping("/editar")
     public ModelAndView editar(@ModelAttribute Question question){
-        System.out.println();
-        System.out.println();
-        System.out.println();
         System.out.println(question.toString());
         this.questionRepository.save(question);
         Map<String, Object> template = new HashMap<>();

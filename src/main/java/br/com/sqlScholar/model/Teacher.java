@@ -19,6 +19,10 @@ public class Teacher extends Person{
             inverseJoinColumns = @JoinColumn(name = "student_id")
     )
     List<Student> students;
+    @OneToMany(mappedBy="teacher")
+    private List<QuestionList> lists;
+
+
     public Teacher() {
         this.setTeacher(true);
     }

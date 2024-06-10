@@ -14,6 +14,7 @@ import java.util.UUID;
 @Entity
 @Table
 public class Question {
+
     @Id
     @GeneratedValue(generator = "UUID")
     @PrimaryKeyJoinColumn
@@ -39,9 +40,8 @@ public class Question {
             inverseJoinColumns = @JoinColumn(name = "questionlist_id")
     )
     private List<QuestionList> questionLists;
-
-
-
+    @Enumerated(EnumType.STRING)
+    private Difficulty difficulty;
 
 
 }
