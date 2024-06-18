@@ -46,7 +46,6 @@ public class TestCaseController {
 
     @PostMapping("/adicionar")
     public ModelAndView adicionar(@ModelAttribute TestCase test, @RequestParam UUID question_id){
-        System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"+question_id);
         Optional<Question> question = this.questionRepository.findById(question_id);
         test.setQuestion(question.get());
         this.testCaseRepository.save(test);

@@ -22,9 +22,16 @@ public class Teacher extends Person{
     @OneToMany(mappedBy="teacher")
     private List<QuestionList> lists;
 
-
     public Teacher() {
         this.setTeacher(true);
+    }
+
+    public List<QuestionList> getLists() {
+        return lists;
+    }
+
+    public void setLists(List<QuestionList> lists) {
+        this.lists = lists;
     }
 
 }

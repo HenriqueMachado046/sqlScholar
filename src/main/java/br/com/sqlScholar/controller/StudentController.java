@@ -43,8 +43,8 @@ public class StudentController {
 
     @RequestMapping("/editar")
     public ModelAndView editar(@ModelAttribute Student student){
-        System.out.println(student.getId());
-        this.studentRepository.save(student);
+        this.studentRepository.update(student.getEmail(), student.getFirstName(), student.getLastName(),
+         student.getPassword(), student.getUsername(), student.getId());
         Map<String, Object> template = new HashMap<>();
         template.put("message", "Aluno editado com sucesso!");
         return new ModelAndView("student/message", template);
@@ -55,7 +55,7 @@ public class StudentController {
         Map<String, Object> template = new HashMap<>();
         Optional<Student> student = this.studentRepository.findById(id);
         System.out.println(student.toString());
-        template.put("student",  student.get());
+        template.put("student", student.get());
         return new ModelAndView("/student/tela_editar", template);
     }
 

@@ -17,8 +17,8 @@ public class Tag {
     @PrimaryKeyJoinColumn
     private UUID id;
     @Column
-    private String tag;
-    @Column
-    private String description;
-
+    private String name;
+    @ManyToOne
+    @JoinColumn(name="question_id")
+    private Question question;
 }

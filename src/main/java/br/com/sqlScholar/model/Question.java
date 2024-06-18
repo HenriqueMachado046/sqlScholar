@@ -29,8 +29,8 @@ public class Question {
     private String answerSheet;
     @OneToMany
     private List<TestCase> testCases;
-    @Column
-    private String tag;
+    @OneToMany(mappedBy = "id")
+    private List<Tag> tag;
     @Column
     @CreationTimestamp
     private LocalDateTime createdAt;
@@ -40,8 +40,8 @@ public class Question {
             inverseJoinColumns = @JoinColumn(name = "questionlist_id")
     )
     private List<QuestionList> questionLists;
-    @Enumerated(EnumType.STRING)
-    private Difficulty difficulty;
+    @Column
+    private String difficulty;
 
 
 }

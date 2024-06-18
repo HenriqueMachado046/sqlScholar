@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -19,7 +20,7 @@ public class QuestionList {
     @PrimaryKeyJoinColumn
     private UUID id;
     @ManyToMany(mappedBy = "questionLists")
-    private List<Question> questions;
+    private List<Question> questions = new ArrayList<>();
     @Column
     @CreationTimestamp
     private LocalDateTime createdAt;

@@ -2,16 +2,15 @@ package br.com.sqlScholar.controller;
 
 import br.com.sqlScholar.model.Question;
 import br.com.sqlScholar.model.QuestionList;
+import br.com.sqlScholar.model.Teacher;
 import br.com.sqlScholar.repository.QuestionListRepository;
 import br.com.sqlScholar.repository.QuestionRepository;
+import br.com.sqlScholar.repository.TeacherRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @RestController
 @RequestMapping("/questionlist")
@@ -23,9 +22,18 @@ public class QuestionListController {
     @Autowired
     private QuestionRepository questionRepository;
 
+    @Autowired
+    private TeacherRepository teacherRepository;
+
+    // filtrar por somente pelas proprias questões do professor e as que forem compartilhaveis (publicas) -> pendente
     @GetMapping("/tela_adicionar")
-    public ModelAndView tela_adicionar(){
-        return new ModelAndView("questionlist/tela_adicionar", new HashMap<>());
+    public ModelAndView tela_adicionar(){        
+        List<Question> question = this.questionRepository.findAll();
+        List<Teacher> teacher = this.teacherRepository.findAll();
+        Map<String, Object> template = new HashMap<>();
+        template.put("arrQuestion", question);
+        template.put("arrTeacher", teacher);
+        return new ModelAndView("questionlist/tela_adicionar", template) ;
     }
 
     @GetMapping("/index")
@@ -35,14 +43,27 @@ public class QuestionListController {
         return new ModelAndView("questionlist/index", template);
     }
 
-    @PostMapping("/adicionar")
-    public ModelAndView adicionar(@ModelAttribute QuestionList questionList, @RequestParam UUID question_id){
+    // arrumar: considerar listas com mais de uma questão -> ainda pendente
+    @PostMapping("/adicionar")    
+    public ModelAndView adicionar(@RequestParam String title, @RequestParam UUID question_id, @RequestParam UUID teacher_id){
+        QuestionList questionList = new QuestionList();        
         Optional<Question> question = this.questionRepository.findById(question_id);
-        questionList.setQuestions(this.questionRepository.findAll());
+        Optional<Teacher> teacher = this.teacherRepository.findById(teacher_id);
+        questionList.setTitle(title);
+        questionList.setTeacher(teacher.get());
+        questionList.getQuestions().add(question.get());               
         this.questionListRepository.save(questionList);
+        
+        question.get().getQuestionLists().add(questionList);
+        this.questionRepository.save(question.get());
+
+        teacher.get().getLists().add(questionList);
+        this.teacherRepository.save(teacher.get());
+
+
         Map<String, Object> template = new HashMap<>();
         template.put("message", "Lista cadastrada com sucesso!");
-        return new ModelAndView("questionlist/message");
+        return new ModelAndView("questionlist/message", template);
     }
 
     @RequestMapping("/editar")
@@ -67,5 +88,14 @@ public class QuestionListController {
         Map<String, Object> template = new HashMap<>();
         template.put("message", "Lista deletada com sucesso!");
         return new ModelAndView("questionlist/message", template);
+    }
+
+    @GetMapping("/mostrar_lista/{id}")
+    public ModelAndView mostrarLista(@PathVariable UUID id){
+        Map<String, Object> template = new HashMap<>();
+        Optional<QuestionList> questionlist = this.questionListRepository.findById(id);
+        template.put("questionlist", questionlist.get());
+        template.put("questions", questionlist.get().getQuestions());
+        return new ModelAndView("questionlist/mostrar_lista", template);
     }
 }

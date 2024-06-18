@@ -29,9 +29,10 @@ public class TeacherController {
     }
 
     @GetMapping("/index")
-    public ModelAndView index(){
+    public ModelAndView index(){        
         Map<String, Object> template = new HashMap<>();
         template.put("arrTeacher", this.teacherRepository.listAll());
+        template.put("message", "");
         return new ModelAndView("teacher/index", template);
     }
 
@@ -40,7 +41,8 @@ public class TeacherController {
         this.teacherRepository.save(teacher);
         Map<String, Object> template = new HashMap<>();
         template.put("message", "Professor criado com sucesso!");
-        return new ModelAndView("teacher/message", template);
+        template.put("arrTeacher", this.teacherRepository.listAll());
+        return new ModelAndView("teacher/index", template);
     }
 
     @RequestMapping("/editar")

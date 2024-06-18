@@ -1,0 +1,26 @@
+{{>header}}
+
+<form id="questionlistform" action="/questionlist/adicionar" method="post">
+    <div class="form-group">
+        <label for="title">Título:</label>
+        <input name="title" type="text" class="form-control" id="title" placeholder="Example input" maxlength="50">
+    </div>
+    <div class="form-group">
+        <select name="question_id" multiple required>
+            {{#arrQuestion}}
+            <option value="{{id}}">{{title}}</option>
+            {{/arrQuestion}}
+        </select>
+    </div>
+    <div class="form-group">
+        <select name="teacher_id" required>
+            {{#arrTeacher}}
+            <option value="{{id}}">{{firstName}}</option>
+            {{/arrTeacher}}
+        </select>
+    </div>
+
+    <input type="submit">
+</form>
+
+{{>footer}}

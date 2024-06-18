@@ -1,6 +1,7 @@
 package br.com.sqlScholar.controller;
 
 
+import br.com.sqlScholar.model.Difficulty;
 import br.com.sqlScholar.model.Question;
 import br.com.sqlScholar.model.Student;
 import br.com.sqlScholar.repository.QuestionRepository;
@@ -43,6 +44,7 @@ public class QuestionController {
 
     @PostMapping("/adicionar")
     public ModelAndView adicionar(@ModelAttribute Question question){
+        System.out.println(question.toString());
         this.questionRepository.save(question);
         Map<String, Object> template =  new HashMap<>();
         template.put("message","Questão cadastrada com sucesso!");
