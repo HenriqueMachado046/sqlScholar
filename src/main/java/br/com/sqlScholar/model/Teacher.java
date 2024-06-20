@@ -11,6 +11,7 @@ import java.util.UUID;
 
 
 @Entity
+@Data
 public class Teacher extends Person{
 
     @ManyToMany
@@ -19,19 +20,17 @@ public class Teacher extends Person{
             inverseJoinColumns = @JoinColumn(name = "student_id")
     )
     List<Student> students;
+    
     @OneToMany(mappedBy="teacher")
     private List<QuestionList> lists;
+
+    @OneToMany(mappedBy = "owner")
+    private List<Question> ownedQuestions;
+
 
     public Teacher() {
         this.setTeacher(true);
     }
 
-    public List<QuestionList> getLists() {
-        return lists;
-    }
-
-    public void setLists(List<QuestionList> lists) {
-        this.lists = lists;
-    }
-
+    
 }

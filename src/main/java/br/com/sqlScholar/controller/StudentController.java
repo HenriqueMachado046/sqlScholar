@@ -42,9 +42,16 @@ public class StudentController {
     }
 
     @RequestMapping("/editar")
-    public ModelAndView editar(@ModelAttribute Student student){
-        this.studentRepository.update(student.getEmail(), student.getFirstName(), student.getLastName(),
-         student.getPassword(), student.getUsername(), student.getId());
+    public ModelAndView editar(@RequestParam UUID id, @RequestParam String email,
+     @RequestParam String firstName, @RequestParam String lastName, @RequestParam String password, @RequestParam String username){
+        Optional<Student> student = this.studentRepository.findById(id);
+        student.get().setId(id);
+        student.get().setEmail(email);
+        student.get().setFirstName(firstName);
+        student.get().setLastName(lastName);
+        student.get().setPassword(password);
+        student.get().setUsername(username);
+        this.studentRepository.save(student.get());
         Map<String, Object> template = new HashMap<>();
         template.put("message", "Aluno editado com sucesso!");
         return new ModelAndView("student/message", template);

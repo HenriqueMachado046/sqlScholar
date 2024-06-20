@@ -40,6 +40,9 @@ public class Question {
             inverseJoinColumns = @JoinColumn(name = "questionlist_id")
     )
     private List<QuestionList> questionLists;
+    @JoinColumn(name = "teacher_id")
+    @ManyToOne
+    private Teacher owner;
     @Column
     private String difficulty;
 

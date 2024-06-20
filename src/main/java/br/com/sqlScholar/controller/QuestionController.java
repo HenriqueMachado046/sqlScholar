@@ -51,10 +51,17 @@ public class QuestionController {
         return new ModelAndView("question/message", template);
     }
 
+    //correto
     @RequestMapping("/editar")
-    public ModelAndView editar(@ModelAttribute Question question){
-        System.out.println(question.toString());
-        this.questionRepository.save(question);
+    public ModelAndView editar(@RequestParam String title,
+    @RequestParam String difficulty,@RequestParam String awnserSheet ,@RequestParam String description ,@RequestParam UUID id){
+        Optional<Question> question = this.questionRepository.findById(id);
+        question.get().setId(id);
+        question.get().setTitle(title);
+        question.get().setDifficulty(difficulty);
+        question.get().setDescription(description);
+        question.get().setAnswerSheet(awnserSheet);
+        this.questionRepository.save(question.get());
         Map<String, Object> template = new HashMap<>();
         template.put("message", "Questão editada com sucesso!");
         return new ModelAndView("question/message", template);

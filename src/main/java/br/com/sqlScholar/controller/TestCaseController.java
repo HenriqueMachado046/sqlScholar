@@ -55,8 +55,12 @@ public class TestCaseController {
     }
 
     @RequestMapping("/editar")
-    public ModelAndView editar(@ModelAttribute TestCase test){
-        this.testCaseRepository.save(test);
+    public ModelAndView editar(@RequestParam UUID id, @RequestParam Question question, @RequestParam String teste){
+        Optional<TestCase> test = this.testCaseRepository.findById(id);
+        test.get().setId(id);
+        test.get().setQuestion(question);
+        test.get().setTeste(teste);
+        this.testCaseRepository.save(test.get());
         Map<String, Object> template = new HashMap<>();
         template.put("message", "Teste editado com sucesso!");
         return new ModelAndView("test/message", template);
