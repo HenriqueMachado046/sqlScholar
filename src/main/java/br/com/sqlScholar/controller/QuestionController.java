@@ -37,6 +37,7 @@ public class QuestionController {
     @GetMapping("/index")
     public ModelAndView index(){
         Map<String, Object> template =  new HashMap<>();
+        template.put("message","");
         template.put("arrQuestion", this.questionRepository.listAll());
         return new ModelAndView("question/index", template);
     }
@@ -68,7 +69,8 @@ public class QuestionController {
 
         Map<String, Object> template =  new HashMap<>();
         template.put("message","Questão cadastrada com sucesso!");
-        return new ModelAndView("question/message", template);
+        template.put("arrQuestion", this.questionRepository.listAll());
+        return new ModelAndView("question/index", template);
     }
 
     //correto
