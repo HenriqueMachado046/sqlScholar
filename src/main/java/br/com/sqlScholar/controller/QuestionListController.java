@@ -115,10 +115,15 @@ public class QuestionListController {
 
     @GetMapping("/deletar/{id}")
     public ModelAndView deletar(@PathVariable UUID id){
-        this.questionListRepository.deletar(id);
-        System.out.println(id);
         Map<String, Object> template = new HashMap<>();
-        template.put("message", "Lista deletada com sucesso!" + id);
+        try {
+            this.questionListRepository.deletar(id);
+            System.out.println(id);
+            template.put("message", "Lista deletada com sucesso!" + id);
+        } catch(Exception e){
+            System.out.println(id);           
+            template.put("message", "deu ruim");
+        }             
         return new ModelAndView("questionlist/message", template);
     }
 
