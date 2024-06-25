@@ -14,6 +14,13 @@
         <label for="answerSheet">Gabarito</label>
         <textarea id="answerSheet" name="answerSheet" form="questionform"></textarea>
     </div>
+    <div class="form-group">
+        <select name="teacher_id" required>
+            {{#arrTeacher}}
+            <option value="{{id}}">{{firstName}}</option>
+            {{/arrTeacher}}
+        </select>
+    </div>
     <input type="submit">
 </form>
 {{/question}}

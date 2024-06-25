@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -19,13 +20,13 @@ public class Teacher extends Person{
             joinColumns = @JoinColumn(name = "teacher_id"),
             inverseJoinColumns = @JoinColumn(name = "student_id")
     )
-    List<Student> students;
+    List<Student> students = new ArrayList<>();
     
     @OneToMany(mappedBy="teacher")
-    private List<QuestionList> lists;
+    private List<QuestionList> lists = new ArrayList<>();
 
     @OneToMany(mappedBy = "owner")
-    private List<Question> ownedQuestions;
+    private List<Question> ownedQuestions = new ArrayList<>();
 
 
     public Teacher() {

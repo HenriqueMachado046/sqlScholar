@@ -1,14 +1,8 @@
 {{>header}}
 <table class="table">
-    <thead>
-        <tr>
-            <th>Título da lista</th>
-        </tr>
-    </thead>
     {{#arrQuestionList}}
     <tbody>
         <tr>
-            <td>{{title}}</td>
             <td><a href="/questionlist/mostrar_lista/{{id}}" class="btn btn-primary">Mostrar</a></td>
             <td><a href="/questionlist/tela_editar/{{id}}" class="btn btn-primary">Editar</a></td>
             <td><a href="/questionlist/deletar/{{id}}" class="btn btn-primary">Excluir</a></td>

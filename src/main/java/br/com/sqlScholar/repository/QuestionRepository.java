@@ -19,5 +19,9 @@ public interface QuestionRepository extends JpaRepository<Question, UUID> {
     @Query("SELECT q FROM Question q WHERE q.owner = ?1 OR q.isShared = TRUE")
     List<Question> listAllSharedAndOwned(Teacher owner);
 
+    @Query("SELECT q FROM Question q WHERE q.owner =?1")
+    List<Question> listAllByTeacher();
 
+    @Query("SELECT q FROM Question q WHERE q.isShared = TRUE")
+    List<Question> listAllSharedQuestions();
 }

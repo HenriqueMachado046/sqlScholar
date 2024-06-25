@@ -59,7 +59,7 @@ public class TagController {
         tag.get().setName(name);
         this.tagRepository.save(tag.get());
         Map<String, Object> template = new HashMap<>();
-        template.put("message", "Tag editada com sucesso!"+name);
+        template.put("message", "Tag editada com sucesso!");
         return new ModelAndView("tag/message", template);
     }
 
