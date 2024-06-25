@@ -1,0 +1,24 @@
+    {{>header}}
+    <h2>{{message}}</h2>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Nome de usuário</th>
+            <th>Email</th>
+        </tr>
+        </thead>
+        {{#arrTeacher}}
+        <tbody>
+        <tr>
+            <td>{{id}}</td>
+            <td>{{username}}</td>
+            <td>{{email}}</td>
+            <td><a href="/teacher/tela_editar/{{id}}" class="btn btn-primary">Editar</a></td>
+            <td><a href="/teacher/deletar/{{id}}" class="btn btn-primary">Excluir</a></td>
+        </tr>
+        </tbody>
+        {{/arrTeacher}}
+    </table>
+    <a href="/teacher/tela_adicionar" class="btn btn-primary">Adicionar</a>
+    {{>footer}}

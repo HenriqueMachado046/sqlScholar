@@ -1,0 +1,23 @@
+{{>header}}
+<table class="table">
+    <thead>
+    <tr>
+        <th>Id</th>
+        <th>Nome de usuário</th>
+        <th>Email</th>
+    </tr>
+    </thead>
+    {{#arrStudent}}
+    <tbody>
+    <tr>
+        <td>{{id}}</td>
+        <td>{{username}}</td>
+        <td>{{email}}</td>
+        <td><a href="/student/tela_editar/{{id}}" class="btn btn-primary">Editar</a></td>
+        <td><a href="/student/deletar/{{id}}" class="btn btn-primary">Excluir</a></td>
+    </tr>
+    </tbody>
+    {{/arrStudent}}
+</table>
+<a href="/student/tela_adicionar" class="btn btn-primary">Adicionar</a>
+{{>footer}}

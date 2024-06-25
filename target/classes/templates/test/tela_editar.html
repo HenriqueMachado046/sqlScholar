@@ -1,0 +1,18 @@
+{{>header}}
+        {{#test}}
+        <form id="testform" action="/test/editar" method="post">
+            <div class="form-group">
+                <label for="teste">Teste:</label>
+                <textarea id="teste" name="teste" form="testform"></textarea>
+            </div>
+            <div class="form-group">
+                <select name="question_id">
+                    {{#arrQuestion}}
+                    <option value="{{id}}">{{title}}</option>
+                    {{/arrQuestion}}
+                </select>
+            </div>
+            <input type="submit">
+        </form>
+        {{/test}}
+{{>footer}}

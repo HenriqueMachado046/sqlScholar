@@ -1,0 +1,33 @@
+{{>header}}
+<form id="questionform" action="/question/adicionar" method="post">
+    <div class="form-group">
+        <label for="title">Título:</label>
+        <input name="title" type="text" class="form-control" id="title" placeholder="Example input" maxlength="50">
+    </div>
+    <div class="form-group">
+        <label for="description">Descrição</label>
+        <textarea id="description" name="description" form="questionform"></textarea>
+    </div>
+    <div class="form-group">
+        <label for="answerSheet">Gabarito</label>
+        <textarea id="answerSheet" name="answerSheet" form="questionform"></textarea>
+    </div>
+    <div class="form-group">
+        <label for="difficulty">Dificuldade</label>
+        <input type="radio" id="facil" name="difficulty" value="FÁCIL">
+        <label for="facil">Fácil</label>
+        <input type="radio" id="intermediario" name="difficulty" value="INTERMEDIÁRIO">
+        <label for="intermediario">Intermediário</label>
+        <input type="radio" id="dificil" name="difficulty" value="DIFÍCIL">
+        <label for="dificil">Difícil</label>
+    </div>
+    <div class="form-group">
+        <select name="teacher_id" required>
+            {{#arrTeacher}}
+            <option value="{{id}}">{{firstName}}</option>
+            {{/arrTeacher}}
+        </select>
+    </div>
+    <input type="submit">
+</form>
+{{>footer}}

@@ -1,0 +1,24 @@
+{{>header}}
+<table class="table">
+    <thead>
+    <tr>
+        <th>Id</th>
+        <th>Título</th>
+        <th>Descrição</th>
+        <th>Gabarito</th>
+    </tr>
+    </thead>
+    {{#question}}
+    <tbody>
+    <tr>
+        <td>{{id}}</td>
+        <td>{{description}}</td>
+        <td>{{answerSheet}}</td>
+        <td><a href="/question/tela_editar/{{id}}" class="btn btn-primary">Editar</a></td>
+        <td><a href="/question/deletar/{{id}}" class="btn btn-primary">Excluir</a></td>
+    </tr>
+    </tbody>
+    {{/question}}
+</table>
+<a href="/question/index" class="btn btn-primary">Retornar</a>
+{{>footer}}

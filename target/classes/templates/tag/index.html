@@ -1,0 +1,20 @@
+{{>header}}
+<table class="table">
+    <thead>
+        <tr>
+            <th>Tag</th>
+        </tr>
+    </thead>
+    {{#arrTag}}
+    <tbody>
+        <tr>
+            <td>{{name}}</td>
+            <td><a href="/tag/mostrar_tag/{{id}}" class="btn btn-primary">Mostrar</a></td>
+            <td><a href="/tag/tela_editar/{{id}}" class="btn btn-primary">Editar</a></td>
+            <td><a href="/tag/deletar/{{id}}" class="btn btn-primary">Excluir</a></td>
+        </tr>
+    </tbody>
+    {{/arrTag}}
+</table>
+<a href="/tag/tela_adicionar" class="btn btn-primary">Adicionar</a>
+{{>footer}}

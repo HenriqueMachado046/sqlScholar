@@ -1,0 +1,21 @@
+{{>header}}
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Id</th>
+                <th>Título</th>
+            </tr>
+            </thead>
+            {{#arrQuestion}}
+            <tbody>
+            <tr>
+                <td>{{id}}</td>
+                <td><a href="/question/mostrar_questao/{{id}}">{{title}}</a></td>
+                <td><a href="/question/tela_editar/{{id}}" class="btn btn-primary">Editar</a></td>
+                <td><a href="/question/deletar/{{id}}" class="btn btn-primary">Excluir</a></td>
+            </tr>
+            </tbody>
+            {{/arrQuestion}}
+        </table>
+        <a href="/question/tela_adicionar" class="btn btn-primary">Adicionar</a>
+{{>footer}}
