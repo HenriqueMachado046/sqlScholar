@@ -26,7 +26,6 @@ public class QuestionList {
     @PrimaryKeyJoinColumn
     private UUID id;
     @ManyToMany(mappedBy = "questionLists")
-    // @Cascade({CascadeType.MERGE})
     private List<Question> questions = new ArrayList<>();
     @Column
     @CreationTimestamp
