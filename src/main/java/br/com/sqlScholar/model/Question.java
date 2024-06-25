@@ -45,7 +45,6 @@ public class Question {
             joinColumns = @JoinColumn(name = "question_id"),
             inverseJoinColumns = @JoinColumn(name = "questionlist_id")
     )
-    // @Cascade({CascadeType.MERGE, CascadeType.PERSIST})
     private List<QuestionList> questionLists = new ArrayList<>();
     @JoinColumn(name = "teacher_id")
     @ManyToOne
