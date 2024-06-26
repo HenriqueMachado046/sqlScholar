@@ -28,16 +28,18 @@ public class StudentController {
     @GetMapping("/index")
     public ModelAndView index(){
         Map<String, Object> template = new HashMap<>();
+        template.put("message", "");
         template.put("arrStudent", this.studentRepository.listAll());
         return new ModelAndView("student/index", template);
     }
-
-
+    
     @PostMapping("/adicionar")
     public ModelAndView adicionar(@ModelAttribute Student student){
         this.studentRepository.save(student);
         Map<String, Object> template = new HashMap<>();
         template.put("message", "Aluno criado com sucesso!");
+        template.put("arrStudent", this.studentRepository.listAll());
+
         return new ModelAndView("student/message", template);
     }
 
@@ -52,9 +54,11 @@ public class StudentController {
         student.get().setPassword(password);
         student.get().setUsername(username);
         this.studentRepository.save(student.get());
-        Map<String, Object> template = new HashMap<>();
+        Map<String, Object> template = new HashMap<>();        
         template.put("message", "Aluno editado com sucesso!");
-        return new ModelAndView("student/message", template);
+        template.put("arrStudent", this.studentRepository.listAll());
+
+        return new ModelAndView("student/index", template);
     }
 
     @GetMapping("/tela_editar/{id}")
@@ -71,7 +75,9 @@ public class StudentController {
         this.studentRepository.deleteById(id);
         Map<String, Object> template = new HashMap<>();
         template.put("message", "Aluno deletado com sucesso!");
-        return new ModelAndView("student/message", template);
+        template.put("arrStudent", this.studentRepository.listAll());
+
+        return new ModelAndView("student/index", template);
     }
 
 }
