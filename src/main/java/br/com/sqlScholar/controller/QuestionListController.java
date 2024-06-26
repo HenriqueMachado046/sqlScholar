@@ -68,9 +68,12 @@ public class QuestionListController {
         QuestionList questionList = this.questionListRepository.findById(id).get();
         questionList.setTitle(title);
         questionList.setTeacher(this.teacherRepository.findById(teacher_id).get());
-        questionList.setPrivate(isPrivate);       
-
+        questionList.setPrivate(isPrivate);               
         this.questionListRepository.save(questionList);
+        this.questionListRepository.deleteQuestions(id);
+        for (int i = 0; i < question_id.size(); i++) {
+            this.questionListRepository.insertQuestions(questionList.getId(), question_id.get(i));    
+        }            
         Map<String, Object> template = new HashMap<>();
         template.put("message", "Lista editada com sucesso!");
         template.put("arrQuestionList", this.questionListRepository.listAll());
