@@ -27,7 +27,7 @@ public class QuestionListController {
     @Autowired
     private TeacherRepository teacherRepository;
 
-    // filtrar por somente pelas proprias questões do professor e as que forem compartilhaveis (publicas) -> pendente
+    // PENDENTE: filtrar por somente pelas proprias questões do professor e as que forem compartilhaveis (publicas) -> pendente
     @GetMapping("/tela_adicionar")
     public ModelAndView tela_adicionar(){        
         List<Question> question = this.questionRepository.findAll();
