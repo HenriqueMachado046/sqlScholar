@@ -39,6 +39,7 @@ public class QuestionListController {
     @GetMapping("/index")
     public ModelAndView index(){
         Map<String, Object> template = new HashMap<>();
+        template.put("message", "");
         template.put("arrQuestionList", this.questionListRepository.listAll());
         return new ModelAndView("questionlist/index", template);
     }
@@ -55,7 +56,9 @@ public class QuestionListController {
         }        
         Map<String, Object> template = new HashMap<>();
         template.put("message", "Lista cadastrada com sucesso!");
-        return new ModelAndView("questionlist/message", template);
+        template.put("arrQuestionList", this.questionListRepository.listAll());
+
+        return new ModelAndView("questionlist/index", template);
     }
 
     @RequestMapping("/editar")
@@ -63,7 +66,9 @@ public class QuestionListController {
         this.questionListRepository.save(questionList);
         Map<String, Object> template = new HashMap<>();
         template.put("message", "Lista editada com sucesso!");
-        return new ModelAndView("questionlist/message", template);
+        template.put("arrQuestionList", this.questionListRepository.listAll());
+
+        return new ModelAndView("questionlist/index", template);
     }
 
     @GetMapping("/tela_editar/{id}")
@@ -77,10 +82,10 @@ public class QuestionListController {
     @GetMapping("/deletar/{id}")
     public ModelAndView deletar(@PathVariable UUID id){
         this.questionListRepository.deletar(id);
-        // this.questionListRepository.deleteById(id);
         Map<String, Object> template = new HashMap<>();
+        template.put("arrQuestionList", this.questionListRepository.listAll());
         template.put("message", "Lista deletada com sucesso!" + id);
-        return new ModelAndView("questionlist/message", template);
+        return new ModelAndView("questionlist/index", template);
     }
 
     @GetMapping("/mostrar_lista/{id}")
