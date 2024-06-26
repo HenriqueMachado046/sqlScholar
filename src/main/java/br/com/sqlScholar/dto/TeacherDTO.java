@@ -1,4 +1,4 @@
-package br.com.sqlScholar.controller;
+package br.com.sqlScholar.dto;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

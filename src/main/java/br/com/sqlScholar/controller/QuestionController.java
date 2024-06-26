@@ -1,6 +1,8 @@
 package br.com.sqlScholar.controller;
 
 
+import br.com.sqlScholar.dto.DifficultyDTO;
+import br.com.sqlScholar.dto.TeacherDTO;
 import br.com.sqlScholar.model.Difficulty;
 import br.com.sqlScholar.model.Question;
 import br.com.sqlScholar.model.Teacher;
@@ -90,9 +92,10 @@ public class QuestionController {
         question.get().setOwner(teacher.get());
 
         this.questionRepository.save(question.get());
-        Map<String, Object> template = new HashMap<>();
+        Map<String, Object> template = new HashMap<>();        
+        template.put("arrQuestion", this.questionRepository.listAll());
         template.put("message", "Questão editada com sucesso!");
-        return new ModelAndView("question/message", template);
+        return new ModelAndView("question/index", template);
     }
 
     @GetMapping("/tela_editar/{id}")
@@ -135,8 +138,9 @@ public class QuestionController {
     public ModelAndView deletar(@PathVariable UUID id){
         this.questionRepository.deleteById(id);
         Map<String, Object> template = new HashMap<>();
+        template.put("arrQuestion", this.questionRepository.listAll());
         template.put("message", "Questão deletada com sucesso!");
-        return new ModelAndView("question/message", template);
+        return new ModelAndView("question/index", template);
     }
 
 }
