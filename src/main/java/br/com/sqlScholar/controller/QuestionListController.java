@@ -82,12 +82,11 @@ public class QuestionListController {
         this.questionListRepository.save(questionList);
 
         teacher.get().getLists().add(questionList);
-        this.teacherRepository.save(teacher.get());
+        this.teacherRepository.save(teacher.get());        
         
-        Optional<Question> question;
         
         for (int i = 0; i < question_id.size(); i++) {
-            question = this.questionRepository.findById(question_id.get(i));
+            Optional<Question> question = this.questionRepository.findById(question_id.get(i));
         }
 
         //this.questionRepository.save();
