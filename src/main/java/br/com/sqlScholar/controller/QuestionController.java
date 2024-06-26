@@ -3,7 +3,6 @@ package br.com.sqlScholar.controller;
 
 import br.com.sqlScholar.dto.DifficultyDTO;
 import br.com.sqlScholar.dto.TeacherDTO;
-import br.com.sqlScholar.model.Difficulty;
 import br.com.sqlScholar.model.Question;
 import br.com.sqlScholar.model.Teacher;
 import br.com.sqlScholar.repository.QuestionRepository;
@@ -102,14 +101,13 @@ public class QuestionController {
     public ModelAndView tela_editar (@PathVariable UUID id){
         Map<String, Object> template =  new HashMap<>();
         Optional<Question> question = this.questionRepository.findById(id);
-        List<TeacherDTO> vetTeacherDTOs = new ArrayList<TeacherDTO>();
-       
+
+        List<TeacherDTO> vetTeacherDTOs = new ArrayList<TeacherDTO>();       
         TeacherDTO owner = new TeacherDTO();
         owner.setId(question.get().getOwner().getId());
         owner.setFirstName(question.get().getOwner().getFirstName());
         owner.setLastName(question.get().getOwner().getLastName());
         owner.setOwner(true);
-
         List<Teacher> vetTeacher = this.teacherRepository.findAll();
         for (int i = 0; i < vetTeacher.size(); i++){
             TeacherDTO teacherDTO = new TeacherDTO();
