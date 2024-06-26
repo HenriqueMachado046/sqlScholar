@@ -64,13 +64,14 @@ public class QuestionListController {
     }
 
     @RequestMapping("/editar")
-    public ModelAndView editar(@RequestParam UUID id, @RequestParam String title, @RequestParam boolean isPrivate, @RequestParam UUID teacher_id, @RequestParam List<UUID> question_id){
+    public ModelAndView editar(@RequestParam UUID id, @RequestParam String title, @RequestParam Boolean isPrivate, @RequestParam UUID teacher_id, @RequestParam List<UUID> question_id){
         QuestionList questionList = this.questionListRepository.findById(id).get();
         questionList.setTitle(title);
         questionList.setTeacher(this.teacherRepository.findById(teacher_id).get());
         questionList.setPrivate(isPrivate);               
         this.questionListRepository.save(questionList);
         this.questionListRepository.deleteQuestions(id);
+
         for (int i = 0; i < question_id.size(); i++) {
             this.questionListRepository.insertQuestions(questionList.getId(), question_id.get(i));    
         }            

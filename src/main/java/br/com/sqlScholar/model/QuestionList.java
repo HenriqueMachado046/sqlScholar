@@ -2,7 +2,9 @@ package br.com.sqlScholar.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import org.hibernate.annotations.CreationTimestamp;
 import java.time.LocalDateTime;
@@ -14,6 +16,8 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @Table(name = "questionlist")
+@Getter
+@Setter
 public class QuestionList {
     @Id
     @GeneratedValue(generator = "UUID")
