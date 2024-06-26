@@ -109,7 +109,7 @@ public class QuestionListController {
         }        
         template.put("vetProfessor", vetTeacherDTOs);     
 
-        // otimizar isso
+        // otimizar isso: aparentemente tá funcionando, mas n eh nada otimizado -> gambiarra "mode on" kkk
         List<Question> vetQuestion = this.questionRepository.findAll();
         List<QuestionDTO> vetQuestionDTOs = new ArrayList<QuestionDTO>();   
         for (int j = 0; j < vetQuestion.size(); j++){
