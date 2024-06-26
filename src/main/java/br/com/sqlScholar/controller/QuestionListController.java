@@ -47,9 +47,10 @@ public class QuestionListController {
     }
 
     @PostMapping("/adicionar")    
-    public ModelAndView adicionar(@RequestParam String title, @RequestParam List<UUID> question_id, @RequestParam UUID teacher_id){        
+    public ModelAndView adicionar(@RequestParam String title, @RequestParam Boolean isPrivate, @RequestParam List<UUID> question_id, @RequestParam UUID teacher_id){        
         QuestionList questionList = new QuestionList();
         questionList.setTitle(title);
+        questionList.setPrivate(isPrivate);               
         Optional<Teacher> teacher = this.teacherRepository.findById(teacher_id);                
         questionList.setTeacher(teacher.get());                     
         this.questionListRepository.save(questionList);
@@ -67,8 +68,9 @@ public class QuestionListController {
     public ModelAndView editar(@RequestParam UUID id, @RequestParam String title, @RequestParam Boolean isPrivate, @RequestParam UUID teacher_id, @RequestParam List<UUID> question_id){
         QuestionList questionList = this.questionListRepository.findById(id).get();
         questionList.setTitle(title);
-        questionList.setTeacher(this.teacherRepository.findById(teacher_id).get());
         questionList.setPrivate(isPrivate);               
+        questionList.setTeacher(this.teacherRepository.findById(teacher_id).get());
+
         this.questionListRepository.save(questionList);
         this.questionListRepository.deleteQuestions(id);
 
