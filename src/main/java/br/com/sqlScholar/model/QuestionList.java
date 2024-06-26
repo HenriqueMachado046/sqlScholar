@@ -27,8 +27,7 @@ public class QuestionList {
     @Column
     private String title;
     @Column
-    private boolean isPrivate;
-    
+    private boolean isPrivate;    
     @ManyToOne
     private Teacher teacher;
 
