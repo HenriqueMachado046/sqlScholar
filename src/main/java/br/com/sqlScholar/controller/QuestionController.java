@@ -122,10 +122,9 @@ public class QuestionController {
         }
 
         List<DifficultyDTO> vDifficulties = new ArrayList<>();
-        vDifficulties.add(new DifficultyDTO("Fácil", ((question.get().getDifficulty().equals("FÁCIL")) ? true : false)));
-        vDifficulties.add(new DifficultyDTO("Intermediário", ((question.get().getDifficulty().equals("INTERMEDIÁRIO")) ? true : false)));
-        vDifficulties.add(new DifficultyDTO("Difícil", ((question.get().getDifficulty().equals("DIFÍCIL")) ? true : false)));
-
+        vDifficulties.add(new DifficultyDTO("Fácil", "Fácil".toUpperCase(), ((question.get().getDifficulty().equals("FÁCIL")) ? true : false)));
+        vDifficulties.add(new DifficultyDTO("Intermediário", "Intermediário".toUpperCase(), ((question.get().getDifficulty().equals("INTERMEDIÁRIO")) ? true : false)));
+        vDifficulties.add(new DifficultyDTO("Difícil", "Difícil".toUpperCase(), ((question.get().getDifficulty().equals("DIFÍCIL")) ? true : false)));
         template.put("question", question.get());
         template.put("vetProfessor", vetTeacherDTOs);        
         template.put("vetDificuldade", vDifficulties);        

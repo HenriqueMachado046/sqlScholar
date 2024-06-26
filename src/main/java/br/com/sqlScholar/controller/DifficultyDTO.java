@@ -11,6 +11,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class DifficultyDTO {
     private String description;
+    private String value;
     private boolean enabled;
 
 
