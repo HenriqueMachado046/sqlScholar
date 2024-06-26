@@ -43,54 +43,16 @@ public class QuestionListController {
         return new ModelAndView("questionlist/index", template);
     }
 
-    // arrumar: considerar listas com mais de uma questão -> ainda pendente
     @PostMapping("/adicionar")    
-    public ModelAndView adicionar(@RequestParam String title, @RequestParam List<UUID> question_id, @RequestParam UUID teacher_id){
+    public ModelAndView adicionar(@RequestParam String title, @RequestParam List<UUID> question_id, @RequestParam UUID teacher_id){        
         QuestionList questionList = new QuestionList();
-        /*
-        -> Primeira Forma: Optional<Question> question = this.questionRepository.findById(uuid);;
-        questionList.getQuestions().add(question.get()); 
-        question.get().getQuestionLists().add(questionList);
-        this.questionRepository.save(question.get());
-
-        Segunda Forma:
-        
-        Optional<List<Question>> questions = Optional.of(questionList.getQuestions());
-        
-        for (UUID uuid : question_id) {
-            Optional<Question> question = this.questionRepository.findById(uuid);
-            questions.get().add(question.get());
-        }
-        questionList.setQuestions(questions.get());
-
-        for (UUID uuid : question_id) {
-            Optional<Question> question = this.questionRepository.findById(uuid);
-            question.get().getQuestionLists().add(questionList);
-            this.questionRepository.save(question.get());
-        }
-        */
-
-        for (int i = 0; i < question_id.size(); i++) {
-            questionList.getQuestions().add(this.questionRepository.findById(question_id.get(i)).get());
-        }
-
-        Optional<Teacher> teacher = this.teacherRepository.findById(teacher_id);
-        
         questionList.setTitle(title);
-        questionList.setTeacher(teacher.get());
-                     
+        Optional<Teacher> teacher = this.teacherRepository.findById(teacher_id);                
+        questionList.setTeacher(teacher.get());                     
         this.questionListRepository.save(questionList);
-
-        teacher.get().getLists().add(questionList);
-        this.teacherRepository.save(teacher.get());        
-        
-        
         for (int i = 0; i < question_id.size(); i++) {
-            Optional<Question> question = this.questionRepository.findById(question_id.get(i));
-        }
-
-        //this.questionRepository.save();
-
+            this.questionListRepository.insertQuestions(questionList.getId(), question_id.get(i));    
+        }        
         Map<String, Object> template = new HashMap<>();
         template.put("message", "Lista cadastrada com sucesso!");
         return new ModelAndView("questionlist/message", template);
