@@ -1,6 +1,7 @@
 package br.com.sqlScholar.controller;
 
 
+import br.com.sqlScholar.model.Difficulty;
 import br.com.sqlScholar.model.Question;
 import br.com.sqlScholar.model.Teacher;
 import br.com.sqlScholar.repository.QuestionRepository;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -97,7 +99,36 @@ public class QuestionController {
     public ModelAndView tela_editar (@PathVariable UUID id){
         Map<String, Object> template =  new HashMap<>();
         Optional<Question> question = this.questionRepository.findById(id);
+        List<TeacherDTO> vetTeacherDTOs = new ArrayList<TeacherDTO>();
+       
+        TeacherDTO owner = new TeacherDTO();
+        owner.setId(question.get().getOwner().getId());
+        owner.setFirstName(question.get().getOwner().getFirstName());
+        owner.setLastName(question.get().getOwner().getLastName());
+        owner.setOwner(true);
+
+        List<Teacher> vetTeacher = this.teacherRepository.findAll();
+        for (int i = 0; i < vetTeacher.size(); i++){
+            TeacherDTO teacherDTO = new TeacherDTO();
+            teacherDTO.setId(vetTeacher.get(i).getId());
+            teacherDTO.setFirstName(vetTeacher.get(i).getFirstName());
+            teacherDTO.setLastName(vetTeacher.get(i).getLastName());
+            if (vetTeacher.get(i).getId() != owner.getId()) {            
+                teacherDTO.setOwner(false);            
+            } else {
+                teacherDTO.setOwner(true);
+            }
+            vetTeacherDTOs.add(teacherDTO);    
+        }
+
+        List<DifficultyDTO> vDifficulties = new ArrayList<>();
+        vDifficulties.add(new DifficultyDTO("Fácil", ((question.get().getDifficulty().equals("FÁCIL")) ? true : false)));
+        vDifficulties.add(new DifficultyDTO("Intermediário", ((question.get().getDifficulty().equals("INTERMEDIÁRIO")) ? true : false)));
+        vDifficulties.add(new DifficultyDTO("Difícil", ((question.get().getDifficulty().equals("DIFÍCIL")) ? true : false)));
+
         template.put("question", question.get());
+        template.put("vetProfessor", vetTeacherDTOs);        
+        template.put("vetDificuldade", vDifficulties);        
         return new ModelAndView("question/tela_editar", template);
     }
 

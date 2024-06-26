@@ -57,8 +57,9 @@ public class TeacherController {
         teacher.get().setUsername(username);
         this.teacherRepository.save(teacher.get());
         Map<String, Object> template = new HashMap<>();
+        template.put("arrTeacher", this.teacherRepository.listAll());        
         template.put("message", "Professor editado com sucesso!");
-        return new ModelAndView("teacher/message", template);
+        return new ModelAndView("teacher/index", template);
     }
 
     @GetMapping("/tela_editar/{id}")
@@ -73,6 +74,7 @@ public class TeacherController {
     public ModelAndView deletar(@PathVariable UUID id){
         this.teacherRepository.deleteById(id);
         Map<String, Object> template = new HashMap<>();
+        template.put("arrTeacher", this.teacherRepository.listAll());        
         template.put("message", "Professor deletado com sucesso!");
         return new ModelAndView("teacher/message", template);
     }

@@ -6,6 +6,7 @@
             <tr>
                 <th>Id</th>
                 <th>Título</th>
+                <th colspan="2">Operações</th>
             </tr>
             </thead>
             {{#arrQuestion}}
@@ -13,8 +14,8 @@
             <tr>
                 <td>{{id}}</td>
                 <td><a href="/question/mostrar_questao/{{id}}">{{title}}</a></td>
-                <td><a href="/question/tela_editar/{{id}}" class="btn btn-primary">Editar</a></td>
-                <td><a href="/question/deletar/{{id}}" class="btn btn-primary">Excluir</a></td>
+                <td><a href="/question/tela_editar/{{id}}" class="btn btn-primary">Editar</a>
+                <a href="/question/deletar/{{id}}" class="btn btn-primary">Excluir</a></td>
             </tr>
             </tbody>
             {{/arrQuestion}}

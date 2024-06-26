@@ -6,12 +6,14 @@
         <th>Título</th>
         <th>Descrição</th>
         <th>Gabarito</th>
+        <th colspan="2">Operações</th>
     </tr>
     </thead>
     {{#question}}
     <tbody>
     <tr>
         <td>{{id}}</td>
+        <td>{{description}}</td>
         <td>{{description}}</td>
         <td>{{answerSheet}}</td>
         <td><a href="/question/tela_editar/{{id}}" class="btn btn-primary">Editar</a></td>
