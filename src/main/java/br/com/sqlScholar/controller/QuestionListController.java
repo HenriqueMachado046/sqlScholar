@@ -8,6 +8,8 @@ import br.com.sqlScholar.model.Teacher;
 import br.com.sqlScholar.repository.QuestionListRepository;
 import br.com.sqlScholar.repository.QuestionRepository;
 import br.com.sqlScholar.repository.TeacherRepository;
+import br.com.sqlScholar.service.TeacherService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -26,6 +28,9 @@ public class QuestionListController {
 
     @Autowired
     private TeacherRepository teacherRepository;
+
+    @Autowired
+    private TeacherService teacherService;
 
     // PENDENTE: filtrar por somente pelas proprias questões do professor e as que forem compartilhaveis (publicas) -> pendente
     // Henrique: Filtro criado. Só está comentado pois só poderá ser ativado após ser criado o login.
@@ -89,30 +94,12 @@ public class QuestionListController {
     @GetMapping("/tela_editar/{id}")
     public ModelAndView tela_editar (@PathVariable UUID id){
         Map<String, Object> template = new HashMap<>();
+
         Optional<QuestionList> questionList = this.questionListRepository.findById(id);
 
-        List<TeacherDTO> vetTeacherDTOs = new ArrayList<TeacherDTO>();       
-        TeacherDTO owner = new TeacherDTO();
-        owner.setId(questionList.get().getTeacher().getId());
-        owner.setFirstName(questionList.get().getTeacher().getFirstName());
-        owner.setLastName(questionList.get().getTeacher().getLastName());
-        owner.setOwner(true);
-        List<Teacher> vetTeacher = this.teacherRepository.findAll();
-        for (int i = 0; i < vetTeacher.size(); i++){
-            TeacherDTO teacherDTO = new TeacherDTO();
-            teacherDTO.setId(vetTeacher.get(i).getId());
-            teacherDTO.setFirstName(vetTeacher.get(i).getFirstName());
-            teacherDTO.setLastName(vetTeacher.get(i).getLastName());
-            if (vetTeacher.get(i).getId() != owner.getId()) {            
-                teacherDTO.setOwner(false);            
-            } else {
-                teacherDTO.setOwner(true);
-            }
-            vetTeacherDTOs.add(teacherDTO);    
-        }        
-        template.put("vetProfessor", vetTeacherDTOs);     
+        List<TeacherDTO> arrTeacherDTOs = this.teacherService.listAvailableTeachers(questionList.get().getTeacher().getId(), 
+        questionList.get().getTeacher().getFirstName(), questionList.get().getTeacher().getLastName());
 
-        // otimizar isso: aparentemente tá funcionando, mas n eh nada otimizado -> gambiarra "mode on" kkk
         List<Question> vetQuestion = this.questionRepository.findAll();
         List<QuestionDTO> vetQuestionDTOs = new ArrayList<QuestionDTO>();   
         for (int j = 0; j < vetQuestion.size(); j++){
@@ -129,6 +116,10 @@ public class QuestionListController {
                 }
             }        
         }
+
+        // otimizar isso: aparentemente tá funcionando, mas n eh nada otimizado -> gambiarra "mode on" kkk
+
+        template.put("vetProfessor", arrTeacherDTOs);     
         template.put("arrQuestion", vetQuestionDTOs);
         template.put("title", questionList.get().getTitle());
         template.put("id", questionList.get().getId());

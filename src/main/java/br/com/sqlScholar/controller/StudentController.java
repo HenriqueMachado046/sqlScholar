@@ -65,7 +65,6 @@ public class StudentController {
     public ModelAndView tela_editar(@PathVariable UUID id){
         Map<String, Object> template = new HashMap<>();
         Optional<Student> student = this.studentRepository.findById(id);
-        System.out.println(student.toString());
         template.put("student", student.get());
         return new ModelAndView("/student/tela_editar", template);
     }

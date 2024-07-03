@@ -78,7 +78,7 @@ public class TestCaseController {
     public ModelAndView deletar(@PathVariable UUID id){
         this.testCaseRepository.deleteById(id);
         Map<String, Object> template = new HashMap<>();
-        template.put("message", "Testee deletado com sucesso!");
+        template.put("message", "Teste deletado com sucesso!");
         return new ModelAndView("test/message", template);
     }
 
