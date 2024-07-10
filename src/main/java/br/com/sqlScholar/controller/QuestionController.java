@@ -41,7 +41,7 @@ public class QuestionController {
     public ModelAndView index(){
         Map<String, Object> template =  new HashMap<>();
         template.put("message","");
-        template.put("arrQuestion", this.questionRepository.listAll());
+        template.put("arrQuestion", this.questionRepository.findAll());
         return new ModelAndView("question/index", template);
     }
 
@@ -72,7 +72,7 @@ public class QuestionController {
 
         Map<String, Object> template =  new HashMap<>();
         template.put("message","Questão cadastrada com sucesso!");
-        template.put("arrQuestion", this.questionRepository.listAll());
+        template.put("arrQuestion", this.questionRepository.findAll());
         return new ModelAndView("question/index", template);
     }
 
@@ -92,7 +92,7 @@ public class QuestionController {
 
         this.questionRepository.save(question.get());
         Map<String, Object> template = new HashMap<>();        
-        template.put("arrQuestion", this.questionRepository.listAll());
+        template.put("arrQuestion", this.questionRepository.findAll());
         template.put("message", "Questão editada com sucesso!");
         return new ModelAndView("question/index", template);
     }
@@ -136,7 +136,7 @@ public class QuestionController {
     public ModelAndView deletar(@PathVariable UUID id){
         this.questionRepository.deleteById(id);
         Map<String, Object> template = new HashMap<>();
-        template.put("arrQuestion", this.questionRepository.listAll());
+        template.put("arrQuestion", this.questionRepository.findAll());
         template.put("message", "Questão deletada com sucesso!");
         return new ModelAndView("question/index", template);
     }

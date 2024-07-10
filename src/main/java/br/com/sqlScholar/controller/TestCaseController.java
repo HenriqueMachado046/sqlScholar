@@ -31,7 +31,7 @@ public class TestCaseController {
     @GetMapping("/index")
     public ModelAndView index(){
         Map<String, Object> template = new HashMap<>();
-        template.put("arrTest", this.testCaseRepository.listAll());
+        template.put("arrTest", this.testCaseRepository.findAll());
         return new ModelAndView("test/index", template);
     }
 

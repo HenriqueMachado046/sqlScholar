@@ -11,8 +11,4 @@ import java.util.UUID;
 @Repository
 public interface TestCaseRepository extends JpaRepository<TestCase, UUID>{
 
-    @Query("SELECT t FROM TestCase t")
-    List<TestCase> listAll();
-
-    //@Query("SELECT q FROM ")
 }

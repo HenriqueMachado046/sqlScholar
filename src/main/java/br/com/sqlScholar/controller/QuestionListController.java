@@ -8,6 +8,8 @@ import br.com.sqlScholar.model.Teacher;
 import br.com.sqlScholar.repository.QuestionListRepository;
 import br.com.sqlScholar.repository.QuestionRepository;
 import br.com.sqlScholar.repository.TeacherRepository;
+import br.com.sqlScholar.service.QuestionListService;
+import br.com.sqlScholar.service.QuestionService;
 import br.com.sqlScholar.service.TeacherService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,8 +34,14 @@ public class QuestionListController {
     @Autowired
     private TeacherService teacherService;
 
-    // PENDENTE: filtrar por somente pelas proprias questões do professor e as que forem compartilhaveis (publicas) -> pendente
-    // Henrique: Filtro criado. Só está comentado pois só poderá ser ativado após ser criado o login.
+    @Autowired
+    private QuestionListService questionListService;
+
+    @Autowired
+    private QuestionService questionService;
+
+    // PENDENTE: filtrar por somente pelas propria questões do professor e as que forem públicas ≥ pendente
+    // Henrique: Filtro criado. Só está comentado, pois só poderá ser ativado após ser criado o login.
     @GetMapping("/tela_adicionar")
     public ModelAndView tela_adicionar(@RequestParam UUID id){        
         List<Question> question = this.questionRepository.findAll();
@@ -49,8 +57,11 @@ public class QuestionListController {
     @GetMapping("/index")
     public ModelAndView index(){
         Map<String, Object> template = new HashMap<>();
+        int pageNumber = 0;
+        int pageSize = 15;
         template.put("message", "");
-        template.put("arrQuestionList", this.questionListRepository.listAll());
+        template.put("arrQuestionList", questionListService.pageableQuestionList(pageNumber, pageSize));
+        template.put("pageNumber", pageNumber + 1);
         return new ModelAndView("questionlist/index", template);
     }
 
@@ -100,24 +111,16 @@ public class QuestionListController {
         List<TeacherDTO> arrTeacherDTOs = this.teacherService.listAvailableTeachers(questionList.get().getTeacher().getId(), 
         questionList.get().getTeacher().getFirstName(), questionList.get().getTeacher().getLastName());
 
-        List<Question> vetQuestion = this.questionRepository.findAll();
-        List<QuestionDTO> vetQuestionDTOs = new ArrayList<QuestionDTO>();   
-        for (int j = 0; j < vetQuestion.size(); j++){
-            QuestionDTO questionDTO = new QuestionDTO();
-            questionDTO.setId(vetQuestion.get(j).getId());
-            questionDTO.setTitle(vetQuestion.get(j).getTitle());
-            questionDTO.setEnabled(false);  
-            vetQuestionDTOs.add(questionDTO);
-        }
-        for (int j = 0; j < vetQuestionDTOs.size(); j++){
-            for (int i = 0; i < questionList.get().getQuestions().size(); i++){                          
-                if (vetQuestionDTOs.get(j).getId() == questionList.get().getQuestions().get(i).getId()) {            
-                    vetQuestionDTOs.get(j).setEnabled(true);                                                         
-                }
-            }        
-        }
+        //Pega somente questões do professor e questões compartilhadas
+        List<QuestionDTO> vetQuestionDTOs = this.questionService.listAvailableQuestions();
 
-        // otimizar isso: aparentemente tá funcionando, mas n eh nada otimizado -> gambiarra "mode on" kkk
+        for (QuestionDTO vetQuestionDTO : vetQuestionDTOs) {
+            for (int i = 0; i < questionList.get().getQuestions().size(); i++) {
+                if (vetQuestionDTO.getId() == questionList.get().getQuestions().get(i).getId()) {
+                    vetQuestionDTO.setEnabled(true);
+                }
+            }
+        }
 
         template.put("vetProfessor", arrTeacherDTOs);     
         template.put("arrQuestion", vetQuestionDTOs);

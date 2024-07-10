@@ -17,6 +17,8 @@ public class TeacherService {
     @Autowired
     private TeacherRepository teacherRepository;
 
+
+
     //funcionando
     public List<TeacherDTO> listAvailableTeachers(UUID id, String firstName, String lastName) {
 
