@@ -1,9 +1,12 @@
 package br.com.sqlScholar.controller;
 
+import br.com.sqlScholar.dto.QuestionDTO;
 import br.com.sqlScholar.model.Question;
 import br.com.sqlScholar.model.TestCase;
 import br.com.sqlScholar.repository.QuestionRepository;
 import br.com.sqlScholar.repository.TestCaseRepository;
+import br.com.sqlScholar.service.QuestionService;
+import br.com.sqlScholar.service.TestCaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +23,12 @@ public class TestCaseController {
     @Autowired
     private QuestionRepository questionRepository;
 
+    @Autowired
+    private QuestionService questionService;
+
+    @Autowired
+    private TestCaseService testCaseService;
+
     @GetMapping("/tela_adicionar")
     public ModelAndView tela_adicionar(){
         List<Question> question = this.questionRepository.findAll();
@@ -31,7 +40,9 @@ public class TestCaseController {
     @GetMapping("/index")
     public ModelAndView index(){
         Map<String, Object> template = new HashMap<>();
-        template.put("arrTest", this.testCaseRepository.findAll());
+        int pageNumber = 0;
+        int pageSize = 15;
+        template.put("arrTest", this.testCaseService.pageableTestCase(pageNumber, pageSize));
         return new ModelAndView("test/index", template);
     }
 
@@ -70,7 +81,9 @@ public class TestCaseController {
     public ModelAndView tela_editar (@PathVariable UUID id){
         Map<String, Object> template =  new HashMap<>();
         Optional<TestCase> test = this.testCaseRepository.findById(id);
+        List<QuestionDTO> questionDTOS = this.questionService.listAvailableQuestions();
         template.put("test", test.get());
+        template.put("arrQuestion", questionDTOS);
         return new ModelAndView("test/tela_editar", template);
     }
 

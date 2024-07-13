@@ -2,6 +2,7 @@ package br.com.sqlScholar.controller;
 
 import br.com.sqlScholar.model.Student;
 import br.com.sqlScholar.repository.StudentRepository;
+import br.com.sqlScholar.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -19,6 +20,9 @@ public class StudentController {
     private StudentRepository studentRepository;
 
     @Autowired
+    private StudentService studentService;
+
+    @Autowired
 
     @GetMapping("/tela_adicionar")
     public ModelAndView tela_adicionar(){
@@ -28,8 +32,10 @@ public class StudentController {
     @GetMapping("/index")
     public ModelAndView index(){
         Map<String, Object> template = new HashMap<>();
+        int pageNumber = 0;
+        int pageSize = 15;
         template.put("message", "");
-        template.put("arrStudent", this.studentRepository.listAll());
+        template.put("arrStudent", this.studentService.pageableStudent(pageNumber, pageSize));
         return new ModelAndView("student/index", template);
     }
     

@@ -8,6 +8,7 @@ import br.com.sqlScholar.model.Teacher;
 import br.com.sqlScholar.repository.QuestionRepository;
 import br.com.sqlScholar.repository.TeacherRepository;
 
+import br.com.sqlScholar.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -29,6 +30,9 @@ public class QuestionController {
     @Autowired
     private TeacherRepository teacherRepository;
 
+    @Autowired
+    private QuestionService questionService;
+
     @GetMapping("/tela_adicionar")
     public ModelAndView tela_adicionar(){
         List<Teacher> teacher = this.teacherRepository.findAll();
@@ -39,9 +43,11 @@ public class QuestionController {
 
     @GetMapping("/index")
     public ModelAndView index(){
+        int pageNumber = 0;
+        int pageSize = 15;
         Map<String, Object> template =  new HashMap<>();
         template.put("message","");
-        template.put("arrQuestion", this.questionRepository.findAll());
+        template.put("arrQuestion", this.questionService.pageableQuestion(pageNumber, pageSize));
         return new ModelAndView("question/index", template);
     }
 

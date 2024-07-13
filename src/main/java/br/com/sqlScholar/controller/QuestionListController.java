@@ -111,8 +111,9 @@ public class QuestionListController {
         List<TeacherDTO> arrTeacherDTOs = this.teacherService.listAvailableTeachers(questionList.get().getTeacher().getId(), 
         questionList.get().getTeacher().getFirstName(), questionList.get().getTeacher().getLastName());
 
-        //Pega somente questões do professor e questões compartilhadas
+        //Pegar somente questões do professor e questões compartilhadas
         List<QuestionDTO> vetQuestionDTOs = this.questionService.listAvailableQuestions();
+        
 
         for (QuestionDTO vetQuestionDTO : vetQuestionDTOs) {
             for (int i = 0; i < questionList.get().getQuestions().size(); i++) {

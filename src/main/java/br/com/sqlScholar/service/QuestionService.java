@@ -28,7 +28,6 @@ public class QuestionService {
     //funcionando
     public List<QuestionDTO> listAvailableQuestions(){
         List<Question> vetQuestion = this.questionRepository.findAll();
-
         List<QuestionDTO> vetQuestionDTOs = new ArrayList<QuestionDTO>();
         for (Question question : vetQuestion) {
             QuestionDTO questionDTO = new QuestionDTO();
@@ -37,7 +36,6 @@ public class QuestionService {
             questionDTO.setEnabled(false);
             vetQuestionDTOs.add(questionDTO);
         }
-
         return vetQuestionDTOs;
     }
 }
