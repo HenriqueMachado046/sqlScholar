@@ -83,7 +83,7 @@ public class QuestionListController {
         }        
 
         // como executar este script que acabei ganhando com o databasecript => PENDENTE
-        // this.questionListRepository.criarDatabase(databaseScript);
+        // this.questionListRepository.criarDatabase(database_script);
         
         Map<String, Object> template = new HashMap<>();
         template.put("message", "Lista cadastrada com sucesso!");
