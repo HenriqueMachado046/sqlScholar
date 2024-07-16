@@ -16,6 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.*;
 
 @RestController
@@ -76,14 +79,21 @@ public class QuestionListController {
 
         Optional<Teacher> teacher = this.teacherRepository.findById(teacher_id);                
         questionList.setTeacher(teacher.get());                     
-        this.questionListRepository.save(questionList);
-        
+        this.questionListRepository.save(questionList);        
         for (int i = 0; i < question_id.size(); i++) {
             this.questionListRepository.insertQuestions(questionList.getId(), question_id.get(i));    
         }        
 
+        // gambiarra!!!
         // como executar este script que acabei ganhando com o databasecript => PENDENTE
         // this.questionListRepository.criarDatabase(database_script);
+        try {
+            String url = "jdbc:postgresql://localhost:5432/sqlscholar";
+            Connection conexao = DriverManager.getConnection(url, "postgres", "postgres");
+            conexao.prepareStatement(database_script).execute();
+        } catch(SQLException e){
+            System.out.println("xabum!");   
+        }       
         
         Map<String, Object> template = new HashMap<>();
         template.put("message", "Lista cadastrada com sucesso!");
