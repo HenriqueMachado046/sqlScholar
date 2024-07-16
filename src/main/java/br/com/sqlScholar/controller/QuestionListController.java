@@ -66,29 +66,35 @@ public class QuestionListController {
     }
 
     @PostMapping("/adicionar")    
-    public ModelAndView adicionar(@RequestParam String title, @RequestParam Boolean isPrivate, @RequestParam List<UUID> question_id, @RequestParam UUID teacher_id){        
+    public ModelAndView adicionar(@RequestParam String title, @RequestParam String databaseScript, @RequestParam Boolean isPrivate, @RequestParam List<UUID> question_id, @RequestParam UUID teacher_id){        
         QuestionList questionList = new QuestionList();
         questionList.setTitle(title);
         questionList.setPrivate(isPrivate);               
+        questionList.setDatabaseScript(databaseScript);                       
+
         Optional<Teacher> teacher = this.teacherRepository.findById(teacher_id);                
         questionList.setTeacher(teacher.get());                     
         this.questionListRepository.save(questionList);
         for (int i = 0; i < question_id.size(); i++) {
             this.questionListRepository.insertQuestions(questionList.getId(), question_id.get(i));    
         }        
+
+        // como executar este script que acabei ganhando com o databasecript
+        this.questionListRepository.criarDatabase(databaseScript);
+        
         Map<String, Object> template = new HashMap<>();
         template.put("message", "Lista cadastrada com sucesso!");
         template.put("arrQuestionList", this.questionListRepository.listAll());
-
         return new ModelAndView("questionlist/index", template);
     }
 
     @RequestMapping("/editar")
-    public ModelAndView editar(@RequestParam UUID id, @RequestParam String title, @RequestParam Boolean isPrivate, @RequestParam UUID teacher_id, @RequestParam List<UUID> question_id){
+    public ModelAndView editar(@RequestParam UUID id, @RequestParam String databaseScript, @RequestParam String title, @RequestParam Boolean isPrivate, @RequestParam UUID teacher_id, @RequestParam List<UUID> question_id){
         QuestionList questionList = this.questionListRepository.findById(id).get();
         questionList.setTitle(title);
         questionList.setPrivate(isPrivate);               
         questionList.setTeacher(this.teacherRepository.findById(teacher_id).get());
+        questionList.setDatabaseScript(databaseScript);                       
 
         this.questionListRepository.save(questionList);
         this.questionListRepository.deleteQuestions(id);
@@ -127,6 +133,8 @@ public class QuestionListController {
         template.put("arrQuestion", vetQuestionDTOs);
         template.put("title", questionList.get().getTitle());
         template.put("id", questionList.get().getId());
+        template.put("databaseScript", questionList.get().getDatabaseScript());
+
         return new ModelAndView("questionlist/tela_editar", template);
     }
 

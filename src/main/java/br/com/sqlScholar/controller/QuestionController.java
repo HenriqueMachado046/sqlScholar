@@ -61,7 +61,7 @@ public class QuestionController {
     }
 
     @PostMapping("/adicionar")
-    public ModelAndView adicionar(@RequestParam String title,
+    public ModelAndView adicionar(@RequestParam String title, @RequestParam String sql,
     @RequestParam String difficulty,@RequestParam String answerSheet ,@RequestParam String description,
     @RequestParam UUID teacher_id){
 
@@ -72,6 +72,7 @@ public class QuestionController {
         question.setDifficulty(difficulty);
         question.setDescription(description);
         question.setAnswerSheet(answerSheet);
+        question.setSql(sql);
         question.setOwner(teacher.get());
         
         this.questionRepository.save(question);
@@ -84,7 +85,7 @@ public class QuestionController {
 
     //correto
     @RequestMapping("/editar")
-    public ModelAndView editar(@RequestParam String title,
+    public ModelAndView editar(@RequestParam String title, @RequestParam String sql,
     @RequestParam String difficulty,@RequestParam String answerSheet ,@RequestParam String description ,@RequestParam UUID id,
     @RequestParam UUID teacher_id){
         Optional<Question> question = this.questionRepository.findById(id);
@@ -94,6 +95,7 @@ public class QuestionController {
         question.get().setDifficulty(difficulty);
         question.get().setDescription(description);
         question.get().setAnswerSheet(answerSheet);
+        question.get().setSql(sql);
         question.get().setOwner(teacher.get());
 
         this.questionRepository.save(question.get());

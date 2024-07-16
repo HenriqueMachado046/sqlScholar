@@ -1,4 +1,3 @@
-
 {{>header}}
 <h2>Editar: Lista de Exercício</h2>
 
@@ -10,14 +9,18 @@
         <input name="title" type="text" class="form-control" id="title" maxlength="50" value="{{title}}">
     </div>
     <div class="form-group">
+        <label for="description">database script</label>
+        <textarea id="sql" name="databaseScript" form="questionform">{{databaseScript}}</textarea>
+    </div>
+    <div class="form-group">
         <select style="width: 100px;" name="question_id" multiple required>
             {{#arrQuestion}}
-            {{#enabled}}
-            <option value="{{id}}" selected>{{title}}</option>
-            {{/enabled}}
-            {{^enabled}}
-            <option value="{{id}}">{{title}}</option> 
-            {{/enabled}}            
+                {{#enabled}}
+                    <option value="{{id}}" selected>{{title}}</option>
+                {{/enabled}}
+                {{^enabled}}
+                    <option value="{{id}}">{{title}}</option>
+                {{/enabled}}
             {{/arrQuestion}}
         </select>
     </div>
@@ -25,25 +28,25 @@
         Professor:
         <select name="teacher_id" required>
             {{#vetProfessor}}
-            {{#isOwner}}
-            <option value="{{id}}" selected>{{firstName}}</option>
-            {{/isOwner}}
-            {{^isOwner}}
-            <option value="{{id}}">{{firstName}}</option> 
-            {{/isOwner}}            
+                {{#isOwner}}
+                    <option value="{{id}}" selected>{{firstName}}</option>
+                {{/isOwner}}
+                {{^isOwner}}
+                    <option value="{{id}}">{{firstName}}</option>
+                {{/isOwner}}
             {{/vetProfessor}}
         </select>
     </div>
-    Privada: 
+    Privada:
     {{#isPrivate}}
-    <input type="radio" name="isPrivate" value="true" checked>Sim
-    <input type="radio" name="isPrivate" value="false">Não
+        <input type="radio" name="isPrivate" value="true" checked>Sim
+        <input type="radio" name="isPrivate" value="false">Não
     {{/isPrivate}}
     {{^isPrivate}}
-    <input type="radio" name="isPrivate" value="false" checked>Não
-    <input type="radio" name="isPrivate" value="true">Sim
+        <input type="radio" name="isPrivate" value="false" checked>Não
+        <input type="radio" name="isPrivate" value="true">Sim
     {{/isPrivate}}
 
     <input class="btn btn-primary" type="submit" value="Editar">
 
-{{>footer}}
+    {{>footer}}

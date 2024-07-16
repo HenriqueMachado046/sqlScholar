@@ -7,10 +7,14 @@
         <input name="title" type="text" class="form-control" id="title" maxlength="50">
     </div>
     <div class="form-group">
+        <label for="description">database script</label>
+        <textarea id="sql" name="databaseScript" form="questionform"></textarea>
+    </div>
+    <div class="form-group">
         <label>Questões:</label> <br>
         <select style="width: 100px;" name="question_id" multiple required>
             {{#arrQuestion}}
-            <option value="{{id}}">{{title}}</option>
+                <option value="{{id}}">{{title}}</option>
             {{/arrQuestion}}
         </select>
     </div>
@@ -18,14 +22,14 @@
         <label>Professor:</label> <br>
         <select name="teacher_id" required>
             {{#arrTeacher}}
-            <option value="{{id}}">{{firstName}}</option>
+                <option value="{{id}}">{{firstName}}</option>
             {{/arrTeacher}}
         </select>
     </div>
-    Privada:     
+    Privada:
     <input type="radio" name="isPrivate" value="true">Sim
     <input type="radio" name="isPrivate" value="false">Não
-    
+
     <input class="btn btn-primary" type="submit" value="Adicionar">
 </form>
 

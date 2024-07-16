@@ -30,4 +30,9 @@ public interface QuestionListRepository extends JpaRepository<QuestionList, UUID
     @Modifying
     @Query(nativeQuery = true, value = "DELETE FROM question_question_lists WHERE questionlist_id = :idparam ;")
     void deleteQuestions(UUID idparam);
+
+    @Transactional
+    @Modifying
+    @Query(nativeQuery = true, value = ":param")
+    void criarDatabase(String param);
 }

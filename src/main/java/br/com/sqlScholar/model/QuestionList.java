@@ -31,6 +31,8 @@ public class QuestionList {
     @Column
     private String title;
     @Column
+    private String databaseScript;
+    @Column
     private boolean isPrivate;    
     @ManyToOne
     private Teacher teacher;

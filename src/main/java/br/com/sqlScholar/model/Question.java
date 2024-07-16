@@ -25,6 +25,8 @@ public class Question {
     @Column
     private String description;
     @Column
+    private String sql;
+    @Column
     private boolean isShared;
     @Column
     private String answerSheet;
