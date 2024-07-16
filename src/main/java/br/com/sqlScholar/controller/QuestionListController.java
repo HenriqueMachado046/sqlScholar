@@ -43,7 +43,7 @@ public class QuestionListController {
     // PENDENTE: filtrar por somente pelas propria questões do professor e as que forem públicas ≥ pendente
     // Henrique: Filtro criado. Só está comentado, pois só poderá ser ativado após ser criado o login.
     @GetMapping("/tela_adicionar")
-    public ModelAndView tela_adicionar(@RequestParam UUID id){        
+    public ModelAndView tela_adicionar(){        
         List<Question> question = this.questionRepository.findAll();
         //List<Question> question = this.questionRepository.listAllSharedAndOwned(id);
         //Teacher teacher = this.teacherRepository.findById(id).get();
@@ -60,27 +60,30 @@ public class QuestionListController {
         int pageNumber = 0;
         int pageSize = 15;
         template.put("message", "");
-        template.put("arrQuestionList", questionListService.pageableQuestionList(pageNumber, pageSize));
-        template.put("pageNumber", pageNumber + 1);
+        // template.put("arrQuestionList", questionListService.pageableQuestionList(pageNumber, pageSize));
+        // template.put("pageNumber", pageNumber + 1);
+        template.put("arrQuestionList", questionListRepository.findAll());
+        template.put("pageNumber", "");
         return new ModelAndView("questionlist/index", template);
     }
 
     @PostMapping("/adicionar")    
-    public ModelAndView adicionar(@RequestParam String title, @RequestParam String databaseScript, @RequestParam Boolean isPrivate, @RequestParam List<UUID> question_id, @RequestParam UUID teacher_id){        
+    public ModelAndView adicionar(@RequestParam String title, @RequestParam String database_script, @RequestParam Boolean isPrivate, @RequestParam List<UUID> question_id, @RequestParam UUID teacher_id){        
         QuestionList questionList = new QuestionList();
         questionList.setTitle(title);
         questionList.setPrivate(isPrivate);               
-        questionList.setDatabaseScript(databaseScript);                       
+        questionList.setDatabaseScript(database_script.trim());                       
 
         Optional<Teacher> teacher = this.teacherRepository.findById(teacher_id);                
         questionList.setTeacher(teacher.get());                     
         this.questionListRepository.save(questionList);
+        
         for (int i = 0; i < question_id.size(); i++) {
             this.questionListRepository.insertQuestions(questionList.getId(), question_id.get(i));    
         }        
 
         // como executar este script que acabei ganhando com o databasecript => PENDENTE
-        this.questionListRepository.criarDatabase(databaseScript);
+        // this.questionListRepository.criarDatabase(databaseScript);
         
         Map<String, Object> template = new HashMap<>();
         template.put("message", "Lista cadastrada com sucesso!");
@@ -152,8 +155,7 @@ public class QuestionListController {
     @GetMapping("/mostrar_lista/{id}")
     public ModelAndView mostrarLista(@PathVariable UUID id){
         Map<String, Object> template = new HashMap<>();
-        Optional<QuestionList> questionlist = this.questionListRepository.findById(id);
-        
+        Optional<QuestionList> questionlist = this.questionListRepository.findById(id);        
         template.put("questionlist", questionlist.get());
         template.put("questions", questionlist.get().getQuestions());
         return new ModelAndView("questionlist/mostrar_lista", template);

@@ -1,16 +1,17 @@
 {{>header}}
 {{#questionlist}}
-<h1>Lista:{{title}}</h1>
-<h3>Professor:{{teacher.firstName}}</h3>
-<h3>Privada? {{isPrivate}}</h3>
-<h4>Questões:</h4>
+    <h1>Lista:{{title}}</h1>
+    <h3>Professor:{{teacher.firstName}}</h3>
+    <h3>Privada? {{isPrivate}}</h3>
+    <h3>database script: {{databaseScript}} </h3>
+    <h4>Questões:</h4>
+{{/questionlist}}
 <table class="table">
     {{#questions}}
-    <tr>
-        <td>{{title}}</td>
-    </tr>
+        <tr>
+            <td>{{title}}</td>
+        </tr>
     {{/questions}}
 </table>
-{{/questionlist}}
 <a href="/questionlist/index" class="btn btn-primary">Retornar</a>
 {{>footer}}

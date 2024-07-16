@@ -7,11 +7,12 @@
         <input name="title" type="text" class="form-control" id="title" maxlength="50">
     </div>
     <div class="form-group">
-        <label for="description">database script</label>
-        <textarea id="sql" name="databaseScript" form="questionform"></textarea>
+        <label for="description">database script:</label>
+        <input type="text" name="database_script">
     </div>
     <div class="form-group">
         <label>Questões:</label> <br>
+
         <select style="width: 100px;" name="question_id" multiple required>
             {{#arrQuestion}}
                 <option value="{{id}}">{{title}}</option>
@@ -27,7 +28,7 @@
         </select>
     </div>
     Privada:
-    <input type="radio" name="isPrivate" value="true">Sim
+    <input type="radio" name="isPrivate" value="true" checked>Sim
     <input type="radio" name="isPrivate" value="false">Não
 
     <input class="btn btn-primary" type="submit" value="Adicionar">
