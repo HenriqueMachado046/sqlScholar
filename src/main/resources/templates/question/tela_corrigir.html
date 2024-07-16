@@ -1,0 +1,24 @@
+{{>header}}
+{{#question}}
+    <h3>Resolver Questão:</h3>
+    <form id="questionform" action="/question/corrigir" method="post">
+
+        <input type="hidden" name="id" value="{{id}}"><br>
+
+        <div class="form-group">
+            <label for="title">Título:</label>
+            <input name="title" type="text" class="form-control" id="title" value="{{title}}" maxlength="50">
+        </div>
+        <div class="form-group">
+            <label for="description">Descrição</label>
+            <textarea id="description" name="description" form="questionform">{{description}}</textarea>
+        </div>
+        <div class="form-group">
+            <label for="description">sqlStudent</label>
+            <textarea id="sql" name="sqlStudent" form="questionform"></textarea>
+        </div>
+
+        <input class="btn btn-primary" type="submit" value="Corrigir">
+    </form>
+{{/question}}
+{{>footer}}

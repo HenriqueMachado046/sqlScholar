@@ -9,7 +9,11 @@ import br.com.sqlScholar.repository.QuestionRepository;
 import br.com.sqlScholar.repository.TeacherRepository;
 
 import br.com.sqlScholar.service.QuestionService;
+import jakarta.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -56,8 +60,25 @@ public class QuestionController {
         Map<String, Object> template = new HashMap<>();
         Optional<Question> question = this.questionRepository.findById(id);
         template.put("question", question.get());
-        System.out.println(question.toString());
         return new ModelAndView("question/mostrar_questao", template);
+    }
+
+
+    @GetMapping("tela_corrigir/{id}")
+    public ModelAndView tela_corrigir(@PathVariable UUID id){
+        Map<String, Object> template = new HashMap<>();
+        Optional<Question> question = this.questionRepository.findById(id);
+        template.put("question", question.get());
+        return new ModelAndView("question/tela_corrigir", template);
+    }
+
+    @PostMapping("/corrigir/{id}")
+    public ModelAndView corrigir(@PathVariable UUID id, @RequestParam String sqlStudent){
+        Optional<Question> question = this.questionRepository.findById(id);
+        // TODO: comparar output => sqlStudent com question.getSQL();
+        Map<String, Object> template =  new HashMap<>();
+        template.put("message","Questão acertou ou não!?");
+        return new ModelAndView("question/message", template);
     }
 
     @PostMapping("/adicionar")

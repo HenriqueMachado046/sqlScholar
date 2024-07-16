@@ -79,7 +79,7 @@ public class QuestionListController {
             this.questionListRepository.insertQuestions(questionList.getId(), question_id.get(i));    
         }        
 
-        // como executar este script que acabei ganhando com o databasecript
+        // como executar este script que acabei ganhando com o databasecript => PENDENTE
         this.questionListRepository.criarDatabase(databaseScript);
         
         Map<String, Object> template = new HashMap<>();
@@ -94,6 +94,8 @@ public class QuestionListController {
         questionList.setTitle(title);
         questionList.setPrivate(isPrivate);               
         questionList.setTeacher(this.teacherRepository.findById(teacher_id).get());
+        
+        // vais dropar o banco antigo? ou editar não aceita substituir a base de dados? => pendente
         questionList.setDatabaseScript(databaseScript);                       
 
         this.questionListRepository.save(questionList);
