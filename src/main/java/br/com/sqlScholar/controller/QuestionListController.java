@@ -57,16 +57,17 @@ public class QuestionListController {
         return new ModelAndView("questionlist/tela_adicionar", template) ;
     }
 
+    // problema paginacao
     @GetMapping("/index")
     public ModelAndView index(){
         Map<String, Object> template = new HashMap<>();
-        int pageNumber = 0;
-        int pageSize = 15;
+        // int pageNumber = 0;
+        // int pageSize = 15;
         template.put("message", "");
         // template.put("arrQuestionList", questionListService.pageableQuestionList(pageNumber, pageSize));
         // template.put("pageNumber", pageNumber + 1);
         template.put("arrQuestionList", questionListRepository.findAll());
-        template.put("pageNumber", "");
+        // template.put("pageNumber", "");
         return new ModelAndView("questionlist/index", template);
     }
 
@@ -84,19 +85,11 @@ public class QuestionListController {
             this.questionListRepository.insertQuestions(questionList.getId(), question_id.get(i));    
         }        
 
-        // gambiarra!!!
-        // como executar este script que acabei ganhando com o databasecript => PENDENTE
-        // this.questionListRepository.criarDatabase(database_script);
-        try {
-            String url = "jdbc:postgresql://localhost:5432/sqlscholar";
-            Connection conexao = DriverManager.getConnection(url, "postgres", "postgres");
-            conexao.prepareStatement(database_script).execute();
-        } catch(SQLException e){
-            System.out.println("xabum!");   
-        }       
+        this.questionListService.rodeSQL(database_script);
         
         Map<String, Object> template = new HashMap<>();
         template.put("message", "Lista cadastrada com sucesso!");
+        // template.put("pageNumber", "");
         template.put("arrQuestionList", this.questionListRepository.listAll());
         return new ModelAndView("questionlist/index", template);
     }
