@@ -95,14 +95,14 @@ public class QuestionListController {
     }
 
     @RequestMapping("/editar")
-    public ModelAndView editar(@RequestParam UUID id, @RequestParam String databaseScript, @RequestParam String title, @RequestParam Boolean isPrivate, @RequestParam UUID teacher_id, @RequestParam List<UUID> question_id){
+    public ModelAndView editar(@RequestParam UUID id, @RequestParam String database_script, @RequestParam String title, @RequestParam Boolean isPrivate, @RequestParam UUID teacher_id, @RequestParam List<UUID> question_id){
         QuestionList questionList = this.questionListRepository.findById(id).get();
         questionList.setTitle(title);
         questionList.setPrivate(isPrivate);               
         questionList.setTeacher(this.teacherRepository.findById(teacher_id).get());
         
         // vais dropar o banco antigo? ou editar não aceita substituir a base de dados? => pendente
-        questionList.setDatabaseScript(databaseScript);                       
+        questionList.setDatabaseScript(database_script);                       
 
         this.questionListRepository.save(questionList);
         this.questionListRepository.deleteQuestions(id);
@@ -141,7 +141,7 @@ public class QuestionListController {
         template.put("arrQuestion", vetQuestionDTOs);
         template.put("title", questionList.get().getTitle());
         template.put("id", questionList.get().getId());
-        template.put("databaseScript", questionList.get().getDatabaseScript());
+        template.put("database_script", questionList.get().getDatabaseScript());
 
         return new ModelAndView("questionlist/tela_editar", template);
     }
