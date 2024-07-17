@@ -16,6 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -84,9 +87,17 @@ public class QuestionListController {
         for (int i = 0; i < question_id.size(); i++) {
             this.questionListRepository.insertQuestions(questionList.getId(), question_id.get(i));    
         }        
-
-        this.questionListService.rodeSQL(database_script);
         
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("dump"+questionList.getId().toString().replace("-", "")+".sql"))) {
+            String sql = "CREATE database list"+questionList.getId().toString().replace("-", "")+"; \\c list"+questionList.getId().toString().replace("-", "")+"; ";
+            sql += database_script.trim();        
+            writer.write(sql);    
+            writer.close();
+            this.questionListService.rodeSQL("\\i /home/iapereira/git/sqlScholar/dump"+questionList.getId().toString().replace("-", "")+".sql"); 
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         Map<String, Object> template = new HashMap<>();
         template.put("message", "Lista cadastrada com sucesso!");
         // template.put("pageNumber", "");

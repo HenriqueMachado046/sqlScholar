@@ -31,8 +31,11 @@ public class QuestionListService {
             String url = "jdbc:postgresql://localhost:5432/sqlscholar";
             Connection conexao = DriverManager.getConnection(url, "postgres", "postgres");
             conexao.prepareStatement(sql).execute();
+            conexao.close();
         } catch(SQLException e){
-            System.out.println("xabum!");   
+            System.out.println("=================");
+            System.out.println(sql+e.getMessage());   
+            System.out.println("=================");
         }       
     }
 
