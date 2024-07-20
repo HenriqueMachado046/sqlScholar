@@ -152,6 +152,7 @@ public class QuestionListController {
     public ModelAndView deletar(@PathVariable UUID id){
         this.questionListRepository.deletar(id);
         try {
+            // TODO: verificar
             this.questionListService.rodeSQL("DROP DATABASE list_"+id.toString().replace("-", "")+";");    
         } catch (Exception e) {
             System.out.println("===========");
