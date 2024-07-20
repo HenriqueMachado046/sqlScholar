@@ -16,12 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 import java.util.*;
 
 @RestController
@@ -86,18 +80,10 @@ public class QuestionListController {
         this.questionListRepository.save(questionList);        
         for (int i = 0; i < question_id.size(); i++) {
             this.questionListRepository.insertQuestions(questionList.getId(), question_id.get(i));    
-        }        
+        }                            
+        this.questionListService.rodeSQL("CREATE database list_"+questionList.getId().toString().replace("-", "")+";");  
+        this.questionListService.rodeSQL(database_script.trim(), "list_"+questionList.getId().toString().replace("-", ""));        
         
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("dump"+questionList.getId().toString().replace("-", "")+".sql"))) {
-            String sql = "CREATE database list"+questionList.getId().toString().replace("-", "")+"; \\c list"+questionList.getId().toString().replace("-", "")+"; ";
-            sql += database_script.trim();        
-            writer.write(sql);    
-            writer.close();
-            this.questionListService.rodeSQL("\\i /home/iapereira/git/sqlScholar/dump"+questionList.getId().toString().replace("-", "")+".sql"); 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
         Map<String, Object> template = new HashMap<>();
         template.put("message", "Lista cadastrada com sucesso!");
         // template.put("pageNumber", "");
@@ -113,7 +99,12 @@ public class QuestionListController {
         questionList.setTeacher(this.teacherRepository.findById(teacher_id).get());
         
         // vais dropar o banco antigo? ou editar não aceita substituir a base de dados? => pendente
-        questionList.setDatabaseScript(database_script);                       
+        questionList.setDatabaseScript(database_script);        
+
+        //  TODO: bug
+        // this.questionListService.rodeSQL("DROP SCHEMA public CASCADE;", "list_"+questionList.getId().toString().replace("-", ""));        
+        // this.questionListService.rodeSQL("CREATE SCHEMA public;", "list_"+questionList.getId().toString().replace("-", ""));        
+        // this.questionListService.rodeSQL(database_script.trim(), "list_"+questionList.getId().toString().replace("-", ""));            
 
         this.questionListRepository.save(questionList);
         this.questionListRepository.deleteQuestions(id);
@@ -160,6 +151,13 @@ public class QuestionListController {
     @GetMapping("/deletar/{id}")
     public ModelAndView deletar(@PathVariable UUID id){
         this.questionListRepository.deletar(id);
+        try {
+            this.questionListService.rodeSQL("DROP DATABASE list_"+id.toString().replace("-", "")+";");    
+        } catch (Exception e) {
+            System.out.println("===========");
+            System.out.println("Não foi possível deletar o banco correspondente:list_"+id.toString());
+            System.out.println("===========");
+        }                
         Map<String, Object> template = new HashMap<>();
         template.put("arrQuestionList", this.questionListRepository.listAll());
         template.put("message", "Lista deletada com sucesso!" + id);

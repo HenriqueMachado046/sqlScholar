@@ -12,7 +12,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import br.com.sqlScholar.dto.TeacherDTO;
-import br.com.sqlScholar.model.Teacher;
 import br.com.sqlScholar.repository.TeacherRepository;
 
 @Service

@@ -9,11 +9,7 @@ import br.com.sqlScholar.repository.QuestionRepository;
 import br.com.sqlScholar.repository.TeacherRepository;
 
 import br.com.sqlScholar.service.QuestionService;
-import jakarta.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 

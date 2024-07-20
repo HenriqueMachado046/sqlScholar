@@ -2,7 +2,6 @@ package br.com.sqlScholar.service;
 
 import br.com.sqlScholar.dto.QuestionDTO;
 import br.com.sqlScholar.model.Question;
-import br.com.sqlScholar.model.Teacher;
 import br.com.sqlScholar.repository.QuestionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

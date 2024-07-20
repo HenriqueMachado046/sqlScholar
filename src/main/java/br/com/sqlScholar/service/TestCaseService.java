@@ -1,6 +1,5 @@
 package br.com.sqlScholar.service;
 
-import br.com.sqlScholar.model.Question;
 import br.com.sqlScholar.model.TestCase;
 import br.com.sqlScholar.repository.TestCaseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
