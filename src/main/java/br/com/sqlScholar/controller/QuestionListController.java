@@ -80,7 +80,8 @@ public class QuestionListController {
         this.questionListRepository.save(questionList);        
         for (int i = 0; i < question_id.size(); i++) {
             this.questionListRepository.insertQuestions(questionList.getId(), question_id.get(i));    
-        }                            
+        }                        
+        // TODO: pra coisas pequenas, funciona!
         this.questionListService.rodeSQL("CREATE database list_"+questionList.getId().toString().replace("-", "")+";");  
         this.questionListService.rodeSQL(database_script.trim(), "list_"+questionList.getId().toString().replace("-", ""));        
         
