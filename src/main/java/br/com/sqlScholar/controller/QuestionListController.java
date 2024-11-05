@@ -76,7 +76,7 @@ public class QuestionListController {
         questionList.setDatabaseScript(database_script.trim());                       
 
         Optional<Teacher> teacher = this.teacherRepository.findById(teacher_id);                
-        questionList.setTeacher(teacher.get());                     
+        questionList.setOwner(teacher.get());                     
         this.questionListRepository.save(questionList);        
         for (int i = 0; i < question_id.size(); i++) {
             this.questionListRepository.insertQuestions(questionList.getId(), question_id.get(i));    
@@ -97,7 +97,7 @@ public class QuestionListController {
         QuestionList questionList = this.questionListRepository.findById(id).get();
         questionList.setTitle(title);
         questionList.setPrivate(isPrivate);               
-        questionList.setTeacher(this.teacherRepository.findById(teacher_id).get());
+        questionList.setOwner(this.teacherRepository.findById(teacher_id).get());
         
         // vais dropar o banco antigo? ou editar não aceita substituir a base de dados? => pendente
         questionList.setDatabaseScript(database_script);        
@@ -125,8 +125,8 @@ public class QuestionListController {
 
         Optional<QuestionList> questionList = this.questionListRepository.findById(id);
 
-        List<TeacherDTO> arrTeacherDTOs = this.teacherService.listAvailableTeachers(questionList.get().getTeacher().getId(), 
-        questionList.get().getTeacher().getFirstName(), questionList.get().getTeacher().getLastName());
+        List<TeacherDTO> arrTeacherDTOs = this.teacherService.listAvailableTeachers(questionList.get().getOwner().getId(), 
+        questionList.get().getOwner().getFirstName(), questionList.get().getOwner().getLastName());
 
         //Pegar somente questões do professor e questões compartilhadas
         List<QuestionDTO> vetQuestionDTOs = this.questionService.listAvailableQuestions();

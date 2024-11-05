@@ -35,6 +35,6 @@ public class QuestionList {
     @Column
     private boolean isPrivate;    
     @ManyToOne
-    private Teacher teacher;
+    private Teacher owner;
 
 }

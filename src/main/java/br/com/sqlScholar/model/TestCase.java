@@ -13,8 +13,10 @@ public class TestCase {
     @GeneratedValue(generator = "UUID")
     @PrimaryKeyJoinColumn
     private UUID id;
+    
     @Column
     private String teste;
+    
     @ManyToOne
     @JoinColumn(name = "question_id")
     private Question question;

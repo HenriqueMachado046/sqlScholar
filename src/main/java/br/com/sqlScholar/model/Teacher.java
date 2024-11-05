@@ -20,7 +20,7 @@ public class Teacher extends Person {
     )
     List<Student> students = new ArrayList<>();
     
-    @OneToMany(mappedBy="teacher")
+    @OneToMany(mappedBy="owner")
     private List<QuestionList> lists = new ArrayList<>();
 
     @OneToMany(mappedBy = "owner")

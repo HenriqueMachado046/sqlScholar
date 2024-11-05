@@ -42,6 +42,15 @@ public class TeacherController {
         return new ModelAndView("teacher/index", template);
     }
 
+    @GetMapping("/perfil/{id}")
+    public ModelAndView perfil(@PathVariable UUID id){
+        Optional<Teacher> teacher = this.teacherRepository.findById(id);
+        Map<String, Object> template = new HashMap<>();
+        template.put("teacher", teacher.get());
+        template.put("message", "");
+        return new ModelAndView("teacher/perfil", template);
+    }
+
     @PostMapping("/adicionar")
     public ModelAndView adicionar(@ModelAttribute Teacher teacher){
         this.teacherRepository.save(teacher);

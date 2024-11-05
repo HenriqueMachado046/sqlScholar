@@ -1,6 +1,7 @@
 package br.com.sqlScholar.controller;
 
 import br.com.sqlScholar.model.Student;
+import br.com.sqlScholar.model.Teacher;
 import br.com.sqlScholar.repository.StudentRepository;
 import br.com.sqlScholar.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,15 @@ public class StudentController {
         template.put("message", "");
         template.put("arrStudent", this.studentService.pageableStudent(pageNumber, pageSize));
         return new ModelAndView("student/index", template);
+    }
+
+    @GetMapping("/perfil/{id}")
+    public ModelAndView perfil(@PathVariable UUID id){
+        Optional<Student> student = this.studentRepository.findById(id);
+        Map<String, Object> template = new HashMap<>();
+        template.put("student", student.get());
+        template.put("message", "");
+        return new ModelAndView("student/perfil", template);
     }
     
     @PostMapping("/adicionar")
