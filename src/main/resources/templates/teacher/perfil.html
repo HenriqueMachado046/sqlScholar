@@ -19,14 +19,29 @@
     {{/teacher}}
 </table>
 
+<div class="row">
+    <div id="solved" class="col-sm" style="background-color: gainsboro;">
+        <H1 id="solvedCount">1</H1>
+        <p style="justify-content:center">Questões adicionadas</p>
+    </div>
+    <div class="col-sm" style="background-color: gray;">
+        <H1>1</H1>
+        <p>Total de alunos</p>
+    </div>
+</div>
+
+
+
+<br>
 <div id="canvasDiv">
 
-<input type="button" id="button2" class="btn" onclick="showChart()" value="Mostrar/Esconder gráfico">
 </div>
+<input type="button" id="button2" class="btn" onclick="showChart()" value="Mostrar/Esconder gráfico">
+
 
 <!-- <canvas id="myChart" style="width:100%;max-width:600px"></canvas> -->
 
-<input type="button" id="button1" class="btn btn-primary" onclick="createChart()" value="Gerar gráfico">
+<input type="button" id="button1" class="btn btn-primary" onclick="createChart(); createBarChart(); createPieChart()" value="Gerar gráfico">
 
 <!-- Esta é a maneira correta de referenciar qualquer arquivo da pasta static. -->
 <script type="text/javascript" src="../../js/charts_teacher.js"></script> 
