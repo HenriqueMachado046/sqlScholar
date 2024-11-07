@@ -8,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -46,6 +48,18 @@ public class TeacherController {
     public ModelAndView perfil(@PathVariable UUID id){
         Optional<Teacher> teacher = this.teacherRepository.findById(id);
         Map<String, Object> template = new HashMap<>();
+        List<Integer> xValues = new ArrayList<>();//Será substituido por acesso ao banco e dados que virão de lá
+        List<Integer> yValues = new ArrayList<>();//Será substituido por acesso ao banco e dados que virão de lá
+        int count_students = (int)(Math.random() * 20);//Será substituido por acesso ao banco e dados que virão de lá (contagem de alunos)
+        int count_questions = (int) (Math.random() * 20);//Será substituido por acesso ao banco e dados que virão de lá (contagem de questões totais registradas)
+        for (int i = 0; i < 5; i++) {
+            xValues.add((int)(Math.random() * 200));
+            yValues.add((int)(Math.random() * 100));
+        }
+        template.put("xvalues", xValues.toString());
+        template.put("yvalues", yValues.toString());
+        template.put("countStudents", count_students);
+        template.put("countQuestions", count_questions);
         template.put("teacher", teacher.get());
         template.put("message", "");
         return new ModelAndView("teacher/perfil", template);

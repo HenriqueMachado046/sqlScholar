@@ -21,7 +21,7 @@
 
 <div class="row">
     <div id="solved" class="col-sm" style="background-color: gainsboro;">
-        <H1 id="solvedCount" >1</H1>
+        <H1 id="solvedCount" >{{solvedQuestions}}</H1>
         <p>Número de exercícios resolvidos</p>
     </div>
     <!-- <div class="col-sm" style="background-color: gray;">
@@ -36,9 +36,14 @@
 </div>
 <input type="button" id="button2" class="btn" onclick="showChart()" value="Mostrar/Esconder gráfico">
 
-<input type="button" id="button1" class="btn btn-primary" onclick="createChart(); createBarChart(); createPieChart()" value="Gerar gráfico">
 
-<script type="text/javascript" src="../../js/charts_teacher.js"></script> 
+
+<input type="button" id="button1" class="btn btn-primary" onclick="createChart(
+eval('{{xvalues}}'), eval('{{yvalues}}')
+); createBarChart(eval('{{xvalues}}')); createPieChart(eval('{{xvalues}}'))" value="Gerar gráfico">
+
+
+<script type="text/javascript" src="../../js/charts_student.js"></script> 
 
 
 

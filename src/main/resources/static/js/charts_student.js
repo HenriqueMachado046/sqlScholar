@@ -1,6 +1,6 @@
 
-const xValues = [5, 8, 1, 2, 4, 7, 5, 13, 11, 12, 17];
-const yValues = [7, 8, 8, 9, 9, 9, 10, 11, 14, 14, 15];
+// const xValues = [5, 8, 1, 2, 4, 7, 5, 13, 11, 12, 17]; -> funcional
+// const yValues = [7, 8, 8, 9, 9, 9, 10, 11, 14, 14, 15]; -> funcional
 const solved = 0;
 //Aqui está um momento de escolha. Os gráficos serão definidos previamente ou poderão ser criados?
 //Gráfico de questões acertadas por este aluno;
@@ -11,13 +11,24 @@ const solved = 0;
 //Tabela
 
 //Dentro desta função deverá ser passado de parâmetro o que é necessário para criar os gráficos de maneira dinâmica.
-function createChart() {
+
+function comparar(a, b) {
+    return a-b;    
+}
+
+
+function createChart(xValues, yValues) {
+    xValues.sort(comparar);
+    yValues.sort();
+
     if (document.getElementById("myChart") === null) {
         const newDiv = document.createElement("div", "chart1")
         const newCanvas = document.createElement("canvas", "myChart")
+        newDiv.setAttribute("id", "chart1")
+        newDiv.setAttribute("class", "float-child")
         newCanvas.setAttribute("id", "myChart")
         newCanvas.setAttribute("style", "width:100%;max-width:600px")
-        document.getElementById("canvasDiv").insertAdjacentElement("afterbegin", newCanvas)
+        document.getElementById("canvasDiv").insertAdjacentElement("afterbegin", newDiv)
         document.getElementById("chart1").insertAdjacentElement("afterbegin", newCanvas)
 
     }
@@ -37,13 +48,16 @@ function createChart() {
         options: {
             legend: { display: false },
             scales: {
-                yAxes: [{ ticks: { min: 6, max: 16 } }],
+                myScale: {
+                    type: 'logarithmic',
+                    position: 'right'
+                }
             }
         }
     });
 }
 
-function createBarChart() {
+function createBarChart(xValues) {
 
     if (document.getElementById("myChart2") === null) {
         const newDiv = document.createElement("div", "chart2")
@@ -59,12 +73,12 @@ function createBarChart() {
     new Chart(document.getElementById('myChart2'), {
         type: 'bar',
         data:{
-            labels: ['Janeiro', 'Fevereiro', 'Marco', 'Abril', 'Maio', 'Junho'],
+            labels: ['Janeiro', 'Fevereiro', 'Marco', 'Abril', 'Maio'],
             datasets: [{
                 label: "Grafico barra do primeiro semestre do ano",
                 backgroundColor: 'rgb (255, 99, 126)',
                 borderColor: 'rgb (255, 99, 132)',
-                data: [15, 39, 24, 55, 12, 99]
+                data: xValues
             }]
         },
         options:{
@@ -80,14 +94,14 @@ function createBarChart() {
     })         
 };
 
-function createPieChart() {
+function createPieChart(xValues) {
 
     const dataPie = {
-        labels: ['Area1', 'Area2', 'Area3', 'Area4'],
+        labels: ['Area 1', 'Area 2', 'Area 3', 'Area 4', 'Area 5'],
         datasets: [
             {
                 label: 'Dataset 1',
-                data: [12, 11, 22, 34],
+                data: xValues,
                 backgroundColor: [
                     '#36A2EB',
                     'rgb (154, 162, 135)',

@@ -20,12 +20,12 @@
 </table>
 
 <div class="row">
-    <div id="solved" class="col-sm" style="background-color: gainsboro;">
-        <H1 id="solvedCount">1</H1>
+    <div id="added" class="col-sm" style="background-color: gainsboro;">
+        <H1 id="addedCount">{{countQuestions}}</H1>
         <p style="justify-content:center">Questões adicionadas</p>
     </div>
     <div class="col-sm" style="background-color: gray;">
-        <H1>1</H1>
+        <H1>{{countStudents}}</H1>
         <p>Total de alunos</p>
     </div>
 </div>
@@ -41,7 +41,8 @@
 
 <!-- <canvas id="myChart" style="width:100%;max-width:600px"></canvas> -->
 
-<input type="button" id="button1" class="btn btn-primary" onclick="createChart(); createBarChart(); createPieChart()" value="Gerar gráfico">
+<input type="button" id="button1" class="btn btn-primary" onclick="createChart(eval('{{xvalues}}'), eval('{{yvalues}}'));
+ createBarChart(eval('{{xvalues}}')); createPieChart(eval('{{xvalues}}'))" value="Gerar gráfico">
 
 <!-- Esta é a maneira correta de referenciar qualquer arquivo da pasta static. -->
 <script type="text/javascript" src="../../js/charts_teacher.js"></script> 
