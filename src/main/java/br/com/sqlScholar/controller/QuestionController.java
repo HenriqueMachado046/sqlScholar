@@ -65,15 +65,20 @@ public class QuestionController {
         Map<String, Object> template = new HashMap<>();
         Optional<Question> question = this.questionRepository.findById(id);
         template.put("question", question.get());
+        //Este aqui passa a informação para a ação de corrigir;
         return new ModelAndView("question/tela_corrigir", template);
     }
 
     @PostMapping("/corrigir/{id}")
     public ModelAndView corrigir(@PathVariable UUID id, @RequestParam String sqlStudent){
         Optional<Question> question = this.questionRepository.findById(id);
-        // TODO: comparar output => sqlStudent com question.getSQL();
+        
+        //Primeiro é preciso resolver a EXECUÇÃO DE SQL. Só depois de resolvido, poderá ser utilizado o método de resolução.
+        //O execução do SQL será feita de maneira independente, pois é uma coisa que será útil em algumas outras partes do código.
+        //Atualmente, isto não faz nada. O código será escrito em QuestionService e importado, para melhor legibilidade.
+
         Map<String, Object> template =  new HashMap<>();
-        template.put("message","Questão acertou ou não!?");
+        template.put("message","Erro/Acerto");
         return new ModelAndView("question/message", template);
     }
 

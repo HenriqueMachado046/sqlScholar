@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class QuestionService {
@@ -37,4 +38,10 @@ public class QuestionService {
         }
         return vetQuestionDTOs;
     }
+
+    public void awnserQuestion(UUID id){
+        
+
+    }
+
 }

@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import br.com.sqlScholar.model.QuestionList;
 import br.com.sqlScholar.repository.QuestionListRepository;
+import br.com.sqlScholar.utils.sqlUtils;
 
 @Service
 public class QuestionListService {
@@ -32,51 +33,36 @@ public class QuestionListService {
         return questionListPage.getContent();
     }
 
-    public void criaDump(UUID questionListID, String sql) {
-        // bug
-        try (BufferedWriter writer = new BufferedWriter(
-                new FileWriter("dump" + questionListID.toString().replace("-", "") + ".sql"))) {
-            String sql1 = "CREATE database list" + questionListID.toString().replace("-", "") + "; \\c list"
-                    + questionListID.toString().replace("-", "") + "; ";
-            sql1 += sql.trim();
-            writer.write(sql1);
-            writer.close();
-            this.rodeSQL(
-                    "\\i /home/iapereira/git/sqlScholar/dump" + questionListID.toString().replace("-", "") + ".sql");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+    // public void criaDump(UUID questionListID, String sql) {
+    //     // bug
+           // O bug provavelmente advém do path estar não ser relativo, mas sim absoluto. Pensar em uma maneira melhor de usar isto. 
+    //     try (BufferedWriter writer = new BufferedWriter(
+    //             new FileWriter("dump" + questionListID.toString().replace("-", "") + ".sql"))) {
+    //         String sql1 = "CREATE database list" + questionListID.toString().replace("-", "") + "; \\c list"
+    //                 + questionListID.toString().replace("-", "") + "; ";
+    //         sql1 += sql.trim();
+    //         writer.write(sql1);
+    //         writer.close();
+    //         this.rodeSQL(
+    //                 "\\i /home/iapereira/git/sqlScholar/dump" + questionListID.toString().replace("-", "") + ".sql");
+    //     } catch (IOException e) {
+    //         e.printStackTrace();
+    //     }
+    // }
 
     public void rodeSQL(String sql) {
-        try {
-            String url = "jdbc:postgresql://localhost:5432/sqlscholar";
-            Connection conexao = DriverManager.getConnection(url, "postgres", "postgres");
-            conexao.createStatement().execute(sql);
-            conexao.close();
-        } catch (SQLException e) {
-            System.out.println("=================");
-            System.out.println(sql + e.getMessage());
-            System.out.println("=================");
-        }
+        //Movido para sqlUtils.
+        sqlUtils.createDatabase(sql);
+
     }
 
     public void rodeSQL(String sql, String database_name) {
-        try {
-            String url = "jdbc:postgresql://localhost:5432/"+database_name;
-            Connection conexao = DriverManager.getConnection(url, "postgres", "postgres");
-            conexao.createStatement().execute(sql);
-            conexao.close();
-        } catch (SQLException e) {
-            System.out.println("=================");
-            System.out.println(sql + e.getMessage());
-            System.out.println("=================");
-        }
+         //Movido para sqlUtils.
+         sqlUtils.executeSQL(sql, database_name);
     }
 
     public void rodeSQLMultiplaInstrucoes(ArrayList<String> vetSQL) {
         try {
-
             String url = "jdbc:postgresql://localhost:5432/sqlscholar";
             Connection c = DriverManager.getConnection(url, "postgres", "postgres");
             c.setAutoCommit(false);
@@ -93,7 +79,6 @@ public class QuestionListService {
             System.out.println(e.getMessage());
             System.out.println("=================");
         }
-
     }
 
     public void rodeSQLMultiplaInstrucoes(ArrayList<String> vetSQL, String database_name) {
