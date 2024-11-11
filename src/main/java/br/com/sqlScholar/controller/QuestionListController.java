@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.sql.SQLException;
 import java.util.*;
 
 @RestController
@@ -83,8 +84,8 @@ public class QuestionListController {
         }                        
         // TODO: pra coisas pequenas, funciona!
         this.questionListService.rodeSQL("CREATE database list_"+questionList.getId().toString().replace("-", "")+";");  
-        this.questionListService.rodeSQL(database_script.trim(), "list_"+questionList.getId().toString().replace("-", ""));        
-        
+        //this.questionListService.rodeSQL(database_script.trim(), "list_"+questionList.getId().toString().replace("-", ""));        
+               
         Map<String, Object> template = new HashMap<>();
         template.put("message", "Lista cadastrada com sucesso!");
         // template.put("pageNumber", "");
@@ -168,10 +169,17 @@ public class QuestionListController {
 
     @GetMapping("/mostrar_lista/{id}")
     public ModelAndView mostrarLista(@PathVariable UUID id){
+        String resultado = "";
+        try {
+            resultado = this.questionListService.rodeSQL("qualquer coisa", "sqlscholar");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         Map<String, Object> template = new HashMap<>();
         Optional<QuestionList> questionlist = this.questionListRepository.findById(id);        
         template.put("questionlist", questionlist.get());
         template.put("questions", questionlist.get().getQuestions());
+        template.put("resultado", resultado);
         return new ModelAndView("questionlist/mostrar_lista", template);
     }
 }

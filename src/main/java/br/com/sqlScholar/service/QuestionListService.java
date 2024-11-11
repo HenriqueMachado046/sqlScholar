@@ -5,6 +5,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -53,12 +54,16 @@ public class QuestionListService {
     public void rodeSQL(String sql) {
         //Movido para sqlUtils.
         sqlUtils.createDatabase(sql);
-
     }
 
-    public void rodeSQL(String sql, String database_name) {
-         //Movido para sqlUtils.
-         sqlUtils.executeSQL(sql, database_name);
+    public String rodeSQL(String sql, String database_name) throws SQLException{
+         ResultSet resultSet = sqlUtils.executeSQL(sql, database_name);
+         String resultado = "";
+         while (resultSet.next()) {
+            resultado = "ID: " + resultSet.getString(1).toString();
+            resultado += "\n Usuario:" + resultSet.getString(2).toString();
+         }
+         return resultado;
     }
 
     public void rodeSQLMultiplaInstrucoes(ArrayList<String> vetSQL) {
