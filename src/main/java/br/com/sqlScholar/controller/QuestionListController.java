@@ -170,11 +170,8 @@ public class QuestionListController {
     @GetMapping("/mostrar_lista/{id}")
     public ModelAndView mostrarLista(@PathVariable UUID id){
         String resultado = "";
-        try {
-            resultado = this.questionListService.rodeSQL("qualquer coisa", "sqlscholar");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        //Trocar o "qualquer coisa" pelo input SQL do professor.
+        resultado = this.questionListService.rodeSQL("qualquer coisa", "sqlscholar");
         Map<String, Object> template = new HashMap<>();
         Optional<QuestionList> questionlist = this.questionListRepository.findById(id);        
         template.put("questionlist", questionlist.get());

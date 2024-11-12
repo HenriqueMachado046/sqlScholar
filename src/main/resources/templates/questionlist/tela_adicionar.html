@@ -1,32 +1,38 @@
 {{>header}}
 <h2>Adicionar: Lista de Exercício</h2>
-
+<!-- Talvez seja necessário alterar o fluxo de criação de questões, sendo primeiro necessário criar listas e depois as questões. -->
 <form id="questionlistform" action="/questionlist/adicionar" method="post">
-    <div class="form-group">
-        <label for="title">Título:</label>
-        <input name="title" type="text" class="form-control" id="title" maxlength="50">
+    <div class="row g-3">
+        <div class="col form-group">
+            <label for="title">Título:</label>
+            <input name="title" type="text" class="form-control" id="title" maxlength="50">
+            
+        </div>
+        <div class="col form-group">
+            <label>Professor:</label> <br>
+            <select class="form-select" name="teacher_id" required>
+                {{#arrTeacher}}
+                    <option value="{{id}}">{{firstName}}</option>
+                {{/arrTeacher}}
+            </select>
+        </div>
     </div>
-    <div class="form-group">
-        <label for="description">database script:</label> <br>
-        <textarea name="database_script"> </textarea>
+
+    <div class="form-group mb-3">
+        <label for="database_script" class="form-label">Database Script:</label> <br>
+        <textarea class="form-control" name="database_script" style="height: 100px; width: auto; resize: none;"></textarea>
     </div>
+
+
     <div class="form-group">
         <label>Questões:</label> <br>
-
-        <select style="width: 100px;" name="question_id" multiple required>
+        <select class="form-select" style="width: auto;" name="question_id" multiple required>
             {{#arrQuestion}}
                 <option value="{{id}}">{{title}}</option>
             {{/arrQuestion}}
         </select>
     </div>
-    <div class="form-group">
-        <label>Professor:</label> <br>
-        <select name="teacher_id" required>
-            {{#arrTeacher}}
-                <option value="{{id}}">{{firstName}}</option>
-            {{/arrTeacher}}
-        </select>
-    </div>
+    
     Privada:
     <input type="radio" name="isPrivate" value="true" checked>Sim
     <input type="radio" name="isPrivate" value="false">Não

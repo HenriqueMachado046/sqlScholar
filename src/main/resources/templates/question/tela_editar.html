@@ -3,25 +3,38 @@
     <h3>Editar: Questão</h3>
     <form id="questionform" action="/question/editar" method="post">
         <input type="hidden" name="id" value="{{id}}"><br>
-        <div class="form-group">
+        <div class="col-md-6 form-group">
             <label for="title">Título:</label>
             <input name="title" type="text" class="form-control" id="title" value="{{title}}" maxlength="50">
         </div>
-        <div class="form-group">
-            <label for="description">Descrição</label>
-            <textarea id="description" name="description" form="questionform">{{description}}</textarea>
+        <div class="row g-3">
+            <div class="col form-group mb-3">
+                <label for="description">Descrição</label>
+                <textarea id="description" name="description" class="form-control" form="questionform" style="height: 100px; resize: none;">{{description}}</textarea>
+            </div>
+            <div class="col form-group mb-3">
+                <label for="answerSheet">Gabarito</label>
+                <textarea id="answerSheet" name="answerSheet" class="form-control" form="questionform" style="height: 100px; resize: none;">{{answerSheet}}</textarea>
+            </div>
+            <div class="col form-group mb-3">
+                <label for="description">Script SQL</label>
+                <textarea id="sql" name="sql" class="form-control" form="questionform" style="height: 100px; resize: none;">{{sql}}</textarea>
+            </div>
         </div>
-        <div class="form-group">
-            <label for="answerSheet">Gabarito</label>
-            <textarea id="answerSheet" name="answerSheet" form="questionform">{{answerSheet}}</textarea>
+        <div class="form-group mb-3">
+            <label for="difficulty">Dificuldade</label>
+            {{#vetDificuldade}}
+                {{#enabled}}
+                    <input class="form-check-input" type="radio" name="difficulty" value="{{value}}" checked>{{description}}
+                {{/enabled}}
+                {{^enabled}}
+                    <input class="form-check-input" type="radio" name="difficulty" value="{{value}}">{{description}}
+                {{/enabled}}
+            {{/vetDificuldade}}
         </div>
-        <div class="form-group">
-            <label for="description">sql</label>
-            <textarea id="sql" name="sql" form="questionform">{{sql}}</textarea>
-        </div>
-        <div class="form-group">
+        <div class="col-md-6 form-group mb-3">
             Professor:
-            <select name="teacher_id" required>
+            <select class="form-select" name="teacher_id" required>
                 {{#vetProfessor}}
                     {{#isOwner}}
                         <option value="{{id}}" selected>{{firstName}}</option>
@@ -31,17 +44,6 @@
                     {{/isOwner}}
                 {{/vetProfessor}}
             </select>
-        </div>
-        <div class="form-group">
-            <label for="difficulty">Dificuldade</label>
-            {{#vetDificuldade}}
-                {{#enabled}}
-                    <input type="radio" name="difficulty" value="{{value}}" checked>{{description}}
-                {{/enabled}}
-                {{^enabled}}
-                    <input type="radio" name="difficulty" value="{{value}}">{{description}}
-                {{/enabled}}
-            {{/vetDificuldade}}
         </div>
         <input class="btn btn-primary" type="submit" value="Editar">
     </form>

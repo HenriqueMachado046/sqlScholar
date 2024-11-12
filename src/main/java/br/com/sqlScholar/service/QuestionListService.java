@@ -1,16 +1,12 @@
 package br.com.sqlScholar.service;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -56,50 +52,41 @@ public class QuestionListService {
         sqlUtils.createDatabase(sql);
     }
 
-    public String rodeSQL(String sql, String database_name) throws SQLException{
-         ResultSet resultSet = sqlUtils.executeSQL(sql, database_name);
-         String resultado = "";
-         while (resultSet.next()) {
-            resultado = "ID: " + resultSet.getString(1).toString();
-            resultado += "\n Usuario:" + resultSet.getString(2).toString();
-         }
-         return resultado;
-    }
-
-    public void rodeSQLMultiplaInstrucoes(ArrayList<String> vetSQL) {
+    public String rodeSQL(String sql, String database_name){
+        int count = 1; 
+        ResultSet resultSet = sqlUtils.executeSQL(sql, database_name);
         try {
-            String url = "jdbc:postgresql://localhost:5432/sqlscholar";
-            Connection c = DriverManager.getConnection(url, "postgres", "postgres");
-            c.setAutoCommit(false);
-            Statement s = c.createStatement();
-            for (int i = 0; i < vetSQL.size(); i++) {
-                s.addBatch(vetSQL.get(i));
+            ResultSetMetaData metaData = resultSet.getMetaData(); 
+         System.out.println("QUANTIDADE DE COLUNAS QUE VIERAM DA QUERY:" + metaData.getColumnCount());
+         String resultado = "";
+         //Array para manter todas as informações...
+         //Funciona! É importante notar que nos métodos do result set que acessam as rows pelo índice, a contagem começa em 1 E NÃO EM 0.
+         List<String> resultadoList = new ArrayList<String>();
+         while (resultSet.next()) {
+            count = 1;
+            resultado = "";
+            while (count <= metaData.getColumnCount()) {
+                resultado += "\n" + metaData.getColumnName(count) + " : " + resultSet.getString(count).toString();
+                count++;
             }
-            s.executeBatch();
-            c.commit();
-            s.close();
-            c.close();
+            resultadoList.add(resultado);
+         }
+
+         for (int i = 0; i < resultadoList.size(); i++) {
+            System.out.println(resultadoList.get(i));
+         }
+
+         return resultado;
+            
         } catch (SQLException e) {
-            System.out.println("=================");
-            System.out.println(e.getMessage());
-            System.out.println("=================");
+            //Assim, é só fazer um modal ou um alert que mostre o erro e já está concluido o "teste" do SQL.
+            return e.toString();
         }
+         
     }
 
     public void rodeSQLMultiplaInstrucoes(ArrayList<String> vetSQL, String database_name) {
-        try {
-            String url = "jdbc:postgresql://localhost:5432/"+database_name;
-            Connection c = DriverManager.getConnection(url, "postgres", "postgres");                        
-            for (int i = 0; i < vetSQL.size(); i++) {            
-                System.out.println(vetSQL.get(i));    
-                c.createStatement().execute(vetSQL.get(i).trim());
-            }
-            c.close();
-        } catch (SQLException e) {
-            System.out.println("=================");
-            System.out.println(e.getMessage());
-            System.out.println("=================");
-        }
+       //Será movido para sqlUtils.
     }
 
 }
