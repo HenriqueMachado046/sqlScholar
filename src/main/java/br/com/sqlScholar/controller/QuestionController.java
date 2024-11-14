@@ -19,6 +19,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+
 
 @RestController
 @RequestMapping("/question")
@@ -126,6 +132,30 @@ public class QuestionController {
         template.put("message", "Questão editada com sucesso!");
         return new ModelAndView("question/index", template);
     }
+
+    @GetMapping("/tela_responder/{id}")
+    public ModelAndView tela_responder(@PathVariable UUID id) {
+        Map<String, Object> template =  new HashMap<>();
+        Optional<Question> question = this.questionRepository.findById(id);
+        template.put("question", question.get());
+        return new ModelAndView("question/tela_responder", template);
+    }
+
+    @RequestMapping("/responder")
+    public ModelAndView responder(@RequestParam String resposta) {
+        //O banco de dados deverá ser passado por aqui. O @RequestParam irá receber uma string com o nome do banco.
+        Map<String, Object> template =  new HashMap<>();
+        System.out.println("Aqui?");
+        //questionService.awnserQuestion(resposta);
+        List<String> respostas = questionService.awnserQuestion(resposta);
+        for (int i = 0; i < respostas.size(); i++) {
+            System.out.println(respostas.get(i));
+        }
+        template.put("resposta", respostas);
+        return new ModelAndView("question/resposta", template);
+    }
+    
+    
 
     @GetMapping("/tela_editar/{id}")
     public ModelAndView tela_editar (@PathVariable UUID id){

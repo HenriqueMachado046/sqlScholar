@@ -31,7 +31,7 @@ public class sqlUtils {
 
     public static ResultSet executeSQL(String sql, String databaseName){
         //Este método deverá retornar um ResultSet e, após isso, cada resultado será tratado no se respectivo service.
-        sql = "SELECT q.id, teacher.id, teacher.username FROM teacher LEFT JOIN question q ON teacher.id = q.teacher_id;";
+        //sql = "SELECT q.id, teacher.id, teacher.username FROM teacher LEFT JOIN question q ON teacher.id = q.teacher_id;";
         // O código abaixo funciona, mas agora é importante testar se funciona algo mais complexo.
         //sql = "SELECT id, username FROM teacher WHERE id IS NOT NULL";
         try {

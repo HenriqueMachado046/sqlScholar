@@ -83,6 +83,7 @@ public class QuestionListController {
             this.questionListRepository.insertQuestions(questionList.getId(), question_id.get(i));    
         }                        
         // TODO: pra coisas pequenas, funciona!
+        //Alterar para receber o create database do HTML.
         this.questionListService.rodeSQL("CREATE database list_"+questionList.getId().toString().replace("-", "")+";");  
         //this.questionListService.rodeSQL(database_script.trim(), "list_"+questionList.getId().toString().replace("-", ""));        
                

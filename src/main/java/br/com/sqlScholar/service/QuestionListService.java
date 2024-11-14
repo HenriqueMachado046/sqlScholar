@@ -56,7 +56,7 @@ public class QuestionListService {
         int count = 1; 
         ResultSet resultSet = sqlUtils.executeSQL(sql, database_name);
         try {
-            ResultSetMetaData metaData = resultSet.getMetaData(); 
+         ResultSetMetaData metaData = resultSet.getMetaData(); 
          System.out.println("QUANTIDADE DE COLUNAS QUE VIERAM DA QUERY:" + metaData.getColumnCount());
          String resultado = "";
          //Array para manter todas as informações...
