@@ -23,8 +23,10 @@ public class QuestionList {
     @GeneratedValue(generator = "UUID")
     @PrimaryKeyJoinColumn
     private UUID id;
-    @ManyToMany(mappedBy = "questionLists")
+    
+    @OneToMany(mappedBy = "questionList")
     private List<Question> questions = new ArrayList<>();
+    
     @Column
     @CreationTimestamp
     private LocalDateTime createdAt;

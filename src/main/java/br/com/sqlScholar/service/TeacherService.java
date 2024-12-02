@@ -15,7 +15,7 @@ import br.com.sqlScholar.dto.TeacherDTO;
 import br.com.sqlScholar.repository.TeacherRepository;
 
 @Service
-public class TeacherService {
+public class TeacherService{
 
     @Autowired
     private TeacherRepository teacherRepository;

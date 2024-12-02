@@ -24,10 +24,22 @@
 		</dependency>
 
 		<dependency>
+			<groupId>jakarta.validation</groupId>
+			<artifactId>jakarta.validation-api</artifactId>
+		</dependency>
+
+		<dependency>
 			<groupId>org.apache.maven.shared</groupId>
 			<artifactId>maven-script-interpreter</artifactId>
 			<version>1.6</version>
 		</dependency>
+
+		<!-- Qualquer coisa, será necessaŕio comentar esta dependência -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

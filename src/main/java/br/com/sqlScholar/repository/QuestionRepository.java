@@ -12,12 +12,7 @@ import java.util.UUID;
 @Repository
 public interface QuestionRepository extends JpaRepository<Question, UUID> {
     
-    @Query("SELECT q FROM Question q WHERE q.owner = ?1 OR q.isShared = TRUE")
-    List<Question> listAllSharedAndOwned(UUID id);
-
     @Query("SELECT q FROM Question q WHERE q.owner =?1")
     List<Question> listAllByTeacher(UUID id);
 
-    @Query("SELECT q FROM Question q WHERE q.isShared = TRUE")
-    List<Question> listAllSharedQuestions();
 }
