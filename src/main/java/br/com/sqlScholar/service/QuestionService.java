@@ -3,6 +3,7 @@ package br.com.sqlScholar.service;
 import br.com.sqlScholar.dto.QuestionDTO;
 import br.com.sqlScholar.model.Question;
 import br.com.sqlScholar.repository.QuestionRepository;
+import br.com.sqlScholar.utils.Resultado;
 import br.com.sqlScholar.utils.sqlUtils;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,10 +12,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Array;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -46,28 +49,29 @@ public class QuestionService {
 
     public List<String> awnserQuestion(String sql){
         //Limitar o aluno a fazer apenas SELECT, com algum tipo de trava.
-        ResultSet resultSet = sqlUtils.executeSQL(sql, "sqlscholar");
-        String resultado = "";
         int count = 1;
-        try {
-            ResultSetMetaData metaData = resultSet.getMetaData();
-            
-            List<String> resultadoList = new ArrayList<String>();
-            while (resultSet.next()) {
-               count = 1;
-               resultado = "";
-               while (count <= metaData.getColumnCount()) {
-                   resultado += "\n" + metaData.getColumnName(count) + ": " + resultSet.getString(count).toString();
-                   count++;
-               }
-               resultadoList.add(resultado);
+        String resultadoString = "";
+        Resultado resultado = sqlUtils.executeSQL(sql, "sqlscholar");
+        if (resultado.getException() == null) {
+            try {
+                ResultSetMetaData metaData = resultado.getResultSet().getMetaData();
+                List<String> resultadoList = new ArrayList<String>();
+                while (resultado.getResultSet().next()) {
+                   count = 1;
+                   resultadoString = "";
+                   while (count <= metaData.getColumnCount()) {
+                       resultadoString += "\n" + metaData.getColumnName(count) + ": " + resultado.getResultSet().getString(count).toString();
+                       count++;
+                   }
+                   resultadoList.add(resultadoString);
+                }
+                return resultadoList;
+            } catch (Exception e) {
+                return Arrays.asList(resultado.getException().getMessage());
             }
-            return resultadoList;
-        } catch (Exception e) {
-            //Gambiarra.
-            List<String> exceptionList = new ArrayList<String>();
-            exceptionList.add(e.toString());
-            return exceptionList;
+            
+        }else{
+            return Arrays.asList(resultado.getException().getMessage());
         }
     }
 

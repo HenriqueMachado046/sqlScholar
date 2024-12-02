@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import br.com.sqlScholar.model.QuestionList;
 import br.com.sqlScholar.repository.QuestionListRepository;
+import br.com.sqlScholar.utils.Resultado;
 import br.com.sqlScholar.utils.sqlUtils;
 
 @Service
@@ -52,35 +54,30 @@ public class QuestionListService {
         sqlUtils.createDatabase(sql);
     }
 
-    public String rodeSQL(String sql, String database_name){
-        int count = 1; 
-        ResultSet resultSet = sqlUtils.executeSQL(sql, database_name);
-        try {
-         ResultSetMetaData metaData = resultSet.getMetaData(); 
-         System.out.println("QUANTIDADE DE COLUNAS QUE VIERAM DA QUERY:" + metaData.getColumnCount());
-         String resultado = "";
-         //Array para manter todas as informações...
-         //Funciona! É importante notar que nos métodos do result set que acessam as rows pelo índice, a contagem começa em 1 E NÃO EM 0.
-         List<String> resultadoList = new ArrayList<String>();
-         while (resultSet.next()) {
-            count = 1;
-            resultado = "";
-            while (count <= metaData.getColumnCount()) {
-                resultado += "\n" + metaData.getColumnName(count) + " : " + resultSet.getString(count).toString();
-                count++;
+    public List<String> rodeSQL(String sql, String database_name){
+        int count = 1;
+        String resultadoString = "";
+        Resultado resultado = sqlUtils.executeSQL(sql, "sqlscholar");
+        if (resultado.getException() == null) {
+            try {
+                ResultSetMetaData metaData = resultado.getResultSet().getMetaData();
+                List<String> resultadoList = new ArrayList<String>();
+                while (resultado.getResultSet().next()) {
+                   count = 1;
+                   resultadoString = "";
+                   while (count <= metaData.getColumnCount()) {
+                       resultadoString += "\n" + metaData.getColumnName(count) + ": " + resultado.getResultSet().getString(count).toString();
+                       count++;
+                   }
+                   resultadoList.add(resultadoString);
+                }
+                return resultadoList;
+            } catch (Exception e) {
+                return Arrays.asList(resultado.getException().getMessage());
             }
-            resultadoList.add(resultado);
-         }
-
-         for (int i = 0; i < resultadoList.size(); i++) {
-            System.out.println(resultadoList.get(i));
-         }
-
-         return resultado;
             
-        } catch (SQLException e) {
-            //Assim, é só fazer um modal ou um alert que mostre o erro e já está concluido o "teste" do SQL.
-            return e.toString();
+        }else{
+            return Arrays.asList(resultado.getException().getMessage());
         }
          
     }
