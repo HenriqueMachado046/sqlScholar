@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.sql.SQLException;
 import java.util.*;
 
 @RestController
@@ -70,21 +69,31 @@ public class QuestionListController {
     }
 
     @PostMapping("/adicionar")    
-    public ModelAndView adicionar(@RequestParam String title, @RequestParam String database_script, @RequestParam Boolean isPrivate, @RequestParam List<UUID> question_id, @RequestParam UUID teacher_id){        
+    public ModelAndView adicionar(@RequestParam String title,
+     @RequestParam String database_script,
+     @RequestParam UUID teacher_id,
+     @RequestParam String database_name){        
         QuestionList questionList = new QuestionList();
+        database_name = database_name.trim().toLowerCase();
         questionList.setTitle(title);
-        questionList.setPrivate(isPrivate);               
         questionList.setDatabaseScript(database_script.trim());                       
-
+        questionList.setDatabaseName(database_name);
         Optional<Teacher> teacher = this.teacherRepository.findById(teacher_id);                
         questionList.setOwner(teacher.get());                     
         this.questionListRepository.save(questionList);        
-        for (int i = 0; i < question_id.size(); i++) {
-            this.questionListRepository.insertQuestions(questionList.getId(), question_id.get(i));    
-        }                        
-        // TODO: pra coisas pequenas, funciona!
+        
+        //Como a questão precisa ser inserida de dentro da lista, não faz mais sentido listar todas as questões necessárias.
+        // for (int i = 0; i < question_id.size(); i++) {
+        //     this.questionListRepository.insertQuestions(questionList.getId(), question_id.get(i));    
+        // }                        
+
+        //O nome do banco de dados será utilizado na criação. Após isso, o database_script é executado.
+        //O banco só deverá ser criado com os CREATE TABLES. Isto estará explícito no HTML.
+        //Agora está funcional.
         //Alterar para receber o create database do HTML.
-        this.questionListService.rodeSQL("CREATE database list_"+questionList.getId().toString().replace("-", "")+";");  
+
+        this.questionListService.rodeSQL("CREATE DATABASE " + database_name + ";");
+        this.questionListService.rodeSQL(database_script, questionList.getDatabaseName());  
         //this.questionListService.rodeSQL(database_script.trim(), "list_"+questionList.getId().toString().replace("-", ""));        
                
         Map<String, Object> template = new HashMap<>();
@@ -102,6 +111,7 @@ public class QuestionListController {
         questionList.setOwner(this.teacherRepository.findById(teacher_id).get());
         
         // vais dropar o banco antigo? ou editar não aceita substituir a base de dados? => pendente
+        //Não aceita substituir. A lista deve ser excluída.
         questionList.setDatabaseScript(database_script);        
 
         //  TODO: bug
@@ -130,10 +140,8 @@ public class QuestionListController {
         List<TeacherDTO> arrTeacherDTOs = this.teacherService.listAvailableTeachers(questionList.get().getOwner().getId(), 
         questionList.get().getOwner().getFirstName(), questionList.get().getOwner().getLastName());
 
-        //Pegar somente questões do professor e questões compartilhadas
         List<QuestionDTO> vetQuestionDTOs = this.questionService.listAvailableQuestions();
         
-
         for (QuestionDTO vetQuestionDTO : vetQuestionDTOs) {
             for (int i = 0; i < questionList.get().getQuestions().size(); i++) {
                 if (vetQuestionDTO.getId() == questionList.get().getQuestions().get(i).getId()) {
@@ -153,10 +161,10 @@ public class QuestionListController {
 
     @GetMapping("/deletar/{id}")
     public ModelAndView deletar(@PathVariable UUID id){
+        Optional<QuestionList> questionList = this.questionListRepository.findById(id);
         this.questionListRepository.deletar(id);
         try {
-            // TODO: verificar
-            this.questionListService.rodeSQL("DROP DATABASE list_"+id.toString().replace("-", "")+";");    
+            this.questionListService.rodeSQL("DROP DATABASE "+ questionList.get().getDatabaseName());    
         } catch (Exception e) {
             System.out.println("===========");
             System.out.println("Não foi possível deletar o banco correspondente:list_"+id.toString());
@@ -170,7 +178,7 @@ public class QuestionListController {
 
     @GetMapping("/mostrar_lista/{id}")
     public ModelAndView mostrarLista(@PathVariable UUID id){
-        String resultado = "";
+        List<String> resultado;
         //Trocar o "qualquer coisa" pelo input SQL do professor.
         resultado = this.questionListService.rodeSQL("qualquer coisa", "sqlscholar");
         Map<String, Object> template = new HashMap<>();

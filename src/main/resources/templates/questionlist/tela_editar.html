@@ -12,7 +12,7 @@
         <label for="description">database script</label>
         <textarea name="database_script">{{database_script}}</textarea>
     </div>
-    <div class="form-group">
+    <!-- <div class="form-group">
         <select style="width: 100px;" name="question_id" multiple required>
             {{#arrQuestion}}
                 {{#enabled}}
@@ -23,7 +23,7 @@
                 {{/enabled}}
             {{/arrQuestion}}
         </select>
-    </div>
+    </div> -->
     <div class="form-group">
         Professor:
         <select name="teacher_id" required>
@@ -37,16 +37,6 @@
             {{/vetProfessor}}
         </select>
     </div>
-    Privada:
-    {{#isPrivate}}
-        <input type="radio" name="isPrivate" value="true" checked>Sim
-        <input type="radio" name="isPrivate" value="false">Não
-    {{/isPrivate}}
-    {{^isPrivate}}
-        <input type="radio" name="isPrivate" value="false" checked>Não
-        <input type="radio" name="isPrivate" value="true">Sim
-    {{/isPrivate}}
-
+    
     <input class="btn btn-primary" type="submit" value="Editar">
-
     {{>footer}}

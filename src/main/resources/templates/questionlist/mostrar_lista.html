@@ -3,10 +3,8 @@
     <h1>Lista:{{title}}</h1>
     <!-- PROFESSOR TEVE O NOME ALTERADO PARA OWNER EM QUESTIONLIST -->
     <h3>Professor:{{owner.firstName}}
-    <h3>Privada? {{isPrivate}}</h3>
     <h3>sql {{databaseScript}}</h3>
     <h4>Questões:</h4>
-{{/questionlist}}
 <table class="table">
     {{#questions}}
         <tr>
@@ -19,5 +17,7 @@
 
 <h2>{{resultado}}</h2>
 
+<a href="/question/tela_adicionar/{{questionlist.id}}" class="btn btn-primary">Adicionar questão</a>
+{{/questionlist}}
 <a href="/questionlist/index" class="btn btn-primary">Retornar</a>
 {{>footer}}

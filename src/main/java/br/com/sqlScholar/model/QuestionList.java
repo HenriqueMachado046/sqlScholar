@@ -23,17 +23,26 @@ public class QuestionList {
     @GeneratedValue(generator = "UUID")
     @PrimaryKeyJoinColumn
     private UUID id;
-    @ManyToMany(mappedBy = "questionLists")
+    
+    @OneToMany(mappedBy = "questionList")
     private List<Question> questions = new ArrayList<>();
+    
+    @Column
+    private String databaseName;
+
     @Column
     @CreationTimestamp
     private LocalDateTime createdAt;
+    
     @Column
     private String title;
+    
     @Column
     private String databaseScript;
+    
     @Column
     private boolean isPrivate;    
+    
     @ManyToOne
     private Teacher owner;
 

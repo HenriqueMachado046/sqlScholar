@@ -47,11 +47,11 @@ public class QuestionService {
         return vetQuestionDTOs;
     }
 
-    public List<String> awnserQuestion(String sql){
+    public List<String> awnserQuestion(String sql, String databaseName){
         //Limitar o aluno a fazer apenas SELECT, com algum tipo de trava.
         int count = 1;
         String resultadoString = "";
-        Resultado resultado = sqlUtils.executeSQL(sql, "sqlscholar");
+        Resultado resultado = sqlUtils.executeSQL(sql, databaseName);
         if (resultado.getException() == null) {
             try {
                 ResultSetMetaData metaData = resultado.getResultSet().getMetaData();

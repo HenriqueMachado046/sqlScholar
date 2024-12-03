@@ -5,7 +5,7 @@
     <div class="row g-3">
         <div class="col form-group">
             <label for="title">Título:</label>
-            <input name="title" type="text" class="form-control" id="title" maxlength="50">
+            <input name="title" type="text" class="form-control" id="title" maxlength="50" required>
             
         </div>
         <div class="col form-group">
@@ -18,24 +18,18 @@
         </div>
     </div>
 
+    Inserir apenas o nome do banco de dados.
+    <div class = "form-group mb-3">
+        <label for="database_name" class="form-label">Database Name:</label>
+        <input name="database_name" type="text" class="form-control" id="database_name" required>
+    </div>
+
+    Insira apenas os CREATE TABLE no espaço abaixo. A aplicação lida com o CREATE DATABASE.
     <div class="form-group mb-3">
         <label for="database_script" class="form-label">Database Script:</label> <br>
-        <textarea class="form-control" name="database_script" style="height: 100px; width: auto; resize: none;"></textarea>
+        <textarea class="form-control" name="database_script" style="height: 100px; width: auto; resize: none;" required></textarea>
     </div>
 
-
-    <div class="form-group">
-        <label>Questões:</label> <br>
-        <select class="form-select" style="width: auto;" name="question_id" multiple required>
-            {{#arrQuestion}}
-                <option value="{{id}}">{{title}}</option>
-            {{/arrQuestion}}
-        </select>
-    </div>
-    
-    Privada:
-    <input type="radio" name="isPrivate" value="true" checked>Sim
-    <input type="radio" name="isPrivate" value="false">Não
 
     <input class="btn btn-primary" type="submit" value="Adicionar">
 </form>

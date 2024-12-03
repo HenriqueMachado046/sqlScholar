@@ -1,5 +1,6 @@
 {{>header}}
 <form id="questionform" action="/question/adicionar" method="post">
+    <input type="hidden" name="id" value="{{questionlist.id}}"><br>
     <div class="row g-2">
         <div class="col-md-6 form-group">
             <label for="title" class="form-label">Título:</label>
@@ -17,8 +18,8 @@
                     style="height: 100px; resize: none;"></textarea>
             </div>
             <div class="col form-group mb-3">
-                <label for="answerSheet">Gabarito</label>
-                <textarea id="answerSheet" class="form-control" name="answerSheet" form="questionform"
+                <label for="answer">Gabarito</label>
+                <textarea id="answer" class="form-control" name="answer" form="questionform"
                     style="height: 100px; resize: none;"></textarea>
             </div>
         </div>

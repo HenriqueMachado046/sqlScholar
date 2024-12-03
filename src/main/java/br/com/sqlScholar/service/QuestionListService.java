@@ -57,7 +57,7 @@ public class QuestionListService {
     public List<String> rodeSQL(String sql, String database_name){
         int count = 1;
         String resultadoString = "";
-        Resultado resultado = sqlUtils.executeSQL(sql, "sqlscholar");
+        Resultado resultado = sqlUtils.executeSQL(sql, database_name);
         if (resultado.getException() == null) {
             try {
                 ResultSetMetaData metaData = resultado.getResultSet().getMetaData();
@@ -80,6 +80,10 @@ public class QuestionListService {
             return Arrays.asList(resultado.getException().getMessage());
         }
          
+    }
+
+    public String getDatabaseName(){
+        return null;
     }
 
     public void rodeSQLMultiplaInstrucoes(ArrayList<String> vetSQL, String database_name) {

@@ -4,7 +4,9 @@ package br.com.sqlScholar.controller;
 import br.com.sqlScholar.dto.DifficultyDTO;
 import br.com.sqlScholar.dto.TeacherDTO;
 import br.com.sqlScholar.model.Question;
+import br.com.sqlScholar.model.QuestionList;
 import br.com.sqlScholar.model.Teacher;
+import br.com.sqlScholar.repository.QuestionListRepository;
 import br.com.sqlScholar.repository.QuestionRepository;
 import br.com.sqlScholar.repository.TeacherRepository;
 
@@ -39,8 +41,11 @@ public class QuestionController {
     @Autowired
     private QuestionService questionService;
 
-    @GetMapping("/tela_adicionar")
-    public ModelAndView tela_adicionar(){
+    @Autowired
+    private QuestionListRepository questionListRepository;
+
+    @GetMapping("/tela_adicionar/{id}")
+    public ModelAndView tela_adicionar(@PathVariable UUID questionlistID){
         List<Teacher> teacher = this.teacherRepository.findAll();
         Map<String, Object> template = new HashMap<>();
         template.put("arrTeacher", teacher);
@@ -88,19 +93,21 @@ public class QuestionController {
         return new ModelAndView("question/message", template);
     }
 
-    @PostMapping("/adicionar")
-    public ModelAndView adicionar(@RequestParam String title, @RequestParam String sql,
-    @RequestParam String difficulty,@RequestParam String answerSheet ,@RequestParam String description,
+    @PostMapping("/adicionar/{id}")
+    public ModelAndView adicionar(@PathVariable UUID questionlist_id,@RequestParam String title, @RequestParam String sql,
+    @RequestParam String difficulty,@RequestParam String answer ,@RequestParam String description,
     @RequestParam UUID teacher_id){
 
         Question question = new Question();
         Optional <Teacher> teacher = this.teacherRepository.findById(teacher_id);
+        Optional <QuestionList> questionlist = this.questionListRepository.findById(questionlist_id);
 
         question.setTitle(title);
         question.setDifficulty(difficulty);
         question.setDescription(description);
-        question.setAnswerSheet(answerSheet);
+        question.setAnswer(answer);
         question.setSql(sql);
+        question.setQuestionList(questionlist.get());
         question.setOwner(teacher.get());
         
         this.questionRepository.save(question);
@@ -114,7 +121,7 @@ public class QuestionController {
     //correto
     @RequestMapping("/editar")
     public ModelAndView editar(@RequestParam String title, @RequestParam String sql,
-    @RequestParam String difficulty,@RequestParam String answerSheet ,@RequestParam String description ,@RequestParam UUID id,
+    @RequestParam String difficulty,@RequestParam String answer ,@RequestParam String description ,@RequestParam UUID id,
     @RequestParam UUID teacher_id){
         Optional<Question> question = this.questionRepository.findById(id);
         Optional <Teacher> teacher = this.teacherRepository.findById(teacher_id);
@@ -122,7 +129,7 @@ public class QuestionController {
         question.get().setTitle(title);
         question.get().setDifficulty(difficulty);
         question.get().setDescription(description);
-        question.get().setAnswerSheet(answerSheet);
+        question.get().setAnswer(answer);
         question.get().setSql(sql);
         question.get().setOwner(teacher.get());
 
@@ -142,12 +149,11 @@ public class QuestionController {
     }
 
     @RequestMapping("/responder")
-    public ModelAndView responder(@RequestParam String resposta) {
+    public ModelAndView responder(@RequestParam String resposta, @RequestParam String databaseName) {
         //O banco de dados deverá ser passado por aqui. O @RequestParam irá receber uma string com o nome do banco.
         Map<String, Object> template =  new HashMap<>();
-        System.out.println("Aqui?");
         //questionService.awnserQuestion(resposta);
-        List<String> respostas = questionService.awnserQuestion(resposta);
+        List<String> respostas = questionService.awnserQuestion(resposta, databaseName);
         for (int i = 0; i < respostas.size(); i++) {
             System.out.println(respostas.get(i));
         }
