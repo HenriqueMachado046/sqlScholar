@@ -115,10 +115,12 @@ public class QuestionController {
         question.setOwner(teacher.get());
         this.questionRepository.save(question);
 
+
         Map<String, Object> template =  new HashMap<>();
         template.put("message","Questão cadastrada com sucesso!");
         template.put("arrQuestion", this.questionRepository.findAll());
-        return new ModelAndView("question/index", template);
+        //bugado. Precisa retornar corretamente para a página principal.
+        return new ModelAndView("/questionlist/index/", template);
     }
 
     //correto
@@ -185,6 +187,7 @@ public class QuestionController {
         template.put("resposta", resposta);
         template.put("corrigida", corrigida);
         template.put("message", message);
+        template.put("questionlistid", question.get().getQuestionList().getId());
         return new ModelAndView("question/resposta", template);
     }
     

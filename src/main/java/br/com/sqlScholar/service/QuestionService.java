@@ -51,7 +51,11 @@ public class QuestionService {
         //Limitar o aluno a fazer apenas SELECT, com algum tipo de trava.
         int count = 1;
         String resultadoString = "";
-        Resultado resultado = sqlUtils.executeSQL(sql, databaseName);
+
+        //Deve funcionar...
+        String sqlValidado = sqlUtils.validateSQL(sql);
+
+        Resultado resultado = sqlUtils.executeSQL(sqlValidado, databaseName);
         if (resultado.getException() == null) {
             try {
                 ResultSetMetaData metaData = resultado.getResultSet().getMetaData();
