@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.lang.StackWalker.Option;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -44,11 +45,15 @@ public class QuestionController {
     @Autowired
     private QuestionListRepository questionListRepository;
 
-    @GetMapping("/tela_adicionar/{id}")
-    public ModelAndView tela_adicionar(@PathVariable UUID questionlistID){
+    @GetMapping("/tela_adicionar/{questionlistId}")
+    public ModelAndView tela_adicionar(@PathVariable UUID questionlistId){
+        //OK
         List<Teacher> teacher = this.teacherRepository.findAll();
+        Optional<QuestionList> questionlist = this.questionListRepository.findById(questionlistId);
         Map<String, Object> template = new HashMap<>();
         template.put("arrTeacher", teacher);
+        template.put("questionlist", questionlist.get());
+        System.out.println("\n" + questionlistId);
         return new ModelAndView("question/tela_adicionar", template);
     }
 
@@ -93,15 +98,14 @@ public class QuestionController {
         return new ModelAndView("question/message", template);
     }
 
-    @PostMapping("/adicionar/{id}")
-    public ModelAndView adicionar(@PathVariable UUID questionlist_id,@RequestParam String title, @RequestParam String sql,
+    @PostMapping("/adicionar")
+    public ModelAndView adicionar(@RequestParam UUID questionlist_id,@RequestParam String title, @RequestParam String sql,
     @RequestParam String difficulty,@RequestParam String answer ,@RequestParam String description,
     @RequestParam UUID teacher_id){
 
         Question question = new Question();
         Optional <Teacher> teacher = this.teacherRepository.findById(teacher_id);
         Optional <QuestionList> questionlist = this.questionListRepository.findById(questionlist_id);
-
         question.setTitle(title);
         question.setDifficulty(difficulty);
         question.setDescription(description);
@@ -109,7 +113,6 @@ public class QuestionController {
         question.setSql(sql);
         question.setQuestionList(questionlist.get());
         question.setOwner(teacher.get());
-        
         this.questionRepository.save(question);
 
         Map<String, Object> template =  new HashMap<>();
@@ -144,7 +147,9 @@ public class QuestionController {
     public ModelAndView tela_responder(@PathVariable UUID id) {
         Map<String, Object> template =  new HashMap<>();
         Optional<Question> question = this.questionRepository.findById(id);
+        Optional<QuestionList> questionlist = this.questionListRepository.findById(question.get().getQuestionList().getId());
         template.put("question", question.get());
+        template.put("questionlist", questionlist.get());
         return new ModelAndView("question/tela_responder", template);
     }
 
@@ -152,6 +157,7 @@ public class QuestionController {
     public ModelAndView responder(@RequestParam String resposta, @RequestParam String databaseName) {
         //O banco de dados deverá ser passado por aqui. O @RequestParam irá receber uma string com o nome do banco.
         //Agora só falta achar uma maneira de fazer o nome do banco ser passado por parâmetro. Quando resolver a inserção, resolve este por consequência.
+        //Aprendendo com erros. Na verdade, é possível pegar o id da lista de questões por dentro da questão, visto que são duas entidades que se relacionam.
         Map<String, Object> template =  new HashMap<>();
         //questionService.awnserQuestion(resposta);
         List<String> respostas = questionService.awnserQuestion(resposta, databaseName);

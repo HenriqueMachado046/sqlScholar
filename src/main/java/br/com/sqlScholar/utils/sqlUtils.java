@@ -6,9 +6,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import org.apache.maven.shared.scriptinterpreter.ScriptRunner;
-
-
 public class sqlUtils {
 
     public static void createDatabase(String sql){
@@ -21,12 +18,6 @@ public class sqlUtils {
         } catch (SQLException e) {
             System.out.println(sql + e.getMessage());
         }
-    }
-
-    public static void createDatabase(){
-        //O script runner é uma opção para rodar o arquivo .sql.
-        //TODO: Conversar com o Igor sobre o upload de arquivo .sql.
-        ScriptRunner scriptRunner;
     }
 
     public static Resultado executeSQL(String sql, String databaseName){

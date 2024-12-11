@@ -113,7 +113,7 @@ public class QuestionListController {
         // Agora está funcional.
         // Alterar para receber o create database do HTML.
 
-        this.questionListService.rodeSQL("CREATE DATABASE " + database_name + ";");
+        this.questionListService.createDatabase("CREATE DATABASE " + database_name + ";");
         this.questionListService.rodeSQL(database_script, questionList.getDatabaseName());
         // this.questionListService.rodeSQL(database_script.trim(),
         // "list_"+questionList.getId().toString().replace("-", ""));
@@ -191,7 +191,7 @@ public class QuestionListController {
         Optional<QuestionList> questionList = this.questionListRepository.findById(id);
         this.questionListRepository.deletar(id);
         try {
-            this.questionListService.rodeSQL("DROP DATABASE " + questionList.get().getDatabaseName());
+            this.questionListService.createDatabase("DROP DATABASE " + questionList.get().getDatabaseName());
         } catch (Exception e) {
             System.out.println("===========");
             System.out.println("Não foi possível deletar o banco correspondente:list_" + id.toString());

@@ -1,6 +1,8 @@
 {{>header}}
 <form id="questionform" action="/question/adicionar" method="post">
-    <input type="hidden" name="id" value="{{questionlist.id}}"><br>
+    {{#questionlist}}
+    <input type="hidden" name="questionlist_id" value="{{questionlist.id}}"><br>
+    {{/questionlist}}
     <div class="row g-2">
         <div class="col-md-6 form-group">
             <label for="title" class="form-label">Título:</label>

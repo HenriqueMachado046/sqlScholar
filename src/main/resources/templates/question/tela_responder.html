@@ -2,7 +2,10 @@
 {{#question}}
     <form id="questionform" action="/question/responder" method="post">
         <input type="hidden" name="id" value="{{question.id}}"><br>
-            <div class="col form-group mb-3">
+        {{#questionlist}}
+        <input type="hidden" name="databaseName" value="{{questionlist.databaseName}}">
+        {{/questionlist}}
+        <div class="col form-group mb-3">
                 <label for="description">Escreva a sua resposta</label>
                 <textarea id="resposta" name="resposta" class="form-control" form="questionform" style="height: 100px; resize: none;"></textarea>
             </div>

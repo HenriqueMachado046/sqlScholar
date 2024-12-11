@@ -32,29 +32,12 @@ public class QuestionListService {
         return questionListPage.getContent();
     }
 
-    // public void criaDump(UUID questionListID, String sql) {
-    //     // bug
-           // O bug provavelmente advém do path estar não ser relativo, mas sim absoluto. Pensar em uma maneira melhor de usar isto. 
-    //     try (BufferedWriter writer = new BufferedWriter(
-    //             new FileWriter("dump" + questionListID.toString().replace("-", "") + ".sql"))) {
-    //         String sql1 = "CREATE database list" + questionListID.toString().replace("-", "") + "; \\c list"
-    //                 + questionListID.toString().replace("-", "") + "; ";
-    //         sql1 += sql.trim();
-    //         writer.write(sql1);
-    //         writer.close();
-    //         this.rodeSQL(
-    //                 "\\i /home/iapereira/git/sqlScholar/dump" + questionListID.toString().replace("-", "") + ".sql");
-    //     } catch (IOException e) {
-    //         e.printStackTrace();
-    //     }
-    // }
-
-    public void rodeSQL(String sql) {
-        //Movido para sqlUtils.
+    public void createDatabase(String sql) {
         sqlUtils.createDatabase(sql);
     }
 
     public List<String> rodeSQL(String sql, String database_name){
+        //Este count precisa iniciar em 1 pois o Result Set começa na posição 1 e não na posição 0.
         int count = 1;
         String resultadoString = "";
         Resultado resultado = sqlUtils.executeSQL(sql, database_name);
