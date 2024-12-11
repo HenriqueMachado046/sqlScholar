@@ -151,6 +151,7 @@ public class QuestionController {
     @RequestMapping("/responder")
     public ModelAndView responder(@RequestParam String resposta, @RequestParam String databaseName) {
         //O banco de dados deverá ser passado por aqui. O @RequestParam irá receber uma string com o nome do banco.
+        //Agora só falta achar uma maneira de fazer o nome do banco ser passado por parâmetro. Quando resolver a inserção, resolve este por consequência.
         Map<String, Object> template =  new HashMap<>();
         //questionService.awnserQuestion(resposta);
         List<String> respostas = questionService.awnserQuestion(resposta, databaseName);

@@ -86,8 +86,5 @@ public class QuestionListService {
         return null;
     }
 
-    public void rodeSQLMultiplaInstrucoes(ArrayList<String> vetSQL, String database_name) {
-       //Será movido para sqlUtils.
-    }
 
 }

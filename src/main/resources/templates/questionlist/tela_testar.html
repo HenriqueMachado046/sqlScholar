@@ -1,0 +1,15 @@
+{{>header}}
+{{#questionlist}}
+    <h1>Este espaço é dedicado ao teste de selects. O banco de dados atual é o {{questionlist.databaseName}}</h1> 
+    <br>
+    <form id="questionlistform" action="/questionlist/testar_sql" method="post">
+        <input type="hidden" name="id" value="{{questionlist.id}}"><br>
+            <div class="col form-group mb-3">
+                <label for="sql_teste">Escreva seu teste</label>
+                <textarea id="sql_teste" name="sql_teste" class="form-control" form="questionlistform" style="height: 100px; resize: none;"></textarea>
+            </div>
+        </div>
+        <input class="btn btn-primary" type="submit" value="Testar">
+    </form>
+{{/questionlist}}
+{{>footer}}

@@ -40,62 +40,84 @@ public class QuestionListController {
     @Autowired
     private QuestionService questionService;
 
-    // PENDENTE: filtrar por somente pelas propria questões do professor e as que forem públicas ≥ pendente
-    // Henrique: Filtro criado. Só está comentado, pois só poderá ser ativado após ser criado o login.
+    // PENDENTE: filtrar por somente pelas propria questões do professor e as que
+    // forem públicas ≥ pendente
+    // Henrique: Filtro criado. Só está comentado, pois só poderá ser ativado após
+    // ser criado o login.
     @GetMapping("/tela_adicionar")
-    public ModelAndView tela_adicionar(){        
+    public ModelAndView tela_adicionar() {
         List<Question> question = this.questionRepository.findAll();
-        //List<Question> question = this.questionRepository.listAllSharedAndOwned(id);
-        //Teacher teacher = this.teacherRepository.findById(id).get();
+        // List<Question> question = this.questionRepository.listAllSharedAndOwned(id);
+        // Teacher teacher = this.teacherRepository.findById(id).get();
         List<Teacher> teacher = this.teacherRepository.findAll();
         Map<String, Object> template = new HashMap<>();
         template.put("arrQuestion", question);
         template.put("arrTeacher", teacher);
-        return new ModelAndView("questionlist/tela_adicionar", template) ;
+        return new ModelAndView("questionlist/tela_adicionar", template);
     }
 
-    // problema paginacao
     @GetMapping("/index")
-    public ModelAndView index(){
+    public ModelAndView index() {
         Map<String, Object> template = new HashMap<>();
         // int pageNumber = 0;
         // int pageSize = 15;
         template.put("message", "");
-        // template.put("arrQuestionList", questionListService.pageableQuestionList(pageNumber, pageSize));
+        // template.put("arrQuestionList",
+        // questionListService.pageableQuestionList(pageNumber, pageSize));
         // template.put("pageNumber", pageNumber + 1);
         template.put("arrQuestionList", questionListRepository.findAll());
         // template.put("pageNumber", "");
         return new ModelAndView("questionlist/index", template);
     }
 
-    @PostMapping("/adicionar")    
+    @GetMapping("/tela_testar/{id}")
+    public ModelAndView tela_testar(@PathVariable UUID id) {
+        Map<String, Object> template = new HashMap<>();
+        Optional<QuestionList> questionlist = questionListRepository.findById(id);
+        template.put("questionlist", questionlist.get());
+        return new ModelAndView("questionlist/tela_testar", template);
+    }
+
+    @RequestMapping("/testar_sql")
+    public ModelAndView sql_teste(@RequestParam String sql_teste, @RequestParam UUID id) {
+        Map<String, Object> template = new HashMap<>();
+        sql_teste = sql_teste.toLowerCase();
+        Optional<QuestionList> questionlist = questionListRepository.findById(id);
+        //Abaixo é a maneira de fazer o acesso do banco através da questionlist. Este mesmo método deverá ser utilizado durante a criação das questões.
+        List<String> resultadoTeste = questionListService.rodeSQL(sql_teste, questionlist.get().getDatabaseName());
+        for (int i = 0; i < resultadoTeste.size(); i++) {
+            System.out.println(resultadoTeste.get(i));
+        }
+        template.put("sql_teste", resultadoTeste);
+        return new ModelAndView("questionlist/testar_sql", template);
+    }
+
+    @PostMapping("/adicionar")
     public ModelAndView adicionar(@RequestParam String title,
-     @RequestParam String database_script,
-     @RequestParam UUID teacher_id,
-     @RequestParam String database_name){        
+            @RequestParam String database_script,
+            @RequestParam UUID teacher_id,
+            @RequestParam String database_name) {
         QuestionList questionList = new QuestionList();
         database_name = database_name.trim().toLowerCase();
         questionList.setTitle(title);
-        questionList.setDatabaseScript(database_script.trim());                       
+        questionList.setDatabaseScript(database_script.trim());
         questionList.setDatabaseName(database_name);
-        Optional<Teacher> teacher = this.teacherRepository.findById(teacher_id);                
-        questionList.setOwner(teacher.get());                     
-        this.questionListRepository.save(questionList);        
-        
-        //Como a questão precisa ser inserida de dentro da lista, não faz mais sentido listar todas as questões necessárias.
-        // for (int i = 0; i < question_id.size(); i++) {
-        //     this.questionListRepository.insertQuestions(questionList.getId(), question_id.get(i));    
-        // }                        
+        Optional<Teacher> teacher = this.teacherRepository.findById(teacher_id);
+        questionList.setOwner(teacher.get());
+        this.questionListRepository.save(questionList);
 
-        //O nome do banco de dados será utilizado na criação. Após isso, o database_script é executado.
-        //O banco só deverá ser criado com os CREATE TABLES. Isto estará explícito no HTML.
-        //Agora está funcional.
-        //Alterar para receber o create database do HTML.
+        // O nome do banco de dados será utilizado na criação. Após isso, o
+        // database_script é executado.
+        // O banco só deverá ser criado com os CREATE TABLES. Isto estará explícito no
+        // HTML.
+        // Agora está funcional.
+        // Alterar para receber o create database do HTML.
 
         this.questionListService.rodeSQL("CREATE DATABASE " + database_name + ";");
-        this.questionListService.rodeSQL(database_script, questionList.getDatabaseName());  
-        //this.questionListService.rodeSQL(database_script.trim(), "list_"+questionList.getId().toString().replace("-", ""));        
-               
+        this.questionListService.rodeSQL(database_script, questionList.getDatabaseName());
+        // this.questionListService.rodeSQL(database_script.trim(),
+        // "list_"+questionList.getId().toString().replace("-", ""));
+
         Map<String, Object> template = new HashMap<>();
         template.put("message", "Lista cadastrada com sucesso!");
         // template.put("pageNumber", "");
@@ -104,27 +126,31 @@ public class QuestionListController {
     }
 
     @RequestMapping("/editar")
-    public ModelAndView editar(@RequestParam UUID id, @RequestParam String database_script, @RequestParam String title, @RequestParam Boolean isPrivate, @RequestParam UUID teacher_id, @RequestParam List<UUID> question_id){
+    public ModelAndView editar(@RequestParam UUID id, @RequestParam String database_script, @RequestParam String title,
+            @RequestParam Boolean isPrivate, @RequestParam UUID teacher_id, @RequestParam List<UUID> question_id) {
         QuestionList questionList = this.questionListRepository.findById(id).get();
         questionList.setTitle(title);
-        questionList.setPrivate(isPrivate);               
+        questionList.setPrivate(isPrivate);
         questionList.setOwner(this.teacherRepository.findById(teacher_id).get());
-        
-        // vais dropar o banco antigo? ou editar não aceita substituir a base de dados? => pendente
-        //Não aceita substituir. A lista deve ser excluída.
-        questionList.setDatabaseScript(database_script);        
 
-        //  TODO: bug
-        // this.questionListService.rodeSQL("DROP SCHEMA public CASCADE;", "list_"+questionList.getId().toString().replace("-", ""));        
-        // this.questionListService.rodeSQL("CREATE SCHEMA public;", "list_"+questionList.getId().toString().replace("-", ""));        
-        // this.questionListService.rodeSQL(database_script.trim(), "list_"+questionList.getId().toString().replace("-", ""));            
+        // vais dropar o banco antigo? ou editar não aceita substituir a base de dados?
+        // => pendente
+        // Não aceita substituir. A lista deve ser excluída.
+        questionList.setDatabaseScript(database_script);
+
+        // this.questionListService.rodeSQL("DROP SCHEMA public CASCADE;",
+        // "list_"+questionList.getId().toString().replace("-", ""));
+        // this.questionListService.rodeSQL("CREATE SCHEMA public;",
+        // "list_"+questionList.getId().toString().replace("-", ""));
+        // this.questionListService.rodeSQL(database_script.trim(),
+        // "list_"+questionList.getId().toString().replace("-", ""));
 
         this.questionListRepository.save(questionList);
         this.questionListRepository.deleteQuestions(id);
 
         for (int i = 0; i < question_id.size(); i++) {
-            this.questionListRepository.insertQuestions(questionList.getId(), question_id.get(i));    
-        }            
+            this.questionListRepository.insertQuestions(questionList.getId(), question_id.get(i));
+        }
         Map<String, Object> template = new HashMap<>();
         template.put("message", "Lista editada com sucesso!");
         template.put("arrQuestionList", this.questionListRepository.listAll());
@@ -132,16 +158,17 @@ public class QuestionListController {
     }
 
     @GetMapping("/tela_editar/{id}")
-    public ModelAndView tela_editar (@PathVariable UUID id){
+    public ModelAndView tela_editar(@PathVariable UUID id) {
         Map<String, Object> template = new HashMap<>();
 
         Optional<QuestionList> questionList = this.questionListRepository.findById(id);
 
-        List<TeacherDTO> arrTeacherDTOs = this.teacherService.listAvailableTeachers(questionList.get().getOwner().getId(), 
-        questionList.get().getOwner().getFirstName(), questionList.get().getOwner().getLastName());
+        List<TeacherDTO> arrTeacherDTOs = this.teacherService.listAvailableTeachers(
+                questionList.get().getOwner().getId(),
+                questionList.get().getOwner().getFirstName(), questionList.get().getOwner().getLastName());
 
         List<QuestionDTO> vetQuestionDTOs = this.questionService.listAvailableQuestions();
-        
+
         for (QuestionDTO vetQuestionDTO : vetQuestionDTOs) {
             for (int i = 0; i < questionList.get().getQuestions().size(); i++) {
                 if (vetQuestionDTO.getId() == questionList.get().getQuestions().get(i).getId()) {
@@ -150,7 +177,7 @@ public class QuestionListController {
             }
         }
 
-        template.put("vetProfessor", arrTeacherDTOs);     
+        template.put("vetProfessor", arrTeacherDTOs);
         template.put("arrQuestion", vetQuestionDTOs);
         template.put("title", questionList.get().getTitle());
         template.put("id", questionList.get().getId());
@@ -160,16 +187,16 @@ public class QuestionListController {
     }
 
     @GetMapping("/deletar/{id}")
-    public ModelAndView deletar(@PathVariable UUID id){
+    public ModelAndView deletar(@PathVariable UUID id) {
         Optional<QuestionList> questionList = this.questionListRepository.findById(id);
         this.questionListRepository.deletar(id);
         try {
-            this.questionListService.rodeSQL("DROP DATABASE "+ questionList.get().getDatabaseName());    
+            this.questionListService.rodeSQL("DROP DATABASE " + questionList.get().getDatabaseName());
         } catch (Exception e) {
             System.out.println("===========");
-            System.out.println("Não foi possível deletar o banco correspondente:list_"+id.toString());
+            System.out.println("Não foi possível deletar o banco correspondente:list_" + id.toString());
             System.out.println("===========");
-        }                
+        }
         Map<String, Object> template = new HashMap<>();
         template.put("arrQuestionList", this.questionListRepository.listAll());
         template.put("message", "Lista deletada com sucesso!" + id);
@@ -177,15 +204,15 @@ public class QuestionListController {
     }
 
     @GetMapping("/mostrar_lista/{id}")
-    public ModelAndView mostrarLista(@PathVariable UUID id){
-        List<String> resultado;
-        //Trocar o "qualquer coisa" pelo input SQL do professor.
-        resultado = this.questionListService.rodeSQL("qualquer coisa", "sqlscholar");
+    public ModelAndView mostrarLista(@PathVariable UUID id) {
+        // List<String> resultado;
+        // Trocar o "qualquer coisa" pelo input SQL do professor.
+        // resultado = this.questionListService.rodeSQL("qualquer coisa", "sqlscholar");
         Map<String, Object> template = new HashMap<>();
-        Optional<QuestionList> questionlist = this.questionListRepository.findById(id);        
+        Optional<QuestionList> questionlist = this.questionListRepository.findById(id);
         template.put("questionlist", questionlist.get());
         template.put("questions", questionlist.get().getQuestions());
-        template.put("resultado", resultado);
+        // template.put("resultado", resultado);
         return new ModelAndView("questionlist/mostrar_lista", template);
     }
 }
