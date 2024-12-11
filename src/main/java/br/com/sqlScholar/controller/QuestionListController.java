@@ -99,7 +99,9 @@ public class QuestionListController {
             @RequestParam String database_name,
             @RequestParam String description) {
         QuestionList questionList = new QuestionList();
-        database_name = database_name.trim().toLowerCase();
+        database_name = database_name.replaceAll(" ", "");
+        database_name = database_name.toLowerCase();
+        System.out.println(database_name);
         questionList.setTitle(title);
         questionList.setDatabaseScript(database_script.trim().toLowerCase());
         questionList.setDatabaseName(database_name);
@@ -107,8 +109,6 @@ public class QuestionListController {
         Optional<Teacher> teacher = this.teacherRepository.findById(teacher_id);
         questionList.setOwner(teacher.get());
         this.questionListRepository.save(questionList);
-
-        
         // O nome do banco de dados será utilizado na criação. Após isso, o
         // database_script é executado.
         // O banco só deverá ser criado com os CREATE TABLES. Isto estará explícito no

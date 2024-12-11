@@ -1,10 +1,25 @@
 {{>header}}
+{{#message}}
+<div class="alert alert-success" role="alert">
+    {{message}}
+</div>
+{{/message}}
+
 {{#resposta}}
     <div class="container">
         <p class="text-break">
-            {{resposta}}
+            Seu select foi: {{resposta}}
         </p>
     </div>
 {{/resposta}}
+
+{{#corrigida}}
+    <div class="container">
+        <p class="text-break">
+            {{corrigida}}
+        </p>
+    </div>
+{{/corrigida}}
+
 <a href="/question/index" class="btn btn-primary">Retornar</a>
 {{>footer}}

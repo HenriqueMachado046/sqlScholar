@@ -3,6 +3,7 @@
     <form id="questionform" action="/question/responder" method="post">
         <input type="hidden" name="id" value="{{question.id}}"><br>
         {{#questionlist}}
+        <input type="hidden" name="questionlistid" value="{{questionlist.id}}">
         <input type="hidden" name="databaseName" value="{{questionlist.databaseName}}">
         {{/questionlist}}
         <div class="col form-group mb-3">

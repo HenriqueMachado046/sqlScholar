@@ -154,17 +154,37 @@ public class QuestionController {
     }
 
     @RequestMapping("/responder")
-    public ModelAndView responder(@RequestParam String resposta, @RequestParam String databaseName) {
+    public ModelAndView responder(@RequestParam String resposta, @RequestParam String databaseName, @RequestParam UUID id) {
         //O banco de dados deverá ser passado por aqui. O @RequestParam irá receber uma string com o nome do banco.
         //Agora só falta achar uma maneira de fazer o nome do banco ser passado por parâmetro. Quando resolver a inserção, resolve este por consequência.
         //Aprendendo com erros. Na verdade, é possível pegar o id da lista de questões por dentro da questão, visto que são duas entidades que se relacionam.
         Map<String, Object> template =  new HashMap<>();
-        //questionService.awnserQuestion(resposta);
+        Optional<Question> question = this.questionRepository.findById(id);
+    
+        String sql_questao = question.get().getSql();
+        List<String> gabarito = questionService.awnserQuestion(sql_questao, databaseName);
         List<String> respostas = questionService.awnserQuestion(resposta, databaseName);
-        for (int i = 0; i < respostas.size(); i++) {
-            System.out.println(respostas.get(i));
+        String message = "";
+        String corrigida =" ";
+
+        //Pensar melhor na correção, talvez fazendo um método no service de question. No entanto, funciona!
+        //TODO: Lidar com respostas que não retornam nada!!
+
+        if (gabarito.containsAll(respostas)) {
+            message = "Acertou.";
+        
+        }else{
+            message = "Errou";
         }
-        template.put("resposta", respostas);
+
+        for (int i = 0; i < respostas.size(); i++) {
+            corrigida += " [" + respostas.get(i) +"] \n";
+        }
+
+
+        template.put("resposta", resposta);
+        template.put("corrigida", corrigida);
+        template.put("message", message);
         return new ModelAndView("question/resposta", template);
     }
     
