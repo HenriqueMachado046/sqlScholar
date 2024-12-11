@@ -96,16 +96,19 @@ public class QuestionListController {
     public ModelAndView adicionar(@RequestParam String title,
             @RequestParam String database_script,
             @RequestParam UUID teacher_id,
-            @RequestParam String database_name) {
+            @RequestParam String database_name,
+            @RequestParam String description) {
         QuestionList questionList = new QuestionList();
         database_name = database_name.trim().toLowerCase();
         questionList.setTitle(title);
-        questionList.setDatabaseScript(database_script.trim());
+        questionList.setDatabaseScript(database_script.trim().toLowerCase());
         questionList.setDatabaseName(database_name);
+        questionList.setDescription(description);
         Optional<Teacher> teacher = this.teacherRepository.findById(teacher_id);
         questionList.setOwner(teacher.get());
         this.questionListRepository.save(questionList);
 
+        
         // O nome do banco de dados será utilizado na criação. Após isso, o
         // database_script é executado.
         // O banco só deverá ser criado com os CREATE TABLES. Isto estará explícito no
@@ -127,30 +130,21 @@ public class QuestionListController {
 
     @RequestMapping("/editar")
     public ModelAndView editar(@RequestParam UUID id, @RequestParam String database_script, @RequestParam String title,
-            @RequestParam Boolean isPrivate, @RequestParam UUID teacher_id, @RequestParam List<UUID> question_id) {
+            @RequestParam Boolean isPrivate, @RequestParam String description) {
         QuestionList questionList = this.questionListRepository.findById(id).get();
         questionList.setTitle(title);
         questionList.setPrivate(isPrivate);
-        questionList.setOwner(this.teacherRepository.findById(teacher_id).get());
-
         // vais dropar o banco antigo? ou editar não aceita substituir a base de dados?
         // => pendente
         // Não aceita substituir. A lista deve ser excluída.
         questionList.setDatabaseScript(database_script);
-
         // this.questionListService.rodeSQL("DROP SCHEMA public CASCADE;",
         // "list_"+questionList.getId().toString().replace("-", ""));
         // this.questionListService.rodeSQL("CREATE SCHEMA public;",
         // "list_"+questionList.getId().toString().replace("-", ""));
         // this.questionListService.rodeSQL(database_script.trim(),
         // "list_"+questionList.getId().toString().replace("-", ""));
-
         this.questionListRepository.save(questionList);
-        this.questionListRepository.deleteQuestions(id);
-
-        for (int i = 0; i < question_id.size(); i++) {
-            this.questionListRepository.insertQuestions(questionList.getId(), question_id.get(i));
-        }
         Map<String, Object> template = new HashMap<>();
         template.put("message", "Lista editada com sucesso!");
         template.put("arrQuestionList", this.questionListRepository.listAll());
@@ -162,26 +156,10 @@ public class QuestionListController {
         Map<String, Object> template = new HashMap<>();
 
         Optional<QuestionList> questionList = this.questionListRepository.findById(id);
-
-        List<TeacherDTO> arrTeacherDTOs = this.teacherService.listAvailableTeachers(
-                questionList.get().getOwner().getId(),
-                questionList.get().getOwner().getFirstName(), questionList.get().getOwner().getLastName());
-
-        List<QuestionDTO> vetQuestionDTOs = this.questionService.listAvailableQuestions();
-
-        for (QuestionDTO vetQuestionDTO : vetQuestionDTOs) {
-            for (int i = 0; i < questionList.get().getQuestions().size(); i++) {
-                if (vetQuestionDTO.getId() == questionList.get().getQuestions().get(i).getId()) {
-                    vetQuestionDTO.setEnabled(true);
-                }
-            }
-        }
-
-        template.put("vetProfessor", arrTeacherDTOs);
-        template.put("arrQuestion", vetQuestionDTOs);
         template.put("title", questionList.get().getTitle());
         template.put("id", questionList.get().getId());
         template.put("database_script", questionList.get().getDatabaseScript());
+        template.put("description", questionList.get().getDescription());
 
         return new ModelAndView("questionlist/tela_editar", template);
     }
@@ -189,17 +167,17 @@ public class QuestionListController {
     @GetMapping("/deletar/{id}")
     public ModelAndView deletar(@PathVariable UUID id) {
         Optional<QuestionList> questionList = this.questionListRepository.findById(id);
-        this.questionListRepository.deletar(id);
+        this.questionListRepository.delete(questionList.get());
         try {
             this.questionListService.createDatabase("DROP DATABASE " + questionList.get().getDatabaseName());
         } catch (Exception e) {
             System.out.println("===========");
-            System.out.println("Não foi possível deletar o banco correspondente:list_" + id.toString());
+            System.out.println("Não foi possível deletar o banco correspondente:" + questionList.get().getDatabaseName());
             System.out.println("===========");
         }
         Map<String, Object> template = new HashMap<>();
         template.put("arrQuestionList", this.questionListRepository.listAll());
-        template.put("message", "Lista deletada com sucesso!" + id);
+        template.put("message", "Lista deletada com sucesso!");
         return new ModelAndView("questionlist/index", template);
     }
 

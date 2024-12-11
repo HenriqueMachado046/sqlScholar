@@ -8,10 +8,17 @@
         <label for="title">Título:</label>
         <input name="title" type="text" class="form-control" id="title" maxlength="50" value="{{title}}">
     </div>
-    <div class="form-group">
-        <label for="description">database script</label>
-        <textarea name="database_script">{{database_script}}</textarea>
+
+    <div class="form-group mb-3">
+        <label for="database_script" class="form-label">Database Script:</label> <br>
+        <textarea class="form-control" name="database_script" style="height: 100px; width: auto; resize: none;" required>{{database_script}}</textarea>
     </div>
+
+    <div class="form-group mb-3">
+        <label for="description" class="form-label">Descrição da lista:</label> <br>
+        <textarea class="form-control" name="description" style="height: 100px; width: auto; resize: none;" required>{{description}}</textarea>
+    </div>
+
     <!-- <div class="form-group">
         <select style="width: 100px;" name="question_id" multiple required>
             {{#arrQuestion}}
@@ -24,7 +31,7 @@
             {{/arrQuestion}}
         </select>
     </div> -->
-    <div class="form-group">
+    <!-- <div class="form-group">
         Professor:
         <select name="teacher_id" required>
             {{#vetProfessor}}
@@ -36,7 +43,7 @@
                 {{/isOwner}}
             {{/vetProfessor}}
         </select>
-    </div>
+    </div> -->
     
     <input class="btn btn-primary" type="submit" value="Editar">
     {{>footer}}

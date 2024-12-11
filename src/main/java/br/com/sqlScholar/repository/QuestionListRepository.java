@@ -17,7 +17,6 @@ public interface QuestionListRepository extends JpaRepository<QuestionList, UUID
     List<QuestionList> listAll();
     
     @Transactional
-    @Modifying
     @Query(nativeQuery = true, value = "BEGIN; DELETE FROM questionlist ql WHERE ql.id = :idparam ; COMMIT;")
     void deletar(UUID idparam);
 

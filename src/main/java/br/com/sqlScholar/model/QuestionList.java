@@ -24,7 +24,7 @@ public class QuestionList {
     @PrimaryKeyJoinColumn
     private UUID id;
     
-    @OneToMany(mappedBy = "questionList")
+    @OneToMany(cascade = CascadeType.REMOVE,mappedBy = "questionList")
     private List<Question> questions = new ArrayList<>();
     
     @Column
@@ -39,6 +39,9 @@ public class QuestionList {
     
     @Column
     private String databaseScript;
+
+    @Column
+    private String description;
     
     @Column
     private boolean isPrivate;    
