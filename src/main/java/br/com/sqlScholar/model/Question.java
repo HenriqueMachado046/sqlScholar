@@ -29,9 +29,6 @@ public class Question {
     @Column
     private String answer;
     
-    @OneToMany(mappedBy= "id")
-    private List<TestCase> testCases = new ArrayList<>();
-    
     @OneToMany(mappedBy = "id")
     private List<Tag> tags = new ArrayList<>();
     
