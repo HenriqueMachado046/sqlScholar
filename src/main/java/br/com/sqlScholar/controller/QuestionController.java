@@ -167,14 +167,22 @@ public class QuestionController {
         Optional<Question> question = this.questionRepository.findById(id);
 
         String sql_questao = question.get().getSql();
-        List<String> respostas = questionService.awnserQuestion(resposta, sql_questao, databaseName);
-        String message = "";
-        String corrigida = " ";
+        List<String> respostas = new ArrayList<String>();
+        String message = " ";
+
+        try {
+           respostas = questionService.awnserQuestion(resposta, sql_questao, databaseName);
+           message = respostas.get(respostas.size() - 1);
+           respostas.remove(respostas.size() - 1);
+        } catch (Exception e) {
+           message = "Erro: select em branco.";
+        }
+
+        
+        String corrigida = "";
 
         // Pensar melhor na correção, talvez fazendo um método no service de question.
         // No entanto, funciona!
-        // TODO: Lidar com respostas que não retornam nada!!
-
         // System.out.println(respostas.get(0));
 
         // Bug. O contains all está retornando positivo mesmo que respostas seja null;
@@ -182,6 +190,8 @@ public class QuestionController {
         for (int i = 0; i < respostas.size(); i++) {
             corrigida += " [" + respostas.get(i) + "] \n";
         }
+      
+        
 
         template.put("resposta", resposta);
         template.put("corrigida", corrigida);

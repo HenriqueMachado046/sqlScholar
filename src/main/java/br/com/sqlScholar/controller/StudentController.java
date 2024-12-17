@@ -1,13 +1,15 @@
 package br.com.sqlScholar.controller;
 
 import br.com.sqlScholar.model.Student;
-import br.com.sqlScholar.model.Teacher;
 import br.com.sqlScholar.repository.StudentRepository;
 import br.com.sqlScholar.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -62,6 +64,8 @@ public class StudentController {
     
     @PostMapping("/adicionar")
     public ModelAndView adicionar(@ModelAttribute Student student){
+        String hashed = DigestUtils.md5DigestAsHex(student.getPassword().getBytes()).toUpperCase();        
+        student.setPassword(hashed);
         this.studentRepository.save(student);
         Map<String, Object> template = new HashMap<>();
         template.put("message", "Aluno criado com sucesso!");

@@ -5,6 +5,7 @@ import br.com.sqlScholar.model.Teacher;
 import br.com.sqlScholar.repository.TeacherRepository;
 import br.com.sqlScholar.service.TeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -67,6 +68,8 @@ public class TeacherController {
 
     @PostMapping("/adicionar")
     public ModelAndView adicionar(@ModelAttribute Teacher teacher){
+        String hashed = DigestUtils.md5DigestAsHex(teacher.getPassword().getBytes()).toUpperCase();
+        teacher.setPassword(hashed);
         this.teacherRepository.save(teacher);
         Map<String, Object> template = new HashMap<>();
         template.put("message", "Professor criado com sucesso!");

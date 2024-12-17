@@ -11,9 +11,14 @@ import java.util.UUID;
 @Repository
 public interface TeacherRepository extends JpaRepository<Teacher, UUID> {
 
-    @Query("SELECT e FROM Teacher e WHERE e.email = ?1")
-    Teacher findByEmailAddress(String email);
+    @Query("SELECT t FROM Teacher t WHERE t.email = ?1")
+    public Teacher findByEmailAddress(String email);
+
+
     @Query("SELECT t FROM Teacher t")
-    List<Teacher> listAll();
+    public List<Teacher> listAll();
+
+    @Query("SELECT t FROM Teacher t WHERE t.email = ?1 AND t.password = ?2")
+    public Teacher findByEmailAndPassword(String email, String password);
 
 }
