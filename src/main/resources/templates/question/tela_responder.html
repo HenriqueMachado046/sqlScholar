@@ -6,9 +6,17 @@
         <input type="hidden" name="questionlistid" value="{{questionlist.id}}">
         <input type="hidden" name="databaseName" value="{{questionlist.databaseName}}">
         {{/questionlist}}
-        <div class="col form-group mb-3">
+
+        <h3 class="text-break">
+            Descrição da questão:
+            {{description}}
+        </h3>
+        
+        <br>
+
+        <div class="form-group mb-3">
                 <label for="description">Escreva a sua resposta</label>
-                <textarea id="resposta" name="resposta" class="form-control" form="questionform" style="height: 100px; resize: none;"></textarea>
+                <textarea id="resposta" name="resposta" class="form-control" form="questionform" style="height: 200px; width: 500px; resize: none;"></textarea>
             </div>
         </div>
         <input class="btn btn-primary" type="submit" value="Responder">

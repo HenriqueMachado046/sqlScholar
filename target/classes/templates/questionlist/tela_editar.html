@@ -19,31 +19,10 @@
         <textarea class="form-control" name="description" style="height: 100px; width: auto; resize: none;" required>{{description}}</textarea>
     </div>
 
-    <!-- <div class="form-group">
-        <select style="width: 100px;" name="question_id" multiple required>
-            {{#arrQuestion}}
-                {{#enabled}}
-                    <option value="{{id}}" selected>{{title}}</option>
-                {{/enabled}}
-                {{^enabled}}
-                    <option value="{{id}}">{{title}}</option>
-                {{/enabled}}
-            {{/arrQuestion}}
-        </select>
-    </div> -->
-    <!-- <div class="form-group">
-        Professor:
-        <select name="teacher_id" required>
-            {{#vetProfessor}}
-                {{#isOwner}}
-                    <option value="{{id}}" selected>{{firstName}}</option>
-                {{/isOwner}}
-                {{^isOwner}}
-                    <option value="{{id}}">{{firstName}}</option>
-                {{/isOwner}}
-            {{/vetProfessor}}
-        </select>
-    </div> -->
+    <div class="form-group">
+        <label for="isPrivate">Privado?</label>
+        <input name="isPrivate" type="checkbox" class="form-control" id="isPrivate" value="{{isPrivate}}">
+    </div>
     
     <input class="btn btn-primary" type="submit" value="Editar">
-    {{>footer}}
+{{>footer}}
