@@ -19,7 +19,7 @@ public abstract class Person {
     private UUID id;
     @Column
     private String username;
-    @Column
+    @Column(unique = true)
     private String email;
     @Column
     private String firstName;

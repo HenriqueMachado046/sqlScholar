@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 
 @RestController
-@RequestMapping
+@RequestMapping("/home")
 public class HomeController {
     
-    @GetMapping("/")
+    @GetMapping("/index")
     public ModelAndView home(){
         Map<String, Object> template =  new HashMap<>();
         return new ModelAndView("home/index", template);

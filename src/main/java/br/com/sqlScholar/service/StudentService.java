@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.DigestUtils;
 
 import java.util.List;
 
@@ -21,6 +22,11 @@ public class StudentService {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
         Page<Student> questionPage = this.studentRepository.findAll(pageable);
         return questionPage.getContent();
+    }
+
+    public Student validateCredentials(String email, String senha){
+       String hashed = DigestUtils.md5DigestAsHex(senha.getBytes());
+       return studentRepository.findByEmailAndPassword(email, hashed);
     }
 
 }

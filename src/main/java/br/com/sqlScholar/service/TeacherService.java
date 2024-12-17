@@ -10,9 +10,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.DigestUtils;
 
 import br.com.sqlScholar.dto.TeacherDTO;
 import br.com.sqlScholar.repository.TeacherRepository;
+import jakarta.servlet.http.HttpSession;
 
 @Service
 public class TeacherService {
@@ -55,6 +57,20 @@ public class TeacherService {
         }
 
         return arrTeacherDTOs;
+    }
+
+    public Teacher validateCredentials(String email, String senha) {
+       String hashed = DigestUtils.md5DigestAsHex(senha.getBytes());
+       return teacherRepository.findByEmailAndPassword(email, hashed);
+    }
+
+    public boolean verifySession(HttpSession session) {
+        
+        if (session.getAttribute("userLogged") == null || ! "professor".equals(session.getAttribute("userType"))) {
+            return true;
+        }else{
+            return false;
+        }
     }
 
 }
