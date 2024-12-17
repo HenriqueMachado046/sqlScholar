@@ -20,14 +20,15 @@ public class Question {
     @GeneratedValue(generator = "UUID")
     @PrimaryKeyJoinColumn
     private UUID id;
+    
     @Column
     private String title;
+    
     @Column
     private String description;
+    
     @Column
     private String sql;
-    @Column
-    private String answer;
     
     @OneToMany(mappedBy = "id")
     private List<Tag> tags = new ArrayList<>();
@@ -46,6 +47,5 @@ public class Question {
     
     @Column
     private String difficulty;
-
 
 }

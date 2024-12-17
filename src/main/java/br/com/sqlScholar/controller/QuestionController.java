@@ -100,7 +100,7 @@ public class QuestionController {
 
     @PostMapping("/adicionar")
     public ModelAndView adicionar(@RequestParam UUID questionlist_id,@RequestParam String title, @RequestParam String sql,
-    @RequestParam String difficulty,@RequestParam String answer ,@RequestParam String description,
+    @RequestParam String difficulty,@RequestParam String description,
     @RequestParam UUID teacher_id){
 
         Question question = new Question();
@@ -109,7 +109,6 @@ public class QuestionController {
         question.setTitle(title);
         question.setDifficulty(difficulty);
         question.setDescription(description);
-        question.setAnswer(answer);
         question.setSql(sql);
         question.setQuestionList(questionlist.get());
         question.setOwner(teacher.get());
@@ -120,13 +119,13 @@ public class QuestionController {
         template.put("message","Questão cadastrada com sucesso!");
         template.put("arrQuestion", this.questionRepository.findAll());
         //bugado. Precisa retornar corretamente para a página principal.
-        return new ModelAndView("/questionlist/index/", template);
+        return new ModelAndView("redirect:/questionlist/mostrar_lista/" + questionlist_id, template);
     }
 
     //correto
     @RequestMapping("/editar")
     public ModelAndView editar(@RequestParam String title, @RequestParam String sql,
-    @RequestParam String difficulty,@RequestParam String answer ,@RequestParam String description ,@RequestParam UUID id,
+    @RequestParam String difficulty,@RequestParam String description ,@RequestParam UUID id,
     @RequestParam UUID teacher_id){
         Optional<Question> question = this.questionRepository.findById(id);
         Optional <Teacher> teacher = this.teacherRepository.findById(teacher_id);
@@ -134,7 +133,6 @@ public class QuestionController {
         question.get().setTitle(title);
         question.get().setDifficulty(difficulty);
         question.get().setDescription(description);
-        question.get().setAnswer(answer);
         question.get().setSql(sql);
         question.get().setOwner(teacher.get());
 
@@ -142,7 +140,7 @@ public class QuestionController {
         Map<String, Object> template = new HashMap<>();        
         template.put("arrQuestion", this.questionRepository.findAll());
         template.put("message", "Questão editada com sucesso!");
-        return new ModelAndView("question/index", template);
+        return new ModelAndView("redirect:/questionlist/mostrar_lista/" + question.get().getQuestionList().getId(), template);
     }
 
     @GetMapping("/tela_responder/{id}")
@@ -230,11 +228,13 @@ public class QuestionController {
 
     @GetMapping("/deletar/{id}")
     public ModelAndView deletar(@PathVariable UUID id){
+        Optional <Question> question =  this.questionRepository.findById(id);
+        UUID id_lista = question.get().getQuestionList().getId();
         this.questionRepository.deleteById(id);
         Map<String, Object> template = new HashMap<>();
         template.put("arrQuestion", this.questionRepository.findAll());
         template.put("message", "Questão deletada com sucesso!");
-        return new ModelAndView("question/index", template);
+        return new ModelAndView("redirect:/questionlist/mostrar_lista/" + id_lista, template);
     }
 
 }
