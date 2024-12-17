@@ -65,9 +65,4 @@ public class QuestionListService {
          
     }
 
-    public String getDatabaseName(){
-        return null;
-    }
-
-
 }

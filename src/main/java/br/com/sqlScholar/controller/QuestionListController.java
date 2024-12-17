@@ -32,13 +32,7 @@ public class QuestionListController {
     private TeacherRepository teacherRepository;
 
     @Autowired
-    private TeacherService teacherService;
-
-    @Autowired
     private QuestionListService questionListService;
-
-    @Autowired
-    private QuestionService questionService;
 
     // PENDENTE: filtrar por somente pelas propria questões do professor e as que
     // forem públicas ≥ pendente
@@ -98,7 +92,8 @@ public class QuestionListController {
             @RequestParam String database_script,
             @RequestParam UUID teacher_id,
             @RequestParam String database_name,
-            @RequestParam String description, @RequestParam boolean isPrivate) {
+            @RequestParam String description,
+            @RequestParam Boolean isPrivate) {
         QuestionList questionList = new QuestionList();
         database_name = database_name.replaceAll(" ", "");
         database_name = database_name.toLowerCase();

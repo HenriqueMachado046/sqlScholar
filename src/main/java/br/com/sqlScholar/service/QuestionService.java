@@ -27,14 +27,14 @@ public class QuestionService {
     @Autowired
     private QuestionRepository questionRepository;
 
-    public List<Question> pageableQuestion(int pageNumber, int pageSize){
+    public List<Question> pageableQuestion(int pageNumber, int pageSize) {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
         Page<Question> questionPage = this.questionRepository.findAll(pageable);
         return questionPage.getContent();
     }
 
-    //funcionando
-    public List<QuestionDTO> listAvailableQuestions(){
+    // funcionando
+    public List<QuestionDTO> listAvailableQuestions() {
         List<Question> vetQuestion = this.questionRepository.findAll();
         List<QuestionDTO> vetQuestionDTOs = new ArrayList<QuestionDTO>();
         for (Question question : vetQuestion) {
@@ -47,36 +47,71 @@ public class QuestionService {
         return vetQuestionDTOs;
     }
 
-    public List<String> awnserQuestion(String sql, String databaseName){
-        //Limitar o aluno a fazer apenas SELECT, com algum tipo de trava.
+    public List<String> awnserQuestion(String sql, String sql_questao, String databaseName) {
+        // Limitar o aluno a fazer apenas SELECT, com algum tipo de trava.
         int count = 1;
         String resultadoString = "";
 
-        //Deve funcionar...
-        String sqlValidado = sqlUtils.validateSQL(sql);
+        // Deve funcionar...
+        String sqlAlunoValidado = sqlUtils.validateSQL(sql);
+        String sqlQuestaoValidado = sqlUtils.validateSQL(sql_questao);
 
-        Resultado resultado = sqlUtils.executeSQL(sqlValidado, databaseName);
-        if (resultado.getException() == null) {
+        compareSQL(sqlAlunoValidado, sqlQuestaoValidado, databaseName);
+
+        // Resultado resultadoQueryAluno = compareSQL(sqlAlunoValidado,
+        // sqlQuestaoValidado, databaseName);
+        Resultado resultadoQueryAluno = sqlUtils.executeSQL(sqlAlunoValidado, databaseName);
+
+        // Gabarito = resultado do SQL proposto pelo professor. Pode ser armazenado.
+
+        if (resultadoQueryAluno.getException() == null) {
             try {
-                ResultSetMetaData metaData = resultado.getResultSet().getMetaData();
+                ResultSetMetaData metaData = resultadoQueryAluno.getResultSet().getMetaData();
                 List<String> resultadoList = new ArrayList<String>();
-                while (resultado.getResultSet().next()) {
-                   count = 1;
-                   resultadoString = "";
-                   while (count <= metaData.getColumnCount()) {
-                       resultadoString += "\n" + metaData.getColumnName(count) + ": " + resultado.getResultSet().getString(count).toString();
-                       count++;
-                   }
-                   resultadoList.add(resultadoString);
+                while (resultadoQueryAluno.getResultSet().next()) {
+                    count = 1;
+                    resultadoString = "";
+                    while (count <= metaData.getColumnCount()) {
+                        resultadoString += "\n" + metaData.getColumnName(count) + ": "
+                                + resultadoQueryAluno.getResultSet().getString(count).toString();
+                        count++;
+                    }
+                    resultadoList.add(resultadoString);
                 }
                 return resultadoList;
             } catch (Exception e) {
-                return Arrays.asList(resultado.getException().getMessage());
+                return Arrays.asList(resultadoQueryAluno.getException().getMessage());
             }
-            
-        }else{
-            return Arrays.asList(resultado.getException().getMessage());
+
+        } else {
+            return Arrays.asList(resultadoQueryAluno.getException().getMessage());
         }
+    }
+
+    private Resultado compareSQL(String sql, String sql_questao, String databaseName) {
+
+        Resultado resultadoQueryAluno = sqlUtils.executeSQL(sql, databaseName);
+        Resultado resultadoQueryQuestao = sqlUtils.executeSQL(sql_questao, databaseName);
+
+        if ((resultadoQueryAluno.getException() == null && resultadoQueryQuestao.getException() == null)) {
+            Resultado resultado = new Resultado();
+
+            try {
+                ResultSetMetaData metaDataAluno = resultadoQueryAluno.getResultSet().getMetaData();
+                ResultSetMetaData metaDataQuestao = resultadoQueryQuestao.getResultSet().getMetaData();
+            } catch (Exception e) {
+
+            }
+
+            resultado.setResultSet(resultadoQueryAluno.getResultSet());
+            return resultado;
+        } else {
+            Resultado resultado = new Resultado();
+            resultado.setResultSet(resultadoQueryAluno.getResultSet());
+            resultado.setException(resultadoQueryAluno.getException());
+            return resultado;
+        }
+
     }
 
 }
