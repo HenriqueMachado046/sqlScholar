@@ -32,13 +32,7 @@ public class QuestionListController {
     private TeacherRepository teacherRepository;
 
     @Autowired
-    private TeacherService teacherService;
-
-    @Autowired
     private QuestionListService questionListService;
-
-    @Autowired
-    private QuestionService questionService;
 
     // PENDENTE: filtrar por somente pelas propria questões do professor e as que
     // forem públicas ≥ pendente
@@ -65,7 +59,7 @@ public class QuestionListController {
         // template.put("arrQuestionList",
         // questionListService.pageableQuestionList(pageNumber, pageSize));
         // template.put("pageNumber", pageNumber + 1);
-        template.put("arrQuestionList", questionListRepository.findAll());
+        template.put("arrQuestionList", questionListRepository.listPublic());
         // template.put("pageNumber", "");
         return new ModelAndView("questionlist/index", template);
     }
@@ -83,7 +77,8 @@ public class QuestionListController {
         Map<String, Object> template = new HashMap<>();
         sql_teste = sql_teste.toLowerCase();
         Optional<QuestionList> questionlist = questionListRepository.findById(id);
-        //Abaixo é a maneira de fazer o acesso do banco através da questionlist. Este mesmo método deverá ser utilizado durante a criação das questões.
+        // Abaixo é a maneira de fazer o acesso do banco através da questionlist. Este
+        // mesmo método deverá ser utilizado durante a criação das questões.
         List<String> resultadoTeste = questionListService.rodeSQL(sql_teste, questionlist.get().getDatabaseName());
         for (int i = 0; i < resultadoTeste.size(); i++) {
             System.out.println(resultadoTeste.get(i));
@@ -97,7 +92,8 @@ public class QuestionListController {
             @RequestParam String database_script,
             @RequestParam UUID teacher_id,
             @RequestParam String database_name,
-            @RequestParam String description) {
+            @RequestParam String description,
+            @RequestParam Boolean isPrivate) {
         QuestionList questionList = new QuestionList();
         database_name = database_name.replaceAll(" ", "");
         database_name = database_name.toLowerCase();
@@ -106,6 +102,7 @@ public class QuestionListController {
         questionList.setDatabaseScript(database_script.trim().toLowerCase());
         questionList.setDatabaseName(database_name);
         questionList.setDescription(description);
+        questionList.setPrivate(isPrivate);
         Optional<Teacher> teacher = this.teacherRepository.findById(teacher_id);
         questionList.setOwner(teacher.get());
         this.questionListRepository.save(questionList);
@@ -172,7 +169,8 @@ public class QuestionListController {
             this.questionListService.createDatabase("DROP DATABASE " + questionList.get().getDatabaseName());
         } catch (Exception e) {
             System.out.println("===========");
-            System.out.println("Não foi possível deletar o banco correspondente:" + questionList.get().getDatabaseName());
+            System.out
+                    .println("Não foi possível deletar o banco correspondente:" + questionList.get().getDatabaseName());
             System.out.println("===========");
         }
         Map<String, Object> template = new HashMap<>();

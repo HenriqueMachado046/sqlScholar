@@ -26,8 +26,6 @@ public class Question {
     private String description;
     @Column
     private String sql;
-    @Column
-    private String answer;
     
     @OneToMany(mappedBy= "id")
     private List<TestCase> testCases = new ArrayList<>();
@@ -50,5 +48,7 @@ public class Question {
     @Column
     private String difficulty;
 
+    @Column
+    private Boolean privateQuestion;
 
 }
