@@ -39,24 +39,30 @@ public class StudentController {
     @GetMapping("/index")
     public ModelAndView index(HttpSession session){
         boolean logged = studentService.verifySession(session);
-        if (!logged) {
+        if (logged == false && session.getAttribute("userType") != "admin") {
             return new ModelAndView("redirect:/");
         }
+        
         Map<String, Object> template = new HashMap<>();
         int pageNumber = 0;
         int pageSize = 15;
         template.put("message", "");
         template.put("arrStudent", this.studentService.pageableStudent(pageNumber, pageSize));
+        template.put("userLogged", session.getAttribute("userLogged"));
+        template.put("userType", session.getAttribute("userType"));
+        template.put("isAdmin", session.getAttribute("isAdmin"));
         return new ModelAndView("student/index", template);
     }
 
     @GetMapping("/perfil/{id}")
     public ModelAndView perfil(@PathVariable UUID id, HttpSession session){
         boolean logged = studentService.verifySession(session);
-        if (!logged) {
+        if (logged == false) {
             return new ModelAndView("redirect:/");
         }
+       
         Map<String, Object> template = new HashMap<>();
+       
         if ("admin".equals(session.getAttribute("userType"))) {
             Optional<Student> student = this.studentRepository.findById(id);
             template.put("student", student.get());
@@ -86,9 +92,7 @@ public class StudentController {
         this.studentRepository.save(student);
         Map<String, Object> template = new HashMap<>();
         template.put("message", "Aluno criado com sucesso!");
-        template.put("arrStudent", this.studentRepository.listAll());
-
-        return new ModelAndView("redirect:/student/perfil/"+student.getId(), template);
+        return new ModelAndView("redirect:/student/perfil/" + student.getId(), template);
     }
 
     @RequestMapping("/editar")
@@ -105,14 +109,13 @@ public class StudentController {
         Map<String, Object> template = new HashMap<>();        
         template.put("message", "Aluno editado com sucesso!");
         template.put("arrStudent", this.studentRepository.listAll());
-
         return new ModelAndView("redirect:/student/perfil/"+id, template);
     }
 
     @GetMapping("/tela_editar/{id}")
     public ModelAndView tela_editar(@PathVariable UUID id, HttpSession session){
         boolean logged = studentService.verifySession(session);
-        if (!logged) {
+        if (logged == false) {
             return new ModelAndView("redirect:/");
         }
         Map<String, Object> template = new HashMap<>();
@@ -124,14 +127,16 @@ public class StudentController {
     @GetMapping("/deletar/{id}")
     public ModelAndView deletar(@PathVariable UUID id, HttpSession session){
         boolean logged = studentService.verifySession(session);
-        if (!logged) {
+        if (logged == false) {
             return new ModelAndView("redirect:/");
         }
         this.studentRepository.deleteById(id);
         Map<String, Object> template = new HashMap<>();
         template.put("message", "Aluno deletado com sucesso!");
         template.put("arrStudent", this.studentRepository.listAll());
-
+        if ("student".equals(session.getAttribute("userType"))) {
+            session.invalidate();            
+        }
         return new ModelAndView("redirect:/", template);
     }
 

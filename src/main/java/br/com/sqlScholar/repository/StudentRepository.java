@@ -23,4 +23,6 @@ public interface StudentRepository extends JpaRepository<Student, UUID> {
     @Query("UPDATE Student s SET s.email =?1, s.firstName =?2, s.lastName = ?3, s.password = ?4, s.username = ?5 WHERE s.id = ?6")
     Student update(String email, String firstName, String lastName, String password, String username, UUID id);
 
+    @Query("SELECT s.firstName, s.lastName, s.rightAnswers, RANK() OVER (ORDER BY s.rightAnswers DESC) as rank FROM Student s")
+    List<Student> rankingStudents();
 }

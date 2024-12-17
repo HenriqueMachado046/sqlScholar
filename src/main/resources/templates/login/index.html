@@ -3,6 +3,9 @@
     {{#error}}
     <p style="color:red">{{error}}</p>
     {{/error}}
+    {{#message}}
+    <p>{{message}}</p>
+    {{/message}}
     <div class="d-flex justify-content-center">
     <form action="/logar" method="post">
         <div class="row g-2">
@@ -15,8 +18,20 @@
                 <input type="password" id="password" name="password" class="form-control" required> <br>
             </div>
 
+            <h2>Cadastro</h2>
+            <p>Não tem conta?</p>
+            <div class="row form-group">
+                <a href="/signin/student">Cadastrar-se como aluno</a>
+            </div>
+            <div class="row form-group">
+                <a href="/signin/teacher">Cadastrar-se como professor</a>
+            </div>
+
+            <input type="submit" class="btn btn-primary" value="Entrar">
         </div>
-        <input type="submit" class="btn btn-primary" value="Entrar">
     </form>
+    
+    
+    
 </div>
 {{>footer}}

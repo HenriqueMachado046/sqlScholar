@@ -27,7 +27,7 @@ public class StudentService {
     }
 
     public Student validateCredentials(String email, String senha){
-       String hashed = DigestUtils.md5DigestAsHex(senha.getBytes());
+       String hashed = DigestUtils.md5DigestAsHex(senha.getBytes()).toUpperCase();
        return studentRepository.findByEmailAndPassword(email, hashed);
     }
 

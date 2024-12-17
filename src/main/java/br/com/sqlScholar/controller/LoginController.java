@@ -49,6 +49,7 @@ public class LoginController {
         if (ADMIN_EMAIL.equals(email) && ADMIN_PASSWORD.equals(password)) {
             session.setAttribute("userLogged", "Administrador");
             session.setAttribute("userType", "admin");
+            session.setAttribute("isAdmin", true);
             return new ModelAndView("redirect:/admin/index");
         }
 
@@ -57,6 +58,7 @@ public class LoginController {
         if (teacher != null) {
             session.setAttribute("userLogged", teacher);
             session.setAttribute("userType", "teacher");
+            session.setAttribute("isTeacher", true);
             return new ModelAndView("redirect:/teacher/index");
         }
 
@@ -65,6 +67,7 @@ public class LoginController {
         if (student != null) {
             session.setAttribute("userLogged", student);
             session.setAttribute("userType", "student");
+            session.setAttribute("isStudent", true);
             return new ModelAndView("redirect:/questionlist/index");
         }
 

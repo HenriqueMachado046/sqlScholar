@@ -60,7 +60,7 @@ public class TeacherService {
     }
 
     public Teacher validateCredentials(String email, String senha) {
-       String hashed = DigestUtils.md5DigestAsHex(senha.getBytes());
+       String hashed = DigestUtils.md5DigestAsHex(senha.getBytes()).toUpperCase();
        return teacherRepository.findByEmailAndPassword(email, hashed);
     }
 

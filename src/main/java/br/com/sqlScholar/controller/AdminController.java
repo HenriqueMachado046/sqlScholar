@@ -29,15 +29,13 @@ public class AdminController {
         if (!"admin".equals(session.getAttribute("userType"))) {
             return new ModelAndView("redirect:/login");            
         }
-        //Como o Mustache não tem lógica, só dá pra negar a exibição de campos com coisas como esse isAdmin;
-        boolean isAdmin = true;
-       
+
         Map<String, Object> template = new HashMap<>();
         Object userLogged = session.getAttribute("userLogged");
         String userType = (String) session.getAttribute("userType");
         template.put("userLogged", userLogged);
         template.put("userType", userType);
-        template.put ("isAdmin", isAdmin);
+        template.put ("isAdmin", session.getAttribute("isAdmin"));
         return new ModelAndView("admin/index", template);
     }
 
