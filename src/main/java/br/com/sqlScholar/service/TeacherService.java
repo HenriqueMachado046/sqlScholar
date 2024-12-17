@@ -66,9 +66,12 @@ public class TeacherService {
 
     public boolean verifySession(HttpSession session) {
         
-        if (session.getAttribute("userLogged") == null || ! "professor".equals(session.getAttribute("userType"))) {
+        if (!(session.getAttribute("userLogged") == null) && "teacher".equals(session.getAttribute("userType"))) {
             return true;
         }else{
+            if (session.getAttribute("userType") == "admin") {
+                return true;                
+            }
             return false;
         }
     }

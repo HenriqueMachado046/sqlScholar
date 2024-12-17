@@ -1,31 +1,22 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-</head>
-<body>
-    <H1>Login</H1>
+{{>header}}
+<H1>Login</H1>
     {{#error}}
     <p style="color:red">{{error}}</p>
     {{/error}}
-    <form action="/login" method="post">
-
-        <div class="row g-3">
-            <div class="col form-group">
+    <div class="d-flex justify-content-center">
+    <form action="/logar" method="post">
+        <div class="row g-2">
+            <div class="row form-group">
                 <label for="email">Email:</label>
                 <input type="email" id="email" name="email" class="form-control" required> <br> 
             </div>
-            <div class="col form-group">
+            <div class="row form-group">
                 <label for="password">Senha:</label>
                 <input type="password" id="password" name="password" class="form-control" required> <br>
             </div>
 
         </div>
-        <input type="submit" class="btn btn-primary">Entrar
+        <input type="submit" class="btn btn-primary" value="Entrar">
     </form>
-
-    
-</body>
-</html>
+</div>
+{{>footer}}

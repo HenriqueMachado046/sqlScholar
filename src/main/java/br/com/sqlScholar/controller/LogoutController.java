@@ -14,6 +14,6 @@ public class LogoutController {
     @GetMapping("/")
     public ModelAndView logout(HttpSession session){
         session.invalidate();
-        return new ModelAndView("redirect:/login");
+        return new ModelAndView("redirect:/");
     }
 }

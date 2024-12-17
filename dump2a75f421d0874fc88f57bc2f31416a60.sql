@@ -1,1 +1,0 @@
-CREATE database list2a75f421d0874fc88f57bc2f31416a60; \c list2a75f421d0874fc88f57bc2f31416a60; create table x;

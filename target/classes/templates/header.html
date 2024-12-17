@@ -19,21 +19,42 @@
         <span class="navbar-toggler-icon"></span>
     </button>
 
+    {{#userLogged}}
+    {{#userType}}
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
+            {{#isAdmin}}
+            
             <li class="nav-item">
-                <a class="nav-link" href="/teacher/index">Professor</a>
+                <a class="nav-link" href="/teacher/index" style="color: red;">Professor</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/student/index" style="color: red;">Estudantes</a>
+            </li>
+            <p style="color: red;" class="text-break ">MODO ADMIN</p>
+            {{/isAdmin}}
+
+            {{#userType.teacher}}
+            <li class="nav-item">
+                <a class="nav-link" href="/teacher/perfil/{{userLogged.id}}">Professor</a>
+            </li>
+            {{/userType.teacher}}
+
             <li class="nav-item">
                 <a class="nav-link" href="/questionlist/index">Lista de Questões</a>
             </li>
-            <!-- <li class="nav-item">
-                 Retirar do menu após acertar a criação através das listas.
-                <a class="nav-link" href="/question/index">Questões</a>
-            </li> -->
+
+            {{#userType.student}}
             <li class="nav-item">
                 <a class="nav-link" href="/student/index">Estudantes</a>
             </li>
+            {{/userType.student}}
+            <li class="nav-item">
+                <a class="nav-link" href="/logout/">Sair</a>
+            </li>
+
         </ul>
     </div>
+    {{/userType}}
+    {{/userLogged}}
 </nav>

@@ -3,6 +3,8 @@ package br.com.sqlScholar.service;
 
 import br.com.sqlScholar.model.Student;
 import br.com.sqlScholar.repository.StudentRepository;
+import jakarta.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -27,6 +29,17 @@ public class StudentService {
     public Student validateCredentials(String email, String senha){
        String hashed = DigestUtils.md5DigestAsHex(senha.getBytes());
        return studentRepository.findByEmailAndPassword(email, hashed);
+    }
+
+    public boolean verifySession(HttpSession session) {
+        if (!(session.getAttribute("userLogged") == null) && "student".equals(session.getAttribute("userType"))) {
+            return true;
+        }else{
+            if (session.getAttribute("userType") == "admin") {
+                return true;                
+            }
+            return false;
+        }
     }
 
 }

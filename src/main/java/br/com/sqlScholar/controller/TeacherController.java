@@ -1,6 +1,5 @@
 package br.com.sqlScholar.controller;
 
-
 import br.com.sqlScholar.model.Teacher;
 import br.com.sqlScholar.repository.TeacherRepository;
 import br.com.sqlScholar.service.TeacherService;
@@ -18,11 +17,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
-
 @RestController
 @RequestMapping("/teacher")
 public class TeacherController {
-
 
     @Autowired
     private TeacherRepository teacherRepository;
@@ -33,15 +30,20 @@ public class TeacherController {
     @Autowired
 
     @GetMapping("/tela_adicionar")
-    public ModelAndView tela_adicionar(HttpSession session){
+    public ModelAndView tela_adicionar(HttpSession session) {
         return new ModelAndView("teacher/tela_adicionar", new HashMap<>());
     }
 
     @GetMapping("/index")
-    public ModelAndView index(HttpSession session){
-        boolean logged = teacherService.verifySession(session);
+    public ModelAndView index(HttpSession session) {
+        boolean logged;
+        if (session.getAttribute("userType") == "admin") {
+            logged = true;
+        } else {
+            logged = teacherService.verifySession(session);
+        }
         if (!logged) {
-            return new ModelAndView("redirect:/login/index");
+            return new ModelAndView("redirect:/");
         }
         Map<String, Object> template = new HashMap<>();
         int pageNumber = 0;
@@ -52,20 +54,27 @@ public class TeacherController {
     }
 
     @GetMapping("/perfil/{id}")
-    public ModelAndView perfil(@PathVariable UUID id, HttpSession session){
-        boolean logged = teacherService.verifySession(session);
-        if (!logged) {
-            return new ModelAndView("redirect:/login/index");
+    public ModelAndView perfil(@PathVariable UUID id, HttpSession session) {
+        boolean logged;
+        if (session.getAttribute("userType") == "admin") {
+            logged = true;
+        } else {
+            logged = teacherService.verifySession(session);
         }
-        Teacher teacher = (Teacher)session.getAttribute("userLogged");
+        if (!logged) {
+            return new ModelAndView("redirect:/");
+        }
+        Teacher teacher = (Teacher) session.getAttribute("userLogged");
         Map<String, Object> template = new HashMap<>();
-        List<Integer> xValues = new ArrayList<>();//Será substituido por acesso ao banco e dados que virão de lá
-        List<Integer> yValues = new ArrayList<>();//Será substituido por acesso ao banco e dados que virão de lá
-        int count_students = (int)(Math.random() * 20);//Será substituido por acesso ao banco e dados que virão de lá (contagem de alunos)
-        int count_questions = (int) (Math.random() * 20);//Será substituido por acesso ao banco e dados que virão de lá (contagem de questões totais registradas)
+        List<Integer> xValues = new ArrayList<>();// Será substituido por acesso ao banco e dados que virão de lá
+        List<Integer> yValues = new ArrayList<>();// Será substituido por acesso ao banco e dados que virão de lá
+        int count_students = (int) (Math.random() * 20);// Será substituido por acesso ao banco e dados que virão de lá
+                                                        // (contagem de alunos)
+        int count_questions = (int) (Math.random() * 20);// Será substituido por acesso ao banco e dados que virão de lá
+                                                         // (contagem de questões totais registradas)
         for (int i = 0; i < 5; i++) {
-            xValues.add((int)(Math.random() * 200));
-            yValues.add((int)(Math.random() * 100));
+            xValues.add((int) (Math.random() * 200));
+            yValues.add((int) (Math.random() * 100));
         }
         template.put("xvalues", xValues.toString());
         template.put("yvalues", yValues.toString());
@@ -73,11 +82,11 @@ public class TeacherController {
         template.put("countQuestions", count_questions);
         template.put("teacher", teacher);
         template.put("message", "");
-        return new ModelAndView("teacher/perfil", template);
+        return new ModelAndView("teacher/perfil" + teacher.getId(), template);
     }
 
     @PostMapping("/adicionar")
-    public ModelAndView adicionar(@ModelAttribute Teacher teacher){
+    public ModelAndView adicionar(@ModelAttribute Teacher teacher) {
         String hashed = DigestUtils.md5DigestAsHex(teacher.getPassword().getBytes()).toUpperCase();
         teacher.setPassword(hashed);
         this.teacherRepository.save(teacher);
@@ -89,7 +98,7 @@ public class TeacherController {
 
     @RequestMapping("/editar")
     public ModelAndView editar(@RequestParam UUID id, @RequestParam String email, @RequestParam String firstName,
-     @RequestParam String lastName, @RequestParam String password, @RequestParam String username){
+            @RequestParam String lastName, @RequestParam String password, @RequestParam String username) {
         Optional<Teacher> teacher = this.teacherRepository.findById(id);
         teacher.get().setId(id);
         teacher.get().setEmail(email);
@@ -99,32 +108,42 @@ public class TeacherController {
         teacher.get().setUsername(username);
         this.teacherRepository.save(teacher.get());
         Map<String, Object> template = new HashMap<>();
-        template.put("arrTeacher", this.teacherRepository.listAll());        
+        template.put("arrTeacher", this.teacherRepository.listAll());
         template.put("message", "Professor editado com sucesso!");
         return new ModelAndView("teacher/index", template);
     }
 
     @GetMapping("/tela_editar/{id}")
-    public ModelAndView tela_editar(@PathVariable UUID id, HttpSession session){
-        boolean logged = teacherService.verifySession(session);
+    public ModelAndView tela_editar(@PathVariable UUID id, HttpSession session) {
+        boolean logged;
+        if (session.getAttribute("userType") == "admin") {
+            logged = true;
+        } else {
+            logged = teacherService.verifySession(session);
+        }
         if (!logged) {
-            return new ModelAndView("redirect:/login/index");
+            return new ModelAndView("redirect:/");
         }
         Map<String, Object> template = new HashMap<>();
         Optional<Teacher> teacher = this.teacherRepository.findById(id);
-        template.put("teacher",  teacher.get());
+        template.put("teacher", teacher.get());
         return new ModelAndView("/teacher/tela_editar", template);
     }
 
     @GetMapping("/deletar/{id}")
-    public ModelAndView deletar(@PathVariable UUID id, HttpSession session){
-        boolean logged = teacherService.verifySession(session);
+    public ModelAndView deletar(@PathVariable UUID id, HttpSession session) {
+        boolean logged;
+        if (session.getAttribute("userType") == "admin") {
+            logged = true;
+        } else {
+            logged = teacherService.verifySession(session);
+        }
         if (!logged) {
-            return new ModelAndView("redirect:/login/index");
+            return new ModelAndView("redirect:/");
         }
         this.teacherRepository.deleteById(id);
         Map<String, Object> template = new HashMap<>();
-        template.put("arrTeacher", this.teacherRepository.listAll());        
+        template.put("arrTeacher", this.teacherRepository.listAll());
         template.put("message", "Professor deletado com sucesso!");
         return new ModelAndView("teacher/message", template);
     }

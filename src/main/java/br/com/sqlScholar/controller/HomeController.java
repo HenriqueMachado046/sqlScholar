@@ -16,7 +16,7 @@ public class HomeController {
     
     @GetMapping("/index")
     public ModelAndView home(){
-        Map<String, Object> template =  new HashMap<>();
+        Map<String, Object> template = new HashMap<>();
         return new ModelAndView("home/index", template);
     }
 }

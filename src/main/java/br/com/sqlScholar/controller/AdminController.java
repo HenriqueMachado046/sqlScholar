@@ -1,6 +1,10 @@
 package br.com.sqlScholar.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,6 +29,16 @@ public class AdminController {
         if (!"admin".equals(session.getAttribute("userType"))) {
             return new ModelAndView("redirect:/login");            
         }
-        return new ModelAndView("index");
+        //Como o Mustache não tem lógica, só dá pra negar a exibição de campos com coisas como esse isAdmin;
+        boolean isAdmin = true;
+       
+        Map<String, Object> template = new HashMap<>();
+        Object userLogged = session.getAttribute("userLogged");
+        String userType = (String) session.getAttribute("userType");
+        template.put("userLogged", userLogged);
+        template.put("userType", userType);
+        template.put ("isAdmin", isAdmin);
+        return new ModelAndView("admin/index", template);
     }
+
 }
