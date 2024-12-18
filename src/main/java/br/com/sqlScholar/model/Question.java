@@ -30,9 +30,6 @@ public class Question {
     @Column
     private String sql;
     
-    @OneToMany(mappedBy = "id")
-    private List<Tag> tags = new ArrayList<>();
-    
     @Column
     @CreationTimestamp
     private LocalDateTime createdAt;
