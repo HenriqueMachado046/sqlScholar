@@ -1,6 +1,7 @@
 package br.com.sqlScholar.controller;
 
 import br.com.sqlScholar.model.Student;
+import br.com.sqlScholar.repository.QuestionRepository;
 import br.com.sqlScholar.repository.StudentRepository;
 import br.com.sqlScholar.service.StudentService;
 import jakarta.servlet.http.HttpSession;
@@ -10,8 +11,6 @@ import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -30,6 +29,7 @@ public class StudentController {
     private StudentService studentService;
 
     @Autowired
+    private QuestionRepository questionRepository;
 
     @GetMapping("/tela_adicionar")
     public ModelAndView tela_adicionar(){
@@ -39,8 +39,9 @@ public class StudentController {
     @GetMapping("/index")
     public ModelAndView index(HttpSession session){
         boolean logged = studentService.verifySession(session);
-        if (logged == false && session.getAttribute("userType") != "admin") {
-            return new ModelAndView("redirect:/");
+        System.out.println(session.getAttribute("userType"));
+        if (logged == false || session.getAttribute("userType") != "admin") {
+            return new ModelAndView("redirect:/home/index");
         }
         
         Map<String, Object> template = new HashMap<>();
@@ -66,22 +67,24 @@ public class StudentController {
         if ("admin".equals(session.getAttribute("userType"))) {
             Optional<Student> student = this.studentRepository.findById(id);
             template.put("student", student.get());
+            template.put("solvedQuestions", student.get().getRightAnswers());
+            template.put("isAdmin", session.getAttribute("isAdmin"));
         }else{
             Student student = (Student) session.getAttribute("userLogged");
             template.put("student", student);
+            template.put("solvedQuestions", student.getRightAnswers());
+            template.put("isStudent", session.getAttribute("isStudent"));
         }
 
-        List<Integer> xValues = new ArrayList<>();//Será substituido por acesso ao banco e dados que virão de lá
-        List<Integer> yValues = new ArrayList<>();//Será substituido por acesso ao banco e dados que virão de lá
-        int count_solved = (int)(Math.random() * 30);//Será substituido por acesso ao banco e dados que virão de lá (Contagem de questões resolvidas pelo aluno)
-        for (int i = 0; i < 5; i++) {
-            xValues.add((int)(Math.random() * 200));
-            yValues.add((int)(Math.random() * 100));
-        }
-       
+        
+        Integer xValues = studentRepository.findById(id).get().getRightAnswers();//Quantidade de acertos do aluno
+        List<Integer> yValues = questionRepository.countQuestions();//Quantidade de questões;
+        
+
+        template.put("userLogged", session.getAttribute("userLogged"));
+        template.put("userType", session.getAttribute("userType"));       
         template.put("xvalues", xValues.toString());
         template.put("yvalues", yValues.toString());
-        template.put("solvedQuestions", count_solved);
         return new ModelAndView("student/perfil", template);
     }
     
@@ -115,12 +118,25 @@ public class StudentController {
     @GetMapping("/tela_editar/{id}")
     public ModelAndView tela_editar(@PathVariable UUID id, HttpSession session){
         boolean logged = studentService.verifySession(session);
+
         if (logged == false) {
             return new ModelAndView("redirect:/");
         }
+
         Map<String, Object> template = new HashMap<>();
-        Optional<Student> student = this.studentRepository.findById(id);
-        template.put("student", student.get());
+
+        if (session.getAttribute("userType") == "student") {
+            template.put("isStudent", session.getAttribute("isStudent"));
+            Student student = (Student) session.getAttribute("userLogged");
+            template.put("student", student);
+        }else{
+            template.put("isAdmin", session.getAttribute("isAdmin"));
+            Optional<Student> student = this.studentRepository.findById(id);
+            template.put("student", student.get());
+        }
+        
+        template.put("userLogged", session.getAttribute("userLogged"));
+        template.put("userType", session.getAttribute("userType"));
         return new ModelAndView("/student/tela_editar", template);
     }
 
@@ -130,10 +146,20 @@ public class StudentController {
         if (logged == false) {
             return new ModelAndView("redirect:/");
         }
-        this.studentRepository.deleteById(id);
         Map<String, Object> template = new HashMap<>();
+        if (session.getAttribute("userType") == "student") {
+            Student student = (Student) session.getAttribute("userLogged");
+            template.put("isStudent", session.getAttribute("isStudent"));
+            this.studentRepository.deleteById(student.getId());
+        }else{
+            template.put("isAdmin", session.getAttribute("isAdmin"));
+            this.studentRepository.deleteById(id);
+        }        
+        
         template.put("message", "Aluno deletado com sucesso!");
         template.put("arrStudent", this.studentRepository.listAll());
+        template.put("userLogged", session.getAttribute("userLogged"));
+        template.put("userType", session.getAttribute("userType"));
         if ("student".equals(session.getAttribute("userType"))) {
             session.invalidate();            
         }

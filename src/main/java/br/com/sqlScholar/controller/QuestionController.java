@@ -4,17 +4,21 @@ import br.com.sqlScholar.dto.DifficultyDTO;
 import br.com.sqlScholar.dto.TeacherDTO;
 import br.com.sqlScholar.model.Question;
 import br.com.sqlScholar.model.QuestionList;
+import br.com.sqlScholar.model.Student;
 import br.com.sqlScholar.model.Teacher;
 import br.com.sqlScholar.repository.QuestionListRepository;
 import br.com.sqlScholar.repository.QuestionRepository;
 import br.com.sqlScholar.repository.TeacherRepository;
 
 import br.com.sqlScholar.service.QuestionService;
+import br.com.sqlScholar.service.StudentService;
+import br.com.sqlScholar.service.TeacherService;
+import jakarta.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.lang.StackWalker.Option;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,7 +28,6 @@ import java.util.UUID;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 @RestController
 @RequestMapping("/question")
@@ -37,17 +40,37 @@ public class QuestionController {
     private TeacherRepository teacherRepository;
 
     @Autowired
+    private TeacherService teacherService;
+
+    @Autowired
     private QuestionService questionService;
 
     @Autowired
     private QuestionListRepository questionListRepository;
 
+    @Autowired
+    private StudentService studentService;
+
     @GetMapping("/tela_adicionar/{questionlistId}")
-    public ModelAndView tela_adicionar(@PathVariable UUID questionlistId) {
+    public ModelAndView tela_adicionar(@PathVariable UUID questionlistId, HttpSession session) {
         // OK
+
+        boolean logged = teacherService.verifySession(session);
+        if (logged == false) {
+            return new ModelAndView("redirect:/");                        
+        }
+        Map<String, Object> template = new HashMap<>();
+        if ("admin".equals(session.getAttribute("userType"))) {
+            template.put ("isAdmin", session.getAttribute("isAdmin"));
+        }else{
+            template.put ("isTeacher", session.getAttribute("isTeacher"));   
+        }
+
         List<Teacher> teacher = this.teacherRepository.findAll();
         Optional<QuestionList> questionlist = this.questionListRepository.findById(questionlistId);
-        Map<String, Object> template = new HashMap<>();
+
+        template.put("userLogged", session.getAttribute("userLogged"));
+        template.put("userType", session.getAttribute("userType"));
         template.put("arrTeacher", teacher);
         template.put("questionlist", questionlist.get());
         System.out.println("\n" + questionlistId);
@@ -55,10 +78,23 @@ public class QuestionController {
     }
 
     @GetMapping("/index")
-    public ModelAndView index() {
+    public ModelAndView index(HttpSession session) {
+
+        Map<String, Object> template = new HashMap<>();
+        if ("admin".equals(session.getAttribute("userType"))) {
+            template.put ("isAdmin", session.getAttribute("isAdmin"));
+        }else{
+            if ("teacher".equals(session.getAttribute("userType"))) {
+                template.put ("isTeacher", session.getAttribute("isTeacher"));                
+            }else{
+                template.put ("isStudent", session.getAttribute("isStudent"));
+            }
+        }
+
+        template.put("userLogged", session.getAttribute("userLogged"));
+        template.put("userType", session.getAttribute("userType"));
         int pageNumber = 0;
         int pageSize = 15;
-        Map<String, Object> template = new HashMap<>();
         template.put("message", "");
         template.put("arrQuestion", this.questionService.pageableQuestion(pageNumber, pageSize));
         return new ModelAndView("question/index", template);
@@ -79,22 +115,6 @@ public class QuestionController {
         template.put("question", question.get());
         // Este aqui passa a informação para a ação de corrigir;
         return new ModelAndView("question/tela_corrigir", template);
-    }
-
-    @PostMapping("/corrigir/{id}")
-    public ModelAndView corrigir(@PathVariable UUID id, @RequestParam String sqlStudent) {
-        Optional<Question> question = this.questionRepository.findById(id);
-
-        // Primeiro é preciso resolver a EXECUÇÃO DE SQL. Só depois de resolvido, poderá
-        // ser utilizado o método de resolução.
-        // O execução do SQL será feita de maneira independente, pois é uma coisa que
-        // será útil em algumas outras partes do código.
-        // Atualmente, isto não faz nada. O código será escrito em QuestionService e
-        // importado, para melhor legibilidade.
-
-        Map<String, Object> template = new HashMap<>();
-        template.put("message", "Erro/Acerto");
-        return new ModelAndView("question/message", template);
     }
 
     @PostMapping("/adicionar")
@@ -144,8 +164,28 @@ public class QuestionController {
     }
 
     @GetMapping("/tela_responder/{id}")
-    public ModelAndView tela_responder(@PathVariable UUID id) {
+    public ModelAndView tela_responder(@PathVariable UUID id, HttpSession session) {
+
+        boolean logged = studentService.verifySession(session);
+
+        if(logged == false){
+            return new ModelAndView("redirect:/"); 
+        }
+
         Map<String, Object> template = new HashMap<>();
+
+        if ("admin".equals(session.getAttribute("userType"))) {
+            template.put ("isAdmin", session.getAttribute("isAdmin"));
+        }else{
+            if ("student".equals(session.getAttribute("userType"))) {
+                template.put ("isStudent", session.getAttribute("isStudent"));              
+            }
+        }
+
+        template.put("userLogged", session.getAttribute("userLogged"));
+        template.put("userType", session.getAttribute("userType"));
+
+        
         Optional<Question> question = this.questionRepository.findById(id);
         Optional<QuestionList> questionlist = this.questionListRepository
                 .findById(question.get().getQuestionList().getId());
@@ -156,14 +196,23 @@ public class QuestionController {
 
     @RequestMapping("/responder")
     public ModelAndView responder(@RequestParam String resposta, @RequestParam String databaseName,
-            @RequestParam UUID id) {
+            @RequestParam UUID id, HttpSession session) {
         // O banco de dados deverá ser passado por aqui. O @RequestParam irá receber uma
         // string com o nome do banco.
         // Agora só falta achar uma maneira de fazer o nome do banco ser passado por
         // parâmetro. Quando resolver a inserção, resolve este por consequência.
         // Aprendendo com erros. Na verdade, é possível pegar o id da lista de questões
         // por dentro da questão, visto que são duas entidades que se relacionam.
+
+        boolean logged = studentService.verifySession(session);
+
+        if(logged == false){
+            return new ModelAndView("redirect:/"); 
+        }
+       
         Map<String, Object> template = new HashMap<>();
+       
+        
         Optional<Question> question = this.questionRepository.findById(id);
 
         String sql_questao = question.get().getSql();
@@ -173,7 +222,7 @@ public class QuestionController {
         try {
            respostas = questionService.awnserQuestion(resposta, sql_questao, databaseName);
            message = respostas.get(respostas.size() - 1);
-           respostas.remove(respostas.size() - 1);
+
         } catch (Exception e) {
            message = "Erro: select em branco.";
         }
@@ -184,12 +233,32 @@ public class QuestionController {
         // Pensar melhor na correção, talvez fazendo um método no service de question.
         // No entanto, funciona!
         // System.out.println(respostas.get(0));
+       
 
-        // Bug. O contains all está retornando positivo mesmo que respostas seja null;
-
-        for (int i = 0; i < respostas.size(); i++) {
-            corrigida += " [" + respostas.get(i) + "] \n";
+        if ("admin".equals(session.getAttribute("userType"))) {
+            template.put ("isAdmin", session.getAttribute("isAdmin"));
+        }else{
+            if ("student".equals(session.getAttribute("userType"))) {
+                Student student = (Student) session.getAttribute("userLogged");
+                template.put ("isStudent", session.getAttribute("isStudent"));
+                if (respostas.size() > 0) {
+                    if (respostas.get(respostas.size() - 1).equals("Acertou.")) {
+                        respostas.remove(respostas.size() - 1);
+                        student.addRight();
+                    }else{
+                        student.addWrong();
+                    }
+                    for (int i = 0; i < respostas.size(); i++) {
+                        corrigida += " [" + respostas.get(i) + "] \n";
+                    }
+                }else{
+                    corrigida = "Não há resultados para retornar.";
+                }
+                
+            }
+       
         }
+        
       
         
 

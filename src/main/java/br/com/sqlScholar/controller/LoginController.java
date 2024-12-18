@@ -59,7 +59,7 @@ public class LoginController {
             session.setAttribute("userLogged", teacher);
             session.setAttribute("userType", "teacher");
             session.setAttribute("isTeacher", true);
-            return new ModelAndView("redirect:/teacher/index");
+            return new ModelAndView("redirect:/home/index");
         }
 
         Student student = studentService.validateCredentials(email, password);
@@ -68,7 +68,7 @@ public class LoginController {
             session.setAttribute("userLogged", student);
             session.setAttribute("userType", "student");
             session.setAttribute("isStudent", true);
-            return new ModelAndView("redirect:/questionlist/index");
+            return new ModelAndView("redirect:/home/index");
         }
 
         return new ModelAndView("login/index").addObject("error", "Email ou senha incorretos!");

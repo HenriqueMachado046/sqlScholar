@@ -11,6 +11,7 @@ import br.com.sqlScholar.repository.TeacherRepository;
 import br.com.sqlScholar.service.QuestionListService;
 import br.com.sqlScholar.service.QuestionService;
 import br.com.sqlScholar.service.TeacherService;
+import jakarta.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -34,25 +35,48 @@ public class QuestionListController {
     @Autowired
     private QuestionListService questionListService;
 
-    // PENDENTE: filtrar por somente pelas propria questões do professor e as que
-    // forem públicas ≥ pendente
-    // Henrique: Filtro criado. Só está comentado, pois só poderá ser ativado após
-    // ser criado o login.
+    @Autowired
+    private TeacherService teacherService;
+
     @GetMapping("/tela_adicionar")
-    public ModelAndView tela_adicionar() {
+    public ModelAndView tela_adicionar(HttpSession session) {
+        
         List<Question> question = this.questionRepository.findAll();
-        // List<Question> question = this.questionRepository.listAllSharedAndOwned(id);
-        // Teacher teacher = this.teacherRepository.findById(id).get();
-        List<Teacher> teacher = this.teacherRepository.findAll();
         Map<String, Object> template = new HashMap<>();
+        if ("admin".equals(session.getAttribute("userType"))) {
+            template.put ("isAdmin", session.getAttribute("isAdmin"));
+            List<Teacher> teacher = this.teacherRepository.findAll();
+            template.put("ArrTeacher", teacher);
+        }else{
+            if ("teacher".equals(session.getAttribute("userType"))) {
+                template.put ("isTeacher", session.getAttribute("isTeacher"));
+                Teacher teacher = (Teacher) session.getAttribute("userLogged");
+                template.put("teacher", teacher);      
+            }
+        }
+        template.put("userLogged", session.getAttribute("userLogged"));
+        template.put("userType", session.getAttribute("userType"));
+        
         template.put("arrQuestion", question);
-        template.put("arrTeacher", teacher);
+        
         return new ModelAndView("questionlist/tela_adicionar", template);
     }
 
     @GetMapping("/index")
-    public ModelAndView index() {
+    public ModelAndView index(HttpSession session) {
         Map<String, Object> template = new HashMap<>();
+
+        if ("admin".equals(session.getAttribute("userType"))) {
+            template.put ("isAdmin", session.getAttribute("isAdmin"));
+        }else{
+            if ("teacher".equals(session.getAttribute("userType"))) {
+                template.put ("isTeacher", session.getAttribute("isTeacher"));                
+            }else{
+                template.put ("isStudent", session.getAttribute("isStudent"));
+            }
+        }
+        template.put("userLogged", session.getAttribute("userLogged"));
+        template.put("userType", session.getAttribute("userType"));
         // int pageNumber = 0;
         // int pageSize = 15;
         template.put("message", "");
@@ -149,9 +173,24 @@ public class QuestionListController {
     }
 
     @GetMapping("/tela_editar/{id}")
-    public ModelAndView tela_editar(@PathVariable UUID id) {
+    public ModelAndView tela_editar(@PathVariable UUID id, HttpSession session) {
         Map<String, Object> template = new HashMap<>();
+        
+        boolean logged = teacherService.verifySession(session);
 
+        if (logged == false) {
+            return new ModelAndView("redirect:/");            
+        }
+
+        if ("admin".equals(session.getAttribute("userType"))) {
+            template.put ("isAdmin", session.getAttribute("isAdmin"));
+        }else{
+            if ("teacher".equals(session.getAttribute("userType"))) {
+                template.put ("isTeacher", session.getAttribute("isTeacher"));                
+            }
+        }
+        template.put("userLogged", session.getAttribute("userLogged"));
+        template.put("userType", session.getAttribute("userType"));
         Optional<QuestionList> questionList = this.questionListRepository.findById(id);
         template.put("title", questionList.get().getTitle());
         template.put("id", questionList.get().getId());
@@ -162,8 +201,26 @@ public class QuestionListController {
     }
 
     @GetMapping("/deletar/{id}")
-    public ModelAndView deletar(@PathVariable UUID id) {
+    public ModelAndView deletar(@PathVariable UUID id, HttpSession session) {
         Optional<QuestionList> questionList = this.questionListRepository.findById(id);
+
+        boolean logged = teacherService.verifySession(session);
+
+        if (logged == false) {
+            return new ModelAndView("redirect:/");            
+        }
+
+        Map<String, Object> template = new HashMap<>();
+        if ("admin".equals(session.getAttribute("userType"))) {
+            template.put ("isAdmin", session.getAttribute("isAdmin"));
+        }else{
+            if ("teacher".equals(session.getAttribute("userType"))) {
+                template.put ("isTeacher", session.getAttribute("isTeacher"));                
+            }
+        }
+        template.put("userLogged", session.getAttribute("userLogged"));
+        template.put("userType", session.getAttribute("userType"));
+
         this.questionListRepository.delete(questionList.get());
         try {
             this.questionListService.createDatabase("DROP DATABASE " + questionList.get().getDatabaseName());
@@ -173,18 +230,25 @@ public class QuestionListController {
                     .println("Não foi possível deletar o banco correspondente:" + questionList.get().getDatabaseName());
             System.out.println("===========");
         }
-        Map<String, Object> template = new HashMap<>();
+        
         template.put("arrQuestionList", this.questionListRepository.listAll());
         template.put("message", "Lista deletada com sucesso!");
         return new ModelAndView("questionlist/index", template);
     }
 
     @GetMapping("/mostrar_lista/{id}")
-    public ModelAndView mostrarLista(@PathVariable UUID id) {
-        // List<String> resultado;
-        // Trocar o "qualquer coisa" pelo input SQL do professor.
-        // resultado = this.questionListService.rodeSQL("qualquer coisa", "sqlscholar");
+    public ModelAndView mostrarLista(@PathVariable UUID id, HttpSession session) {
         Map<String, Object> template = new HashMap<>();
+
+        if ("admin".equals(session.getAttribute("userType"))) {
+            template.put ("isAdmin", session.getAttribute("isAdmin"));
+        }else{
+            if ("teacher".equals(session.getAttribute("userType"))) {
+                template.put ("isTeacher", session.getAttribute("isTeacher"));                
+            }else{
+                template.put ("isStudent", session.getAttribute("isStudent"));
+            }
+        }
         Optional<QuestionList> questionlist = this.questionListRepository.findById(id);
         template.put("questionlist", questionlist.get());
         template.put("questions", questionlist.get().getQuestions());

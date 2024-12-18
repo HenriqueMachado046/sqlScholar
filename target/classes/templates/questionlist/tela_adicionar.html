@@ -6,18 +6,21 @@
         <div class="col form-group">
             <label for="title">Título:</label>
             <input name="title" type="text" class="form-control" id="title" maxlength="50" required>
+
         </div>
         <!-- O campo abaixo vai virar um input hidden. -->
+        <!-- {{#arrTeacher}}
         <div class="col form-group">
             <label>Professor:</label> <br>
-            <select class="form-select" name="teacher_id" required>
-                {{#arrTeacher}}
-                    <option value="{{id}}">{{firstName}}</option>
-                {{/arrTeacher}}
-            </select>
+            <input type="hidden" class="form-control" value="{{id}}">{{firstName}}
         </div>
+        {{/arrTeacher}} -->
+        
+        {{#teacher}}
+        <input type="hidden" class="form-control" name="teacher_id" value="{{id}}">
+        {{/teacher}}
     </div>
-
+  
     Inserir apenas o nome do banco de dados.
     <div class = "form-group mb-3">
         <label for="database_name" class="form-label">Database Name:</label>
