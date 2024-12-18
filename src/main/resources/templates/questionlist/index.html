@@ -3,7 +3,6 @@
 <table class="table">
     <thead>
         <tr>
-            <th>Id</th>
             <th>Título</th>
             <th colspan="3">Operações</th>
         </tr>
@@ -11,20 +10,21 @@
     {{#arrQuestionList}}
         <tbody>
             <tr>
-                <td>{{id}}</td>
                 <td>{{title}}</td>
                 <td><a href="/questionlist/mostrar_lista/{{id}}" class="btn btn-primary">Detalhes</a></td>
                 {{#hasAccess}}
                 <td><a href="/questionlist/tela_editar/{{id}}" class="btn btn-primary">Editar</a></td>
                 <td><a href="/questionlist/deletar/{{id}}" class="btn btn-primary">Excluir</a></td>
-                <td><a href="/questionlist/tela_testar/{{id}}" class="btn btn-primary">Testar SQL</a></td>
+                <td><a href="/questionlist/inserir/{{id}}" class="btn btn-primary">Inserir dados e Testar selects</a></td>
                 {{/hasAccess}}              
             </tr>
         </tbody>
     {{/arrQuestionList}}
 </table>
+<a href="/home/index" class="btn btn-primary">Retornar</a>
 {{#hasAccess}}
 <a href="/questionlist/tela_adicionar" class="btn btn-primary">Adicionar</a> 
 {{/hasAccess}}
+
 
 {{>footer}}

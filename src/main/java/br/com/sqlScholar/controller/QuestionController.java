@@ -93,13 +93,8 @@ public class QuestionController {
         if (session.getAttribute("userType").equals("admin")) {
             template.put ("isAdmin", session.getAttribute("isAdmin"));
         }else{
-            if (session.getAttribute("userType").equals("teacher")) {
-                template.put ("isTeacher", session.getAttribute("isTeacher"));                
-            }else{
-                template.put ("isStudent", session.getAttribute("isStudent"));                    
-            }
+            return new ModelAndView("redirect:/home/index");
         }
-
 
         template.put("userLogged", session.getAttribute("userLogged"));
         template.put("userType", session.getAttribute("userType"));

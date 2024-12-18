@@ -61,7 +61,7 @@ public class StudentController {
         if (logged == false) {
             return new ModelAndView("redirect:/");
         }
-       
+    
         Map<String, Object> template = new HashMap<>();
        
         if ("admin".equals(session.getAttribute("userType"))) {

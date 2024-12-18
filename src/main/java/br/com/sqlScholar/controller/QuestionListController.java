@@ -91,14 +91,14 @@ public class QuestionListController {
     }
 
     @GetMapping("/tela_testar/{id}")
-    public ModelAndView tela_testar(@PathVariable UUID id) {
+    public ModelAndView tela_testar(@PathVariable UUID id, HttpSession session) {
         Map<String, Object> template = new HashMap<>();
         Optional<QuestionList> questionlist = questionListRepository.findById(id);
         template.put("questionlist", questionlist.get());
         return new ModelAndView("questionlist/tela_testar", template);
     }
 
-    @RequestMapping("/testar_sql")
+    @RequestMapping("/inserir")
     public ModelAndView sql_teste(@RequestParam String sql_teste, @RequestParam UUID id) {
         Map<String, Object> template = new HashMap<>();
         sql_teste = sql_teste.toLowerCase();
@@ -110,7 +110,7 @@ public class QuestionListController {
             System.out.println(resultadoTeste.get(i));
         }
         template.put("sql_teste", resultadoTeste);
-        return new ModelAndView("questionlist/testar_sql", template);
+        return new ModelAndView("questionlist/inserir", template);
     }
 
     @PostMapping("/adicionar")

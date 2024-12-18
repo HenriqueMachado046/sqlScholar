@@ -1,6 +1,3 @@
-// Gráfico pizza = Acertos vs Questões cadastradas;
-// Gráfico linha = Erros vs Questões cadastradas;
-// Gráfico barra = Questoes cadastradas (professor x) vs Questoes cadastradas (geral);
 
 function comparar(a, b) {
     return a-b;    
