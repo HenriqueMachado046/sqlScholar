@@ -1,14 +1,21 @@
+// Gráfico pizza = Acertos vs Questões cadastradas;
+// Gráfico linha = Erros vs Questões cadastradas;
+// Gráfico barra = Questoes cadastradas (professor x) vs Questoes cadastradas (geral);
+
 function comparar(a, b) {
     return a-b;    
 }
 
 
 function createChart(xValues, yValues) {
+
     if (document.getElementById("myChart") === null) {
+        const newParagraph = document.createTextNode("Grafico de erros por questoes cadastradas");
         const newDiv = document.createElement("div", "chart1")
         const newCanvas = document.createElement("canvas", "myChart")
         newDiv.setAttribute("id", "chart1")
         newDiv.setAttribute("class", "float-child")
+        newDiv.appendChild(newParagraph);
         newCanvas.setAttribute("id", "myChart")
         newCanvas.setAttribute("style", "width:100%;max-width:600px")
         document.getElementById("canvasDiv").insertAdjacentElement("afterbegin", newDiv)
@@ -19,12 +26,12 @@ function createChart(xValues, yValues) {
         data: {
             labels: xValues,
             datasets: [{
-                label: 'Grafico linha teste',
+                label: 'Erros totais dos alunos',
                 fill: false,
                 lineTension: 0,
                 backgroundColor: "rgba(0,0,255,1.0)",
                 borderColor: "rgba(0,0,255,0.1)",
-                data: yValues
+                data: [yValues]
             }]
         },
         options: {
@@ -39,7 +46,7 @@ function createChart(xValues, yValues) {
     });
 };
 
-function createBarChart(xValues) {
+function createBarChart(xValues, countTotal) {
 
     if (document.getElementById("myChart2") === null) {
         const newDiv = document.createElement("div", "chart2")
@@ -52,43 +59,47 @@ function createBarChart(xValues) {
         document.getElementById("chart2").insertAdjacentElement("afterbegin", newCanvas)
     }
 
+    const data = {
+        labels: ['Cadastradas Professor', 'Cadastradas totais'],
+        datasets: [{
+            label: "Grafico de contribuicao",
+            data: [ parseInt(xValues), parseInt(countTotal)],
+            backgroundColor: 'rgb (255, 99, 126)',
+            borderColor: 'rgb (255, 99, 132)',
+            borderWidth: 1
+        }]
+    }
+
     new Chart(document.getElementById('myChart2'), {
         type: 'bar',
-        data:{
-            labels: ['Janeiro', 'Fevereiro', 'Marco', 'Abril', 'Maio'],
-            datasets: [{
-                label: "Grafico barra do primeiro semestre do ano",
-                backgroundColor: 'rgb (255, 99, 126)',
-                borderColor: 'rgb (255, 99, 132)',
-                data: xValues
-            }]
-        },
+        data: data ,
         options:{
             responsive: true,
+            scales:{
+                beginAtZero: true,
+            },
             legend:{
                 position: 'top',
             },
             title:{
                 display:true,
-                text: 'Exemplo barra'
+                text: 'Grafico de contribuicao'
             }
         }
     })         
 };
 
-function createPieChart(xValues) {
+function createPieChart(xValues, zValues) {
 
     const dataPie = {
-        labels: ['Area 1', 'Area 2', 'Area 3', 'Area 4', 'Area 5'],
+        labels: ['Questoes cadastradas', 'Questoes resolvidas'],
         datasets: [
             {
-                label: 'Dataset 1',
-                data: xValues,
+                label: 'Acertos por questões cadastradas',
+                data: [xValues, zValues],
                 backgroundColor: [
                     'rgb(255, 99, 132)',
                     'rgb(54, 162, 235)',
-                    'rgb(255, 205, 86)',
-                    'rgb(115, 225, 19)'
                 ],
                 hoverOffset: 4
             }
@@ -116,7 +127,7 @@ function createPieChart(xValues) {
             },
             title:{
                 display:true,
-                text: 'Exemplo pizza'
+                text: 'Acertos por questões cadastradas'
             }
         }
     })

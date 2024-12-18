@@ -12,12 +12,10 @@
     <tr>
         <td>{{title}}</td>
         <td>{{description}}</td>
-        {{#isAdmin}}
-        {{#isTeacher}}
+        {{#hasAccess}}
         <td><a href="/question/tela_editar/{{id}}" class="btn btn-primary">Editar</a></td>
         <td><a href="/question/deletar/{{id}}" class="btn btn-primary">Excluir</a></td>
-        {{/isTeacher}}
-        {{/isAdmin}}
+        {{/hasAccess}}
 
         <td><a href="/question/tela_responder/{{id}}" class="btn btn-primary">Resolver questão</a></td>
     </tr>

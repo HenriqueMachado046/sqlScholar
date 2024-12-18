@@ -44,12 +44,12 @@ public class QuestionListController {
         List<Question> question = this.questionRepository.findAll();
         Map<String, Object> template = new HashMap<>();
         if ("admin".equals(session.getAttribute("userType"))) {
-            template.put ("isAdmin", session.getAttribute("isAdmin"));
+            template.put("isAdmin", session.getAttribute("isAdmin"));
             List<Teacher> teacher = this.teacherRepository.findAll();
             template.put("ArrTeacher", teacher);
         }else{
             if ("teacher".equals(session.getAttribute("userType"))) {
-                template.put ("isTeacher", session.getAttribute("isTeacher"));
+                template.put("isTeacher", session.getAttribute("isTeacher"));
                 Teacher teacher = (Teacher) session.getAttribute("userLogged");
                 template.put("teacher", teacher);      
             }
@@ -66,13 +66,15 @@ public class QuestionListController {
     public ModelAndView index(HttpSession session) {
         Map<String, Object> template = new HashMap<>();
 
-        if ("admin".equals(session.getAttribute("userType"))) {
-            template.put ("isAdmin", session.getAttribute("isAdmin"));
+        if (session.getAttribute("userType").equals("admin")) {
+            boolean hasAccess = true;
+            template.put ("hasAccess", hasAccess);
         }else{
-            if ("teacher".equals(session.getAttribute("userType"))) {
-                template.put ("isTeacher", session.getAttribute("isTeacher"));                
+            if (session.getAttribute("userType").equals("teacher")) {
+                boolean hasAccess = true;
+                template.put ("hasAccess", hasAccess);                
             }else{
-                template.put ("isStudent", session.getAttribute("isStudent"));
+                template.put ("isStudent", session.getAttribute("isStudent"));                    
             }
         }
         template.put("userLogged", session.getAttribute("userLogged"));
@@ -183,10 +185,10 @@ public class QuestionListController {
         }
 
         if ("admin".equals(session.getAttribute("userType"))) {
-            template.put ("isAdmin", session.getAttribute("isAdmin"));
+            template.put("isAdmin", session.getAttribute("isAdmin"));
         }else{
             if ("teacher".equals(session.getAttribute("userType"))) {
-                template.put ("isTeacher", session.getAttribute("isTeacher"));                
+                template.put("isTeacher", session.getAttribute("isTeacher"));                
             }
         }
         template.put("userLogged", session.getAttribute("userLogged"));
@@ -225,10 +227,8 @@ public class QuestionListController {
         try {
             this.questionListService.createDatabase("DROP DATABASE " + questionList.get().getDatabaseName());
         } catch (Exception e) {
-            System.out.println("===========");
             System.out
                     .println("Não foi possível deletar o banco correspondente:" + questionList.get().getDatabaseName());
-            System.out.println("===========");
         }
         
         template.put("arrQuestionList", this.questionListRepository.listAll());
@@ -240,15 +240,19 @@ public class QuestionListController {
     public ModelAndView mostrarLista(@PathVariable UUID id, HttpSession session) {
         Map<String, Object> template = new HashMap<>();
 
-        if ("admin".equals(session.getAttribute("userType"))) {
-            template.put ("isAdmin", session.getAttribute("isAdmin"));
+        if (session.getAttribute("userType").equals("admin")) {
+            boolean hasAccess = true;
+            template.put ("hasAccess", hasAccess);
         }else{
-            if ("teacher".equals(session.getAttribute("userType"))) {
-                template.put ("isTeacher", session.getAttribute("isTeacher"));                
+            if (session.getAttribute("userType").equals("teacher")) {
+                boolean hasAccess = true;
+                template.put ("hasAccess", hasAccess);                
             }else{
-                template.put ("isStudent", session.getAttribute("isStudent"));
+                template.put ("isStudent", session.getAttribute("isStudent"));                    
             }
         }
+        template.put("userLogged", session.getAttribute("userLogged"));
+        template.put("userType", session.getAttribute("userType"));
         Optional<QuestionList> questionlist = this.questionListRepository.findById(id);
         template.put("questionlist", questionlist.get());
         template.put("questions", questionlist.get().getQuestions());

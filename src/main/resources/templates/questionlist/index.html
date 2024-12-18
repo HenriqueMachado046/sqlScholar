@@ -14,20 +14,17 @@
                 <td>{{id}}</td>
                 <td>{{title}}</td>
                 <td><a href="/questionlist/mostrar_lista/{{id}}" class="btn btn-primary">Detalhes</a></td>
-                {{#isAdmin}}
-                {{#isTeacher}}
+                {{#hasAccess}}
                 <td><a href="/questionlist/tela_editar/{{id}}" class="btn btn-primary">Editar</a></td>
                 <td><a href="/questionlist/deletar/{{id}}" class="btn btn-primary">Excluir</a></td>
                 <td><a href="/questionlist/tela_testar/{{id}}" class="btn btn-primary">Testar SQL</a></td>
-                {{/isTeacher}}
-                {{/isAdmin}} 
-                               
+                {{/hasAccess}}              
             </tr>
         </tbody>
     {{/arrQuestionList}}
 </table>
-
+{{#hasAccess}}
 <a href="/questionlist/tela_adicionar" class="btn btn-primary">Adicionar</a> 
-
+{{/hasAccess}}
 
 {{>footer}}

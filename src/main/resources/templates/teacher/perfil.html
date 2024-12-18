@@ -31,7 +31,6 @@
 </div>
 
 
-
 <br>
 <div id="canvasDiv">
 
@@ -41,8 +40,10 @@
 
 <!-- <canvas id="myChart" style="width:100%;max-width:600px"></canvas> -->
 
-<input type="button" id="button1" class="btn btn-primary" onclick="createChart(eval('{{xvalues}}'), eval('{{yvalues}}'));
- createBarChart(eval('{{xvalues}}')); createPieChart(eval('{{xvalues}}'))" value="Gerar gráfico">
+<input type="button" id="button1" class="btn btn-primary" onclick="
+ createChart(eval('{{yvalues}}'), eval('{{zvalues}}'));
+ createBarChart(eval('{{yvalues}}'), eval('{{cadastradasvalues}}'));
+ createPieChart(eval('{{yvalues}}'), eval('{{zvalues}}'))" value="Gerar gráfico">
 
 <!-- Esta é a maneira correta de referenciar qualquer arquivo da pasta static. -->
 <script type="text/javascript" src="../../js/charts_teacher.js"></script> 

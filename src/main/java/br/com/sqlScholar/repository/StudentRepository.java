@@ -1,7 +1,10 @@
 package br.com.sqlScholar.repository;
 
 import br.com.sqlScholar.model.Student;
+import jakarta.transaction.Transactional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -28,4 +31,17 @@ public interface StudentRepository extends JpaRepository<Student, UUID> {
 
     @Query("SELECT COUNT (s) FROM Student s")
     List<Integer> countStudents();
+
+    @Modifying
+    @Transactional
+    @Query(nativeQuery = true, value ="UPDATE student SET right_answers = (right_answers + 1) WHERE id = ?1 ")
+    public int updateRightById(UUID id);
+
+    @Modifying
+    @Transactional
+    @Query(nativeQuery = true, value ="UPDATE student SET wrong_answers = (wrong_answers + 1) WHERE id = ?1 ")
+    public int updateWrongById(UUID id);
+
+    @Query(nativeQuery = true,value = "SELECT COUNT (wrong_answers) FROM student")
+    List<Integer> countWrong();
 }

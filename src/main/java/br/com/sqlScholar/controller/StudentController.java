@@ -66,24 +66,31 @@ public class StudentController {
        
         if ("admin".equals(session.getAttribute("userType"))) {
             Optional<Student> student = this.studentRepository.findById(id);
-            template.put("student", student.get());
-            template.put("solvedQuestions", student.get().getRightAnswers());
+            Integer right = student.get().getRightAnswers();
+            Integer wrong = student.get().getWrongAnswers();
+            Integer attempts = (student.get().getRightAnswers() + student.get().getWrongAnswers());
+            template.put("student", student);
+            template.put("wrongQuestions", wrong.toString());
+            template.put("rightQuestions", right.toString());
+            template.put("attemptedQuestions", attempts.toString());
+            template.put("attemptedQuestions", (student.get().getWrongAnswers() + student.get().getRightAnswers()));
             template.put("isAdmin", session.getAttribute("isAdmin"));
         }else{
             Student student = (Student) session.getAttribute("userLogged");
+            Integer right = student.getRightAnswers();
+            Integer wrong = student.getWrongAnswers();
+            Integer attempts = (student.getRightAnswers() + student.getWrongAnswers());
             template.put("student", student);
-            template.put("solvedQuestions", student.getRightAnswers());
+            template.put("wrongQuestions", wrong.toString());
+            template.put("rightQuestions", right.toString());
+            template.put("attemptedQuestions", attempts.toString());
             template.put("isStudent", session.getAttribute("isStudent"));
         }
 
-        
-        Integer xValues = studentRepository.findById(id).get().getRightAnswers();//Quantidade de acertos do aluno
         List<Integer> yValues = questionRepository.countQuestions();//Quantidade de questões;
-        
 
         template.put("userLogged", session.getAttribute("userLogged"));
         template.put("userType", session.getAttribute("userType"));       
-        template.put("xvalues", xValues.toString());
         template.put("yvalues", yValues.toString());
         return new ModelAndView("student/perfil", template);
     }

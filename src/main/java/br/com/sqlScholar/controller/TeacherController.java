@@ -84,22 +84,36 @@ public class TeacherController {
             template.put("isAdmin", session.getAttribute("isAdmin"));
             Optional <Teacher> teacher = this.teacherRepository.findById(id);
             template.put("teacher", teacher);
-            List<Integer> count_questions = questionRepository.countQuestionsTeachers(id);
+            List<Integer> count_questions_teacher = questionRepository.countQuestionsTeachers(id);
             List<Integer> count_students = studentRepository.countStudents();
+            String count_solved = Integer.toString(teacher.get().getSolvedQuestions());
+            List<Integer> count_questions_total = questionRepository.countQuestions();
+            List<Integer> count_wrong = studentRepository.countWrong();
             template.put("xvalues", count_students.toString());
-            template.put("yvalues", count_questions.toString());
+            template.put("yvalues", count_questions_teacher.toString());
+            template.put("zvalues", count_solved);
+            template.put("cadastradasvalues", count_questions_total.toString());
             template.put("countStudents", count_students.toString());
-            template.put("countQuestions", count_questions.toString());
+            template.put("countQuestions", count_questions_teacher.toString());
+            template.put("erradasvalues", count_wrong.toString());
+            
         }else{
+
             Teacher teacher = (Teacher) session.getAttribute("userLogged");
-            List<Integer> count_questions = questionRepository.countQuestionsTeachers(teacher.getId());
+            List<Integer> count_questions_teacher = questionRepository.countQuestionsTeachers(teacher.getId());
             List<Integer> count_students = studentRepository.countStudents();
+            String count_solved = Integer.toString(teacher.getSolvedQuestions());
+            List<Integer> count_questions_total = questionRepository.countQuestions();
+            List<Integer> count_wrong = studentRepository.countWrong();
             template.put("isTeacher", session.getAttribute("isTeacher"));
             template.put("teacher", teacher);
             template.put("xvalues", count_students.toString());
-            template.put("yvalues", count_questions.toString());
+            template.put("yvalues", count_questions_teacher.toString());
+            template.put("cadastradasvalues", count_questions_total.toString());
+            template.put("zvalues", count_solved);
             template.put("countStudents", count_students.toString());
-            template.put("countQuestions", count_questions.toString());
+            template.put("countQuestions", count_questions_teacher.toString());
+            template.put("erradasvalues", count_wrong.toString());
         } 
        
         

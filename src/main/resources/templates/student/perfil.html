@@ -21,13 +21,19 @@
 
 <div class="row">
     <div id="solved" class="col-sm" style="background-color: gainsboro;">
-        <H1 id="solvedCount" >{{solvedQuestions}}</H1>
-        <p>Número de exercícios resolvidos</p>
+        <H1 id="solvedCount" >{{rightQuestions}}</H1>
+        <p>Número de exercícios corretos</p>
     </div>
-    <!-- <div class="col-sm" style="background-color: gray;">
-        <H1>1</H1>
-        <p>Total de alunos</p>
-    </div> -->
+    <div id="solved" class="col-sm" style="background-color: gainsboro;">
+        <H1 id="solvedCount" >{{wrongQuestions}}</H1>
+        <p>Número de exercícios errados</p>
+    </div>
+    <div id="solved" class="col-sm" style="background-color: gainsboro;">
+        <H1 id="solvedCount" >{{attemptedQuestions}}</H1>
+        <p>Número de exercícios tentados (acertos e erros)</p>
+    </div>
+
+
 </div>
 <br>
 
@@ -39,9 +45,9 @@
 
 
 <input type="button" id="button1" class="btn btn-primary" onclick="createChart(
-eval('{{xvalues}}'), eval('{{yvalues}}')
-); createBarChart(eval('{{xvalues}}')); createPieChart(eval('{{xvalues}}'))" value="Gerar gráfico">
-
+eval('{{rightQuestions}}'), eval('{{wrongQuestions}}'));
+createBarChart(eval('{{rightQuestions}}'), eval('{{wrongQuestions}}'), eval('{{yvalues}}'));
+createPieChart(eval('{{attemptedQuestions}}'), eval('{{yvalues}}'))" value="Gerar gráfico">
 
 <script type="text/javascript" src="../../js/charts_student.js"></script> 
 

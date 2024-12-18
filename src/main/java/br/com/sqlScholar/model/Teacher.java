@@ -26,6 +26,8 @@ public class Teacher extends Person {
     @OneToMany(mappedBy = "owner")
     private List<Question> ownedQuestions = new ArrayList<>();
 
+    @Column
+    private int solvedQuestions = 0;
 
     public Teacher() {
         this.setTeacher(true);

@@ -8,6 +8,7 @@ import br.com.sqlScholar.model.Student;
 import br.com.sqlScholar.model.Teacher;
 import br.com.sqlScholar.repository.QuestionListRepository;
 import br.com.sqlScholar.repository.QuestionRepository;
+import br.com.sqlScholar.repository.StudentRepository;
 import br.com.sqlScholar.repository.TeacherRepository;
 
 import br.com.sqlScholar.service.QuestionService;
@@ -51,6 +52,9 @@ public class QuestionController {
     @Autowired
     private StudentService studentService;
 
+    @Autowired
+    private StudentRepository studentRepository;
+
     @GetMapping("/tela_adicionar/{questionlistId}")
     public ModelAndView tela_adicionar(@PathVariable UUID questionlistId, HttpSession session) {
         // OK
@@ -79,17 +83,23 @@ public class QuestionController {
 
     @GetMapping("/index")
     public ModelAndView index(HttpSession session) {
-
+        
         Map<String, Object> template = new HashMap<>();
-        if ("admin".equals(session.getAttribute("userType"))) {
+
+        if (session.getAttribute("userType") == null) {
+            return new ModelAndView("redirect:/");            
+        }
+        
+        if (session.getAttribute("userType").equals("admin")) {
             template.put ("isAdmin", session.getAttribute("isAdmin"));
         }else{
-            if ("teacher".equals(session.getAttribute("userType"))) {
+            if (session.getAttribute("userType").equals("teacher")) {
                 template.put ("isTeacher", session.getAttribute("isTeacher"));                
             }else{
-                template.put ("isStudent", session.getAttribute("isStudent"));
+                template.put ("isStudent", session.getAttribute("isStudent"));                    
             }
         }
+
 
         template.put("userLogged", session.getAttribute("userLogged"));
         template.put("userType", session.getAttribute("userType"));
@@ -101,8 +111,27 @@ public class QuestionController {
     }
 
     @GetMapping("mostrar_questao/{id}")
-    public ModelAndView mostrarQuestao(@PathVariable UUID id) {
+    public ModelAndView mostrarQuestao(@PathVariable UUID id, HttpSession session) {
         Map<String, Object> template = new HashMap<>();
+
+        if (session.getAttribute("userType") == null) {
+            return new ModelAndView("redirect:/");            
+        }
+        
+        if (session.getAttribute("userType").equals("admin")) {
+            boolean hasAccess = true;
+            template.put ("hasAccess", hasAccess);
+        }else{
+            if (session.getAttribute("userType").equals("teacher")) {
+                boolean hasAccess = true;
+                template.put ("hasAccess", hasAccess);                
+            }else{
+                template.put ("isStudent", session.getAttribute("isStudent"));                    
+            }
+        }
+        template.put("userLogged", session.getAttribute("userLogged"));
+        template.put("userType", session.getAttribute("userType"));
+
         Optional<Question> question = this.questionRepository.findById(id);
         template.put("question", question.get());
         return new ModelAndView("question/mostrar_questao", template);
@@ -242,11 +271,12 @@ public class QuestionController {
                 Student student = (Student) session.getAttribute("userLogged");
                 template.put ("isStudent", session.getAttribute("isStudent"));
                 if (respostas.size() > 0) {
-                    if (respostas.get(respostas.size() - 1).equals("Acertou.")) {
+                    if (respostas.get(respostas.size() - 1).equals("Certo.")) {
                         respostas.remove(respostas.size() - 1);
-                        student.addRight();
+                        studentRepository.updateRightById(student.getId());
+                        teacherRepository.updateCounterById(question.get().getOwner().getId());
                     }else{
-                        student.addWrong();
+                        studentRepository.updateWrongById(student.getId());
                     }
                     for (int i = 0; i < respostas.size(); i++) {
                         corrigida += " [" + respostas.get(i) + "] \n";
@@ -308,11 +338,18 @@ public class QuestionController {
     }
 
     @GetMapping("/deletar/{id}")
-    public ModelAndView deletar(@PathVariable UUID id) {
+    public ModelAndView deletar(@PathVariable UUID id, HttpSession session) {
         Optional<Question> question = this.questionRepository.findById(id);
         UUID id_lista = question.get().getQuestionList().getId();
         this.questionRepository.deleteById(id);
         Map<String, Object> template = new HashMap<>();
+        if ("admin".equals(session.getAttribute("userType"))) {
+            template.put ("isAdmin", session.getAttribute("isAdmin"));
+        }else{
+            template.put ("isTeacher", session.getAttribute("isTeacher"));   
+        }
+        template.put("userLogged", session.getAttribute("userLogged"));
+        template.put("userType", session.getAttribute("userType"));
         template.put("arrQuestion", this.questionRepository.findAll());
         template.put("message", "Questão deletada com sucesso!");
         return new ModelAndView("redirect:/questionlist/mostrar_lista/" + id_lista, template);
