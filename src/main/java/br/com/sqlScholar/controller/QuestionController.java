@@ -252,12 +252,7 @@ public class QuestionController {
         }
 
         
-        String corrigida = "";
-
-        // Pensar melhor na correção, talvez fazendo um método no service de question.
-        // No entanto, funciona!
-        // System.out.println(respostas.get(0));
-       
+        String corrigida = "";       
 
         if ("admin".equals(session.getAttribute("userType"))) {
             template.put ("isAdmin", session.getAttribute("isAdmin"));
@@ -283,9 +278,7 @@ public class QuestionController {
             }
        
         }
-        
-      
-        
+
 
         template.put("resposta", resposta);
         template.put("corrigida", corrigida);

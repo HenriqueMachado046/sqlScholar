@@ -109,7 +109,6 @@ public class QuestionService {
             }
         }
 
-        //O retorno está errado.
 
     }
 

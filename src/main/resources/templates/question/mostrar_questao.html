@@ -17,7 +17,9 @@
         <td><a href="/question/deletar/{{id}}" class="btn btn-primary">Excluir</a></td>
         {{/hasAccess}}
 
+        {{#isStudent}}
         <td><a href="/question/tela_responder/{{id}}" class="btn btn-primary">Resolver questão</a></td>
+        {{/isStudent}}
     </tr>
     </tbody>
     {{/question}}

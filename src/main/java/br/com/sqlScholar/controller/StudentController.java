@@ -66,20 +66,19 @@ public class StudentController {
        
         if ("admin".equals(session.getAttribute("userType"))) {
             Optional<Student> student = this.studentRepository.findById(id);
-            Integer right = student.get().getRightAnswers();
-            Integer wrong = student.get().getWrongAnswers();
-            Integer attempts = (student.get().getRightAnswers() + student.get().getWrongAnswers());
+            Integer right = studentRepository.getRightById(student.get().getId());
+            Integer wrong = studentRepository.getWrongById(student.get().getId());
+            Integer attempts = wrong + right;
             template.put("student", student);
             template.put("wrongQuestions", wrong.toString());
             template.put("rightQuestions", right.toString());
             template.put("attemptedQuestions", attempts.toString());
-            template.put("attemptedQuestions", (student.get().getWrongAnswers() + student.get().getRightAnswers()));
             template.put("isAdmin", session.getAttribute("isAdmin"));
         }else{
             Student student = (Student) session.getAttribute("userLogged");
-            Integer right = student.getRightAnswers();
-            Integer wrong = student.getWrongAnswers();
-            Integer attempts = (student.getRightAnswers() + student.getWrongAnswers());
+            Integer right = studentRepository.getRightById(student.getId());
+            Integer wrong = studentRepository.getWrongById(student.getId());
+            Integer attempts = wrong + right;
             template.put("student", student);
             template.put("wrongQuestions", wrong.toString());
             template.put("rightQuestions", right.toString());

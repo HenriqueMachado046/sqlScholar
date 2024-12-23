@@ -19,23 +19,10 @@ public class Student extends Person{
     @Column
     private int wrongAnswers = 0;
     
-    public int getRightAnswers() {
-        return rightAnswers;
-    }
-
     public void setRightAnswers(int rightAnswers) {
         this.rightAnswers = rightAnswers;
     }
-
-    public void addRight(){
-        this.rightAnswers++;
-    }
-
-    public void addWrong(){
-        this.wrongAnswers++;
-    }
-
-
+    
     public int getWrongAnswers() {
         return wrongAnswers;
     }
@@ -46,5 +33,9 @@ public class Student extends Person{
 
     public Student(){
         this.setTeacher(false);
+    }
+
+    public int getRightAnswers() {
+        return rightAnswers;
     }
 }

@@ -14,6 +14,17 @@
 //Tabela
 
 function createChart(xValues, yValues) {
+    const newXvalues = []
+    const newYvalues = []
+
+    for (let index = 1; index <= xValues; index++) {
+        newXvalues.push(index);
+    }
+
+    for (let index = 1; index <= yValues; index++) {
+        newYvalues.push(index);
+    }
+
     
     if (document.getElementById("myChart") === null) {
         const newParagraph = document.createTextNode("Grafico de acertos e erros");
@@ -30,16 +41,18 @@ function createChart(xValues, yValues) {
         
     }
 
+    //Aqui o problema é que não tem um vetor de dados.
+    //Resolvido
     new Chart(document.getElementById('myChart').id, {
         type: "line",
         data: {
-            labels: [parseInt(xValues)],
+            labels: newYvalues,
             datasets: [{
                 fill: false,
                 lineTension: 0,
                 backgroundColor: "rgba(0,0,255,1.0)",
                 borderColor: "rgba(0,0,255,0.1)",
-                data: parseInt(yValues)
+                data: newXvalues
             }]
         },
         options: {
@@ -53,11 +66,10 @@ function createChart(xValues, yValues) {
         }
     });
 }
-
+//funcionando 100%
 function createBarChart(xValues, yValues, zValues) {
 
-
-    console.log(zValues);
+    console.log(yValues)
 
     if (document.getElementById("myChart2") === null) {
         const newDiv = document.createElement("div", "chart2")
@@ -73,9 +85,9 @@ function createBarChart(xValues, yValues, zValues) {
     new Chart(document.getElementById('myChart2'), {
         type: 'bar',
         data:{
-            labels: ['Acertos', 'Erros', 'Cadastradas'],
+            labels: ['Acertos', 'Erros', 'Tentativas'],
             datasets: [{
-                label: "Acertos vs Erros vs Total de cadastradas",
+                label: "Acertos vs Erros vs Tentativas",
                 data: [parseInt(xValues), parseInt(yValues), parseInt(zValues)]
             }]
         },
@@ -86,7 +98,20 @@ function createBarChart(xValues, yValues, zValues) {
             },
             title:{
                 display:true,
-                text: 'Acertos vs Erros vs Total de cadastradas'
+                text: 'Acertos vs Erros vs Tentativas'
+            },
+            scales:{
+                x:{
+                    ticks:{
+                        display: true,
+                        autoSkip: false
+                    }
+                },
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
             }
         }
     })         

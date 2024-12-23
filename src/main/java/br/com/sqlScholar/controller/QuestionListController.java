@@ -90,12 +90,12 @@ public class QuestionListController {
         return new ModelAndView("questionlist/index", template);
     }
 
-    @GetMapping("/tela_testar/{id}")
+    @GetMapping("/tela_inserir/{id}")
     public ModelAndView tela_testar(@PathVariable UUID id, HttpSession session) {
         Map<String, Object> template = new HashMap<>();
         Optional<QuestionList> questionlist = questionListRepository.findById(id);
         template.put("questionlist", questionlist.get());
-        return new ModelAndView("questionlist/tela_testar", template);
+        return new ModelAndView("questionlist/tela_inserir", template);
     }
 
     @RequestMapping("/inserir")
@@ -157,16 +157,7 @@ public class QuestionListController {
         QuestionList questionList = this.questionListRepository.findById(id).get();
         questionList.setTitle(title);
         questionList.setPrivate(isPrivate);
-        // vais dropar o banco antigo? ou editar não aceita substituir a base de dados?
-        // => pendente
-        // Não aceita substituir. A lista deve ser excluída.
         questionList.setDatabaseScript(database_script);
-        // this.questionListService.rodeSQL("DROP SCHEMA public CASCADE;",
-        // "list_"+questionList.getId().toString().replace("-", ""));
-        // this.questionListService.rodeSQL("CREATE SCHEMA public;",
-        // "list_"+questionList.getId().toString().replace("-", ""));
-        // this.questionListService.rodeSQL(database_script.trim(),
-        // "list_"+questionList.getId().toString().replace("-", ""));
         this.questionListRepository.save(questionList);
         Map<String, Object> template = new HashMap<>();
         template.put("message", "Lista editada com sucesso!");
@@ -239,16 +230,30 @@ public class QuestionListController {
     @GetMapping("/mostrar_lista/{id}")
     public ModelAndView mostrarLista(@PathVariable UUID id, HttpSession session) {
         Map<String, Object> template = new HashMap<>();
+        boolean isTeacher = false;
+
+        if (session.getAttribute("userType").equals("teacher")) {
+            Teacher teacher = questionListRepository.findById(id).get().getOwner();
+            Teacher logged = (Teacher)session.getAttribute("userLogged");
+            isTeacher = true;
+        }
+
 
         if (session.getAttribute("userType").equals("admin")) {
             boolean hasAccess = true;
             template.put ("hasAccess", hasAccess);
         }else{
-            if (session.getAttribute("userType").equals("teacher")) {
+            
+            if (isTeacher) {
                 boolean hasAccess = true;
                 template.put ("hasAccess", hasAccess);                
             }else{
-                template.put ("isStudent", session.getAttribute("isStudent"));                    
+                if (session.getAttribute("userType").equals("teacher")){
+                    boolean hasAccess = false;
+                    template.put("hasAccess", hasAccess);                    
+                }else{
+                    template.put ("isStudent", session.getAttribute("isStudent")); 
+                }       
             }
         }
         template.put("userLogged", session.getAttribute("userLogged"));

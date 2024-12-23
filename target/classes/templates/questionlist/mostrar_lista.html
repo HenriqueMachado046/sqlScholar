@@ -18,6 +18,9 @@
 
 {{#hasAccess}}
 <a href="/question/tela_adicionar/{{questionlist.id}}" class="btn btn-primary">Adicionar questão</a>
+<td><a href="/questionlist/tela_editar/{{id}}" class="btn btn-primary">Editar</a></td>
+<td><a href="/questionlist/deletar/{{id}}" class="btn btn-primary">Excluir</a></td>
+<td><a href="/questionlist/tela_inserir/{{id}}" class="btn btn-primary">Inserir dados e Testar selects</a></td>
 {{/hasAccess}}
 
 {{/questionlist}}

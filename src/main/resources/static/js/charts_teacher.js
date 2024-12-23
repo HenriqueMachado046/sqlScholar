@@ -6,6 +6,17 @@ function comparar(a, b) {
 
 function createChart(xValues, yValues) {
 
+    const newXvalues = []
+    const newYvalues = []
+
+    for (let index = 1; index <= xValues; index++) {
+        newXvalues.push(index);
+    }
+
+    for (let index = 1; index <= yValues; index++) {
+        newYvalues.push(index);
+    }
+
     if (document.getElementById("myChart") === null) {
         const newParagraph = document.createTextNode("Grafico de erros por questoes cadastradas");
         const newDiv = document.createElement("div", "chart1")
@@ -21,14 +32,14 @@ function createChart(xValues, yValues) {
     new Chart(document.getElementById('myChart').id, {
         type: "line",
         data: {
-            labels: xValues,
+            labels: newYvalues,
             datasets: [{
                 label: 'Erros totais dos alunos',
                 fill: false,
                 lineTension: 0,
                 backgroundColor: "rgba(0,0,255,1.0)",
                 borderColor: "rgba(0,0,255,0.1)",
-                data: [yValues]
+                data: newXvalues
             }]
         },
         options: {
@@ -57,7 +68,7 @@ function createBarChart(xValues, countTotal) {
     }
 
     const data = {
-        labels: ['Cadastradas Professor', 'Cadastradas totais'],
+        labels: ['Questoes cadastradas do professor', 'Cadastradas totais'],
         datasets: [{
             label: "Grafico de contribuicao",
             data: [ parseInt(xValues), parseInt(countTotal)],
@@ -73,7 +84,17 @@ function createBarChart(xValues, countTotal) {
         options:{
             responsive: true,
             scales:{
-                beginAtZero: true,
+                x:{
+                    ticks:{
+                        display: true,
+                        autoSkip: false
+                    }
+                },
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
             },
             legend:{
                 position: 'top',
@@ -89,7 +110,7 @@ function createBarChart(xValues, countTotal) {
 function createPieChart(xValues, zValues) {
 
     const dataPie = {
-        labels: ['Questoes cadastradas', 'Questoes resolvidas'],
+        labels: ['Questoes cadastradas do professor', 'Questoes resolvidas'],
         datasets: [
             {
                 label: 'Acertos por questões cadastradas',
@@ -124,7 +145,7 @@ function createPieChart(xValues, zValues) {
             },
             title:{
                 display:true,
-                text: 'Acertos por questões cadastradas'
+                text: 'Acertos por questoes cadastradas'
             }
         }
     })

@@ -49,20 +49,20 @@ public class HomeController {
         List<String> studentsRanked = new ArrayList<String>();
 
         for (int i = 0; i < students.size(); i++) {
-            if (students.get(i).getRightAnswers() != 0) {
+            if (studentRepository.getRightById(students.get(i).getId()) != 0) {
                 if (i == 0) {
                     studentsRanked.add("Nome: " + students.get(i).getFirstName() + " " + students.get(i).getLastName()
-                            + "<br> Total de acertos: " + students.get(i).getRightAnswers()
+                            + "<br> Total de acertos: " + studentRepository.getRightById(students.get(i).getId())
                             + " Ranking: Ouro. Parabéns!");
                 } else {
                     if (i == 1) {
                         studentsRanked.add("Nome: " + students.get(i).getFirstName() + " "
                                 + students.get(i).getLastName() + "<br> Total de acertos: "
-                                + students.get(i).getRightAnswers() + " Ranking: Prata. Ótimo!");
+                                + studentRepository.getRightById(students.get(i).getId()) + " Ranking: Prata. Ótimo!");
                     } else {
                         studentsRanked.add("Nome: " + students.get(i).getFirstName() + " "
                                 + students.get(i).getLastName() + "<br> Total de acertos: "
-                                + students.get(i).getRightAnswers() + " Ranking: Bronze. Continue assim!");
+                                + studentRepository.getRightById(students.get(i).getId()) + " Ranking: Bronze. Continue assim!");
                     }
                 }
             }

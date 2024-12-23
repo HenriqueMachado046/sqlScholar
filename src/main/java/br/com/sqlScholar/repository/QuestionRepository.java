@@ -18,6 +18,6 @@ public interface QuestionRepository extends JpaRepository<Question, UUID> {
     @Query("SELECT COUNT (q) FROM Question q ")
     List<Integer> countQuestions();
 
-    @Query("SELECT COUNT (q) FROM Question q JOIN Teacher t ON t.id = ?1")
+    @Query(nativeQuery = true, value = "SELECT COUNT (*) FROM question q WHERE q.teacher_id = ?1")
     List<Integer> countQuestionsTeachers(UUID id);
 }
