@@ -26,9 +26,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 @RestController
 @RequestMapping("/question")
@@ -57,7 +54,6 @@ public class QuestionController {
 
     @GetMapping("/tela_adicionar/{questionlistId}")
     public ModelAndView tela_adicionar(@PathVariable UUID questionlistId, HttpSession session) {
-        // OK
 
         boolean logged = teacherService.verifySession(session);
         if (logged == false) {
@@ -66,16 +62,19 @@ public class QuestionController {
         Map<String, Object> template = new HashMap<>();
         if ("admin".equals(session.getAttribute("userType"))) {
             template.put ("isAdmin", session.getAttribute("isAdmin"));
+            List<Teacher> teacher = this.teacherRepository.findAll();
+            template.put("arrTeacher", teacher);
         }else{
-            template.put ("isTeacher", session.getAttribute("isTeacher"));   
+            template.put ("isTeacher", session.getAttribute("isTeacher"));
+            Teacher teacher = (Teacher) session.getAttribute("userLogged");
+            template.put("teacher", teacher);
         }
 
-        List<Teacher> teacher = this.teacherRepository.findAll();
         Optional<QuestionList> questionlist = this.questionListRepository.findById(questionlistId);
 
         template.put("userLogged", session.getAttribute("userLogged"));
         template.put("userType", session.getAttribute("userType"));
-        template.put("arrTeacher", teacher);
+        
         template.put("questionlist", questionlist.get());
         System.out.println("\n" + questionlistId);
         return new ModelAndView("question/tela_adicionar", template);
@@ -288,8 +287,22 @@ public class QuestionController {
     }
 
     @GetMapping("/tela_editar/{id}")
-    public ModelAndView tela_editar(@PathVariable UUID id) {
+    public ModelAndView tela_editar(@PathVariable UUID id, HttpSession session) {
         Map<String, Object> template = new HashMap<>();
+        boolean logged = teacherService.verifySession(session);
+        if (logged == false) {
+            return new ModelAndView("redirect:/");                        
+        } 
+        if ("admin".equals(session.getAttribute("userType"))) {
+            template.put ("isAdmin", session.getAttribute("isAdmin"));
+            List<Teacher> teacher = this.teacherRepository.findAll();
+            template.put("arrTeacher", teacher);
+        }else{
+            template.put ("isTeacher", session.getAttribute("isTeacher"));
+            Teacher teacher = (Teacher) session.getAttribute("userLogged");
+            template.put("teacher", teacher);
+        }
+       
         Optional<Question> question = this.questionRepository.findById(id);
 
         List<TeacherDTO> vetTeacherDTOs = new ArrayList<TeacherDTO>();
@@ -298,19 +311,6 @@ public class QuestionController {
         owner.setFirstName(question.get().getOwner().getFirstName());
         owner.setLastName(question.get().getOwner().getLastName());
         owner.setOwner(true);
-        List<Teacher> vetTeacher = this.teacherRepository.findAll();
-        for (int i = 0; i < vetTeacher.size(); i++) {
-            TeacherDTO teacherDTO = new TeacherDTO();
-            teacherDTO.setId(vetTeacher.get(i).getId());
-            teacherDTO.setFirstName(vetTeacher.get(i).getFirstName());
-            teacherDTO.setLastName(vetTeacher.get(i).getLastName());
-            if (vetTeacher.get(i).getId() != owner.getId()) {
-                teacherDTO.setOwner(false);
-            } else {
-                teacherDTO.setOwner(true);
-            }
-            vetTeacherDTOs.add(teacherDTO);
-        }
 
         List<DifficultyDTO> vDifficulties = new ArrayList<>();
         vDifficulties.add(new DifficultyDTO("Fácil", "Fácil".toUpperCase(),

@@ -1,7 +1,5 @@
 package br.com.sqlScholar.controller;
 
-import br.com.sqlScholar.dto.QuestionDTO;
-import br.com.sqlScholar.dto.TeacherDTO;
 import br.com.sqlScholar.model.Question;
 import br.com.sqlScholar.model.QuestionList;
 import br.com.sqlScholar.model.Teacher;
@@ -9,7 +7,6 @@ import br.com.sqlScholar.repository.QuestionListRepository;
 import br.com.sqlScholar.repository.QuestionRepository;
 import br.com.sqlScholar.repository.TeacherRepository;
 import br.com.sqlScholar.service.QuestionListService;
-import br.com.sqlScholar.service.QuestionService;
 import br.com.sqlScholar.service.TeacherService;
 import jakarta.servlet.http.HttpSession;
 
@@ -65,12 +62,11 @@ public class QuestionListController {
     @GetMapping("/index")
     public ModelAndView index(HttpSession session) {
         Map<String, Object> template = new HashMap<>();
-
         if (session.getAttribute("userType").equals("admin")) {
             boolean hasAccess = true;
             template.put ("hasAccess", hasAccess);
         }else{
-            if (session.getAttribute("userType").equals("teacher")) {
+            if (session.getAttribute("userType").equals("teacher") ) {
                 boolean hasAccess = true;
                 template.put ("hasAccess", hasAccess);                
             }else{
@@ -79,14 +75,9 @@ public class QuestionListController {
         }
         template.put("userLogged", session.getAttribute("userLogged"));
         template.put("userType", session.getAttribute("userType"));
-        // int pageNumber = 0;
-        // int pageSize = 15;
+
         template.put("message", "");
-        // template.put("arrQuestionList",
-        // questionListService.pageableQuestionList(pageNumber, pageSize));
-        // template.put("pageNumber", pageNumber + 1);
         template.put("arrQuestionList", questionListRepository.listPublic());
-        // template.put("pageNumber", "");
         return new ModelAndView("questionlist/index", template);
     }
 
@@ -109,6 +100,16 @@ public class QuestionListController {
         for (int i = 0; i < resultadoTeste.size(); i++) {
             System.out.println(resultadoTeste.get(i));
         }
+        if (sql_teste.contains("insert")) {
+            boolean isInsert = true;
+            template.put("isInsert", isInsert);
+            template.put("insert", "Insert realizado com sucesso!");            
+        }else{
+            boolean isSelect = true;
+            template.put("isSelect", isSelect);
+            template.put("select", "O resultado do seu select foi:");
+        }
+
         template.put("sql_teste", resultadoTeste);
         return new ModelAndView("questionlist/inserir", template);
     }
@@ -158,6 +159,7 @@ public class QuestionListController {
         questionList.setTitle(title);
         questionList.setPrivate(isPrivate);
         questionList.setDatabaseScript(database_script);
+        questionList.setDescription(description);
         this.questionListRepository.save(questionList);
         Map<String, Object> template = new HashMap<>();
         template.put("message", "Lista editada com sucesso!");
@@ -232,19 +234,22 @@ public class QuestionListController {
         Map<String, Object> template = new HashMap<>();
         boolean isTeacher = false;
 
+        String ownerId = questionListRepository.findById(id).get().getOwner().getId().toString();
+         
+
         if (session.getAttribute("userType").equals("teacher")) {
-            Teacher teacher = questionListRepository.findById(id).get().getOwner();
-            Teacher logged = (Teacher)session.getAttribute("userLogged");
             isTeacher = true;
         }
-
 
         if (session.getAttribute("userType").equals("admin")) {
             boolean hasAccess = true;
             template.put ("hasAccess", hasAccess);
         }else{
-            
-            if (isTeacher) {
+            Teacher logged = (Teacher)session.getAttribute("userLogged");
+            String userId = logged.getId().toString();
+
+            System.out.println(logged.getId());
+            if (isTeacher && (ownerId.equals(userId))) {
                 boolean hasAccess = true;
                 template.put ("hasAccess", hasAccess);                
             }else{

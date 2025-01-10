@@ -8,13 +8,6 @@
             <input name="title" type="text" class="form-control" id="title" maxlength="50" required>
 
         </div>
-        <!-- O campo abaixo vai virar um input hidden. -->
-        <!-- {{#arrTeacher}}
-        <div class="col form-group">
-            <label>Professor:</label> <br>
-            <input type="hidden" class="form-control" value="{{id}}">{{firstName}}
-        </div>
-        {{/arrTeacher}} -->
         
         {{#teacher}}
         <input type="hidden" class="form-control" name="teacher_id" value="{{id}}">

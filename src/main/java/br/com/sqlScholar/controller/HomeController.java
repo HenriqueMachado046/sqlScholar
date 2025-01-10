@@ -48,6 +48,7 @@ public class HomeController {
         List<Student> students = studentRepository.rankingStudents();
         List<String> studentsRanked = new ArrayList<String>();
 
+
         for (int i = 0; i < students.size(); i++) {
             if (studentRepository.getRightById(students.get(i).getId()) != 0) {
                 if (i == 0) {

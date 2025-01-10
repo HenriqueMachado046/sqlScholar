@@ -1,5 +1,6 @@
 package br.com.sqlScholar.repository;
 
+import br.com.sqlScholar.model.Student;
 import br.com.sqlScholar.model.Teacher;
 import jakarta.transaction.Transactional;
 
@@ -28,5 +29,4 @@ public interface TeacherRepository extends JpaRepository<Teacher, UUID> {
     @Transactional
     @Query(nativeQuery = true, value ="UPDATE teacher SET solved_questions = (solved_questions + 1) WHERE id = ?1 ")
     public int updateCounterById(UUID id);
-
 }

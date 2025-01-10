@@ -1,7 +1,15 @@
 {{>header}}
+
 <div class="container">
-    <p class="text-break">
+    <p class="text-break" style="font-size: xx-large;">
+        {{#isInsert}}
+        {{insert}}
+        {{/isInsert}}
+        
+        {{#isSelect}}
+        {{select}}
         {{sql_teste}}
+        {{/isSelect}}        
     </p>
 </div>
 

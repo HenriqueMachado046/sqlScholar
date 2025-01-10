@@ -32,9 +32,4 @@ public interface QuestionListRepository extends JpaRepository<QuestionList, UUID
 
     @Query(value = "SELECT ql from QuestionList ql WHERE isPrivate IS FALSE")
     List<QuestionList> listPublic();
-
-    // @Transactional
-    // @Modifying
-    // @Query(nativeQuery = true, value = "param")
-    // void criarDatabase(String param);
 }

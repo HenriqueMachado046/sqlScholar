@@ -5,8 +5,11 @@
 
 <p>Os top estudantes da plataforma são:</p>
 
-{{#students}}
-<p class="text-break">{{{.}}}
-{{/students}}
-
+<div class="row g-3">
+    <div class="col form-group mb-3">
+        {{#students}}
+        <p class="text-break">{{{.}}}
+        {{/students}}
+    </div>
+</div>
 {{>footer}}

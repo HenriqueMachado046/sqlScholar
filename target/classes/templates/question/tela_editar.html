@@ -3,6 +3,9 @@
     <h3>Editar: Questão</h3>
     <form id="questionform" action="/question/editar" method="post">
         <input type="hidden" name="id" value="{{id}}"><br>
+        {{#teacher}}
+        <input type="hidden" class="form-control" name="teacher_id" value="{{id}}">
+        {{/teacher}}
         <div class="col-md-6 form-group">
             <label for="title">Título:</label>
             <input name="title" type="text" class="form-control" id="title" value="{{title}}" maxlength="50">
@@ -27,19 +30,6 @@
                     <input class="form-check-input" type="radio" name="difficulty" value="{{value}}">{{description}}
                 {{/enabled}}
             {{/vetDificuldade}}
-        </div>
-        <div class="col-md-6 form-group mb-3">
-            Professor:
-            <select class="form-select" name="teacher_id" required>
-                {{#vetProfessor}}
-                    {{#isOwner}}
-                        <option value="{{id}}" selected>{{firstName}}</option>
-                    {{/isOwner}}
-                    {{^isOwner}}
-                        <option value="{{id}}">{{firstName}}</option>
-                    {{/isOwner}}
-                {{/vetProfessor}}
-            </select>
         </div>
         <input class="btn btn-primary" type="submit" value="Editar">
     </form>
