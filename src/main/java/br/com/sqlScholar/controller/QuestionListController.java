@@ -235,8 +235,7 @@ public class QuestionListController {
         boolean isTeacher = false;
 
         String ownerId = questionListRepository.findById(id).get().getOwner().getId().toString();
-         
-
+        
         if (session.getAttribute("userType").equals("teacher")) {
             isTeacher = true;
         }
