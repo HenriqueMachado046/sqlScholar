@@ -2,6 +2,7 @@ package br.com.sqlScholar.controller;
 
 import br.com.sqlScholar.model.Question;
 import br.com.sqlScholar.model.QuestionList;
+import br.com.sqlScholar.model.Student;
 import br.com.sqlScholar.model.Teacher;
 import br.com.sqlScholar.repository.QuestionListRepository;
 import br.com.sqlScholar.repository.QuestionRepository;
@@ -240,17 +241,19 @@ public class QuestionListController {
             isTeacher = true;
         }
 
+        String userId = "";
+
         if (session.getAttribute("userType").equals("admin")) {
             boolean hasAccess = true;
             template.put ("hasAccess", hasAccess);
         }else{
-            Teacher logged = (Teacher)session.getAttribute("userLogged");
-            String userId = logged.getId().toString();
-
-            System.out.println(logged.getId());
-            if (isTeacher && (ownerId.equals(userId))) {
-                boolean hasAccess = true;
-                template.put ("hasAccess", hasAccess);                
+            if (isTeacher) {
+                Teacher teacherLogged = (Teacher)session.getAttribute("userLogged");
+                userId = teacherLogged.getId().toString();
+                if (ownerId.equals(userId)) {
+                    boolean hasAccess = true;
+                    template.put ("hasAccess", hasAccess);   
+                }
             }else{
                 if (session.getAttribute("userType").equals("teacher")){
                     boolean hasAccess = false;
